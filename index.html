@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignMaster: Learn Uganda Sign Language</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-yellow: #FCDC04;
+            --primary-red: #D90000;
+            --primary-black: #1a1a1a;
+            --accent-blue: #4A90E2;
+            --accent-green: #7ED321;
+            --bg-light: #f8f9fa;
+            --text-dark: #2c3e50;
+            --card-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-light) 0%, #e8eef3 100%);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        body.high-contrast {
+            background: #000;
+            color: #fff;
+        }
+
+        body.high-contrast .card {
+            background: #1a1a1a;
+            border: 2px solid #fff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .screen {
+            display: none;
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary-red) 0%, #b00000 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header h1 {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Buttons */
+        .btn {
+            background: linear-gradient(135deg, var(--accent-blue) 0%, #3a7bc8 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(74, 144, 226, 0.4);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-yellow) 0%, #e5c600 100%);
+            color: var(--primary-black);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--accent-green) 0%, #6bb91a 100%);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        }
+
+        /* Level Grid */
+        .level-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .level-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .level-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary-yellow), var(--primary-red));
+        }
+
+        .level-card.locked {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .level-card:not(.locked):hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
+
+        .level-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .level-card h3 {
+            color: var(--primary-red);
+            margin-bottom: 10px;
+        }
+
+        /* Sign Display */
+        .sign-display {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            margin: 20px 0;
+            color: white;
+        }
+
+        .sign-animation {
+            width: 300px;
+            height: 300px;
+            margin: 0 auto 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .sign-svg {
+            width: 200px;
+            height: 200px;
+        }
+
+        .sign-label {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* Match Game */
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .option-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .option-card:hover {
+            transform: scale(1.05);
+            border-color: var(--accent-blue);
+        }
+
+        .option-card.correct {
+            background: var(--accent-green);
+            color: white;
+            animation: pulse 0.5s;
+        }
+
+        .option-card.wrong {
+            background: var(--primary-red);
+            color: white;
+            animation: shake 0.5s;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-green) 0%, var(--primary-yellow) 100%);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Badge Display */
+        .badges-container {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .badge {
+            background: linear-gradient(135deg, var(--primary-yellow) 0%, #ffa500 100%);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(252, 220, 4, 0.4);
+            font-size: 2rem;
+            position: relative;
+        }
+
+        .badge.locked {
+            background: #ccc;
+            opacity: 0.5;
+        }
+
+        .badge-name {
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        /* Story Mission */
+        .story-scene {
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+            border-radius: 20px;
+            padding: 40px;
+            color: white;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .npc-dialogue {
+            background: rgba(255,255,255,0.2);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-size: 1.2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .toggle-btn {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .toggle-btn.active {
+            background: var(--accent-green);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                text-align: center;
+            }
+            
+            .stats {
+                justify-content: center;
+            }
+
+            .sign-animation {
+                width: 250px;
+                height: 250px;
+            }
+
+            .level-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Celebration */
+        .celebration {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 50px;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        .celebration.show {
+            display: block;
+            animation: celebrationPop 0.5s ease;
+        }
+
+        @keyframes celebrationPop {
+            0% { transform: translate(-50%, -50%) scale(0); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 999;
+            display: none;
+        }
+
+        .overlay.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>
+                <span>🤟</span>
+                <span>SignMaster USL</span>
+            </h1>
+            <div class="stats">
+                <div class="stat-badge">
+                    <span>⭐</span>
+                    <span id="xp-display">0 XP</span>
+                </div>
+                <div class="stat-badge">
+                    <span>🏆</span>
+                    <span id="badge-count">0/5 Badges</span>
+                </div>
+                <div class="stat-badge">
+                    <span>📊</span>
+                    <span id="level-display">Level 1</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="screen active">
+            <div class="card" style="text-align: center;">
+                <h1 style="font-size: 3rem; color: var(--primary-red); margin-bottom: 20px;">
+                    Welcome to SignMaster! 🎓
+                </h1>
+                <p style="font-size: 1.3rem; margin-bottom: 30px;">
+                    Learn Uganda Sign Language through fun games and stories!
+                </p>
+                <div style="margin: 40px 0;">
+                    <svg width="200" height="200" viewBox="0 0 200 200" style="margin: 0 auto; display: block;">
+                        <circle cx="100" cy="100" r="90" fill="var(--primary-yellow)" opacity="0.3"/>
+                        <path d="M70,80 Q100,50 130,80" stroke="var(--primary-red)" stroke-width="8" fill="none" stroke-linecap="round"/>
+                        <circle cx="80" cy="90" r="8" fill="var(--primary-black)"/>
+                        <circle cx="120" cy="90" r="8" fill="var(--primary-black)"/>
+                        <path d="M75,120 Q100,140 125,120" stroke="var(--primary-black)" stroke-width="6" fill="none" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="controls">
+                    <button class="btn btn-primary" onclick="game.startGame()">
+                        🚀 Start Learning
+                    </button>
+                    <button class="toggle-btn" id="voice-toggle" onclick="game.toggleVoice()">
+                        🔊 Voice: ON
+                    </button>
+                    <button class="toggle-btn" id="contrast-toggle" onclick="game.toggleContrast()">
+                        🌓 High Contrast
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Level Selection Screen -->
+        <div id="level-select-screen" class="screen">
+            <div class="card">
+                <h2 style="text-align: center; color: var(--primary-red); margin-bottom: 10px;">
+                    Choose Your Learning Path
+                </h2>
+                <p style="text-align: center; margin-bottom: 30px;">
+                    Complete each level to unlock the next challenge!
+                </p>
+                <div class="level-grid" id="level-grid"></div>
+            </div>
+        </div>
+
+        <!-- Learn Mode Screen -->
+        <div id="learn-screen" class="screen">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <button class="btn btn-secondary" onclick="game.showLevelSelect()">← Back</button>
+                    <h2 id="learn-title">Learn Mode</h2>
+                    <div></div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="learn-progress" style="width: 0%">0%</div>
+                </div>
+                <div class="sign-display">
+                    <div class="sign-animation" id="sign-animation-container"></div>
+                    <div class="sign-label" id="sign-label">A</div>
+                    <p id="sign-description">This is the sign for the letter A</p>
+                </div>
+                <div class="controls">
+                    <button class="btn" onclick="game.previousSign()">← Previous</button>
+                    <button class="btn btn-success" onclick="game.speakSign()">🔊 Hear It</button>
+                    <button class="btn" onclick="game.nextSign()">Next →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Match Game Screen -->
+        <div id="match-screen" class="screen">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <button class="btn btn-secondary" onclick="game.showLevelSelect()">← Back</button>
+                    <h2>Match the Sign!</h2>
+                    <div class="stat-badge" style="background: var(--accent-blue);">
+                        <span>⏱️</span>
+                        <span id="match-timer">60s</span>
+                    </div>
+                </div>
+                <div class="sign-display">
+                    <div class="sign-animation" id="match-sign-animation"></div>
+                    <p style="font-size: 1.2rem;">What does this sign mean?</p>
+                </div>
+                <div class="options-grid" id="match-options"></div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <div class="stat-badge" style="background: var(--accent-green); display: inline-flex;">
+                        <span>✓</span>
+                        <span id="match-score">Score: 0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Story Mission Screen -->
+        <div id="story-screen" class="screen">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <button class="btn btn-secondary" onclick="game.showLevelSelect()">← Back</button>
+                    <h2>Story Mission</h2>
+                    <div></div>
+                </div>
+                <div class="story-scene">
+                    <h3 style="font-size: 2rem; margin-bottom: 20px;" id="story-title">Help a Friend</h3>
+                    <div style="font-size: 4rem; margin: 20px 0;">👦</div>
+                    <div class="npc-dialogue" id="story-dialogue">
+                        Your classmate looks confused. Show them a greeting sign!
+                    </div>
+                </div>
+                <div class="options-grid" id="story-options"></div>
+            </div>
+        </div>
+
+        <!-- Completion Screen -->
+        <div id="completion-screen" class="screen">
+            <div class="card" style="text-align: center;">
+                <h1 style="font-size: 3rem; color: var(--accent-green); margin-bottom: 20px;">
+                    🎉 Congratulations, Sign Hero! 🎉
+                </h1>
+                <div style="margin: 40px 0;">
+                    <svg width="200" height="200" viewBox="0 0 200 200" style="margin: 0 auto; display: block;">
+                        <circle cx="100" cy="100" r="90" fill="var(--primary-yellow)"/>
+                        <polygon points="100,30 115,70 160,75 125,105 135,150 100,125 65,150 75,105 40,75 85,70" fill="var(--primary-red)"/>
+                        <text x="100" y="180" text-anchor="middle" font-size="24" fill="var(--primary-black)" font-weight="bold">HERO</text>
+                    </svg>
+                </div>
+                <p style="font-size: 1.5rem; margin-bottom: 30px;">
+                    You've completed all levels and earned your Sign Hero Diploma!
+                </p>
+                <div class="badges-container" id="final-badges"></div>
+                <div style="margin: 30px 0;">
+                    <div class="stat-badge" style="background: var(--primary-yellow); color: var(--primary-black); font-size: 1.5rem; display: inline-flex;">
+                        <span>⭐</span>
+                        <span id="final-xp">Total XP: 0</span>
+                    </div>
+                </div>
+                <div class="controls">
+                    <button class="btn btn-primary" onclick="game.restartGame()">
+                        🔄 Play Again
+                    </button>
+                    <button class="btn" onclick="game.showLevelSelect()">
+                        📚 Review Levels
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Celebration Overlay -->
+        <div class="overlay" id="celebration-overlay"></div>
+        <div class="celebration" id="celebration-popup">
+            <h2 style="font-size: 2.5rem; color: var(--accent-green); margin-bottom: 20px;">
+                🎊 Level Complete! 🎊
+            </h2>
+            <div style="font-size: 5rem; margin: 20px 0;" id="celebration-badge">🏆</div>
+            <p style="font-size: 1.3rem; margin-bottom: 30px;" id="celebration-message">
+                Great job! You earned 100 XP!
+            </p>
+            <button class="btn btn-success" onclick="game.closeCelebration()">
+                Continue →
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Game Data
+        const signDatabase = {
+            alphabet: {
+                name: 'Alphabet',
+                icon: '✍️',
+                signs: [
+                    { id: 'A', label: 'A', description: 'The letter A in USL', type: 'letter' },
+                    { id: 'B', label: 'B', description: 'The letter B in USL', type: 'letter' },
+                    { id: 'C', label: 'C', description: 'The letter C in USL', type: 'letter' },
+                    { id: 'D', label: 'D', description: 'The letter D in USL', type: 'letter' },
+                    { id: 'E', label: 'E', description: 'The letter E in USL', type: 'letter' }
+                ]
+            },
+            numbers: {
+                name: 'Numbers',
+                icon: '🔢',
+                signs: [
+                    { id: '1', label: '1', description: 'The number one', type: 'number' },
+                    { id: '2', label: '2', description: 'The number two', type: 'number' },
+                    { id: '3', label: '3', description: 'The number three', type: 'number' },
+                    { id: '4', label: '4', description: 'The number four', type: 'number' },
+                    { id: '5', label: '5', description: 'The number five', type: 'number' }
+                ]
+            },
+            greetings: {
+                name: 'Greetings',
+                icon: '👋',
+                signs: [
+                    { id: 'hello', label: 'Hello', description: 'A friendly greeting', type: 'greeting' },
+                    { id: 'goodbye', label: 'Goodbye', description: 'Farewell sign', type: 'greeting' },
+                    { id: 'thanks', label: 'Thank You', description: 'Expressing gratitude', type: 'greeting' },
+                    { id: 'please', label: 'Please', description: 'Polite request', type: 'greeting' },
+                    { id: 'sorry', label: 'Sorry', description: 'Apology sign', type: 'greeting' }
+                ]
+            },
+            emotions: {
+                name: 'Emotions',
+                icon: '😊',
+                signs: [
+                    { id: 'happy', label: 'Happy', description: 'Showing joy', type: 'emotion' },
+                    { id: 'sad', label: 'Sad', description: 'Showing sadness', type: 'emotion' },
+                    { id: 'angry', label: 'Angry', description: 'Showing anger', type: 'emotion' },
+                    { id: 'love', label: 'Love', description: 'Showing love', type: 'emotion' },
+                    { id: 'tired', label: 'Tired', description: 'Showing fatigue', type: 'emotion' }
+                ]
+            },
+            story: {
+                name: 'Story Missions',
+                icon: '📖',
+                missions: [
+                    {
+                        id: 'mission1',
+                        title: 'Help a Classmate',
+                        dialogue: 'Your new classmate looks lost. Greet them with a sign!',
+                        correctSign: 'hello',
+                        options: ['hello', 'goodbye', 'thanks', 'please']
+                    },
+                    {
+                        id: 'mission2',
+                        title: 'Share Your Feelings',
+                        dialogue: 'Your friend asks how you feel. Show them you are happy!',
+                        correctSign: 'happy',
+                        options: ['happy', 'sad', 'angry', 'tired']
+                    },
+                    {
+                        id: 'mission3',
+                        title: 'Polite Request',
+                        dialogue: 'You want to borrow a book. What sign do you use?',
+                        correctSign: 'please',
+                        options: ['please', 'thanks', 'sorry', 'goodbye']
+                    }
+                ]
+            }
+        };
+
+        // Game State Manager
+        class GameState {
+            constructor() {
+                this.loadState();
+            }
+
+            loadState() {
+                const saved = localStorage.getItem('signmaster_progress');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    this.xp = data.xp || 0;
+                    this.currentLevel = data.currentLevel || 1;
+                    this.completedLevels = data.completedLevels || [];
+                    this.badges = data.badges || [];
+                } else {
+                    this.xp = 0;
+                    this.currentLevel = 1;
+                    this.completedLevels = [];
+                    this.badges = [];
+                }
+                this.voiceEnabled = true;
+                this.highContrast = false;
+            }
+
+            saveState() {
+                const data = {
+                    xp: this.xp,
+                    currentLevel: this.currentLevel,
+                    completedLevels: this.completedLevels,
+                    badges: this.badges
+                };
+                localStorage.setItem('signmaster_progress', JSON.stringify(data));
+            }
+
+            addXP(amount) {
+                this.xp += amount;
+                this.updateDisplay();
+                this.saveState();
+            }
+
+            completeLevel(levelName) {
+                if (!this.completedLevels.includes(levelName)) {
+                    this.completedLevels.push(levelName);
+                    this.currentLevel = Math.min(this.currentLevel + 1, 6);
+                    this.addBadge(levelName);
+                    this.saveState();
+                }
+            }
+
+            addBadge(badgeName) {
+                if (!this.badges.includes(badgeName)) {
+                    this.badges.push(badgeName);
+                    this.saveState();
+                }
+            }
+
+            updateDisplay() {
+                document.getElementById('xp-display').textContent = `${this.xp} XP`;
+                document.getElementById('badge-count').textContent = `${this.badges.length}/5 Badges`;
+                document.getElementById('level-display').textContent = `Level ${this.currentLevel}`;
+            }
+
+            reset() {
+                this.xp = 0;
+                this.currentLevel = 1;
+                this.completedLevels = [];
+                this.badges = [];
+                this.saveState();
+                this.updateDisplay();
+            }
+        }
+
+        // Main Game Controller
+        class SignMasterGame {
+            constructor() {
+                this.state = new GameState();
+                this.currentScreen = 'welcome-screen';
+                this.currentLevelData = null;
+                this.currentSignIndex = 0;
+                this.matchScore = 0;
+                this.matchTimer = 60;
+                this.timerInterval = null;
+                this.init();
+            }
+
+            init() {
+                this.state.updateDisplay();
+                this.setupVoiceNarration();
+            }
+
+            setupVoiceNarration() {
+                // Simple text-to-speech setup
+                this.synth = window.speechSynthesis;
+            }
+
+            speak(text) {
+                if (!this.state.voiceEnabled || !this.synth) return;
+                
+                this.synth.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.9;
+                utterance.pitch = 1.1;
+                this.synth.speak(utterance);
+            }
+
+            toggleVoice() {
+                this.state.voiceEnabled = !this.state.voiceEnabled;
+                const btn = document.getElementById('voice-toggle');
+                btn.textContent = this.state.voiceEnabled ? '🔊 Voice: ON' : '🔇 Voice: OFF';
+                btn.classList.toggle('active', this.state.voiceEnabled);
+            }
+
+            toggleContrast() {
+                this.state.highContrast = !this.state.highContrast;
+                document.body.classList.toggle('high-contrast', this.state.highContrast);
+                const btn = document.getElementById('contrast-toggle');
+                btn.classList.toggle('active', this.state.highContrast);
+            }
+
+            showScreen(screenId) {
+                document.querySelectorAll('.screen').forEach(s => {
+                    s.classList.remove('active');
+                });
+                document.getElementById(screenId).classList.add('active');
+                this.currentScreen = screenId;
+            }
+
+            startGame() {
+                this.speak('Welcome to Sign Master! Let\'s learn Uganda Sign Language together!');
+                this.showLevelSelect();
+            }
+
+            showLevelSelect() {
+                this.showScreen('level-select-screen');
+                this.renderLevelGrid();
+            }
+
+            renderLevelGrid() {
+                const grid = document.getElementById('level-grid');
+                grid.innerHTML = '';
+
+                const levels = [
+                    { id: 'alphabet', name: 'Alphabet', icon: '✍️', index: 1 },
+                    { id: 'numbers', name: 'Numbers', icon: '🔢', index: 2 },
+                    { id: 'greetings', name: 'Greetings', icon: '👋', index: 3 },
+                    { id: 'emotions', name: 'Emotions', icon: '😊', index: 4 },
+                    { id: 'story', name: 'Story Missions', icon: '📖', index: 5 }
+                ];
+
+                levels.forEach(level => {
+                    const isLocked = level.index > this.state.currentLevel;
+                    const isCompleted = this.state.completedLevels.includes(level.id);
+                    
+                    const card = document.createElement('div');
+                    card.className = `level-card ${isLocked ? 'locked' : ''}`;
+                    card.innerHTML = `
+                        <div class="level-icon">${level.icon}</div>
+                        <h3>${level.name}</h3>
+                        <p>${isCompleted ? '✓ Completed' : isLocked ? '🔒 Locked' : '▶️ Start'}</p>
+                    `;
+                    
+                    if (!isLocked) {
+                        card.onclick = () => this.startLevel(level.id);
+                    }
+                    
+                    grid.appendChild(card);
+                });
+            }
+
+            startLevel(levelId) {
+                this.currentLevelData = signDatabase[levelId];
+                
+                if (levelId === 'story') {
+                    this.startStoryMode();
+                } else {
+                    this.startLearnMode(levelId);
+                }
+            }
+
+            // Learn Mode
+            startLearnMode(levelId) {
+                this.showScreen('learn-screen');
+                this.currentSignIndex = 0;
+                document.getElementById('learn-title').textContent = `Learn: ${this.currentLevelData.name}`;
+                this.displaySign();
+            }
+
+            displaySign() {
+                const signs = this.currentLevelData.signs;
+                const sign = signs[this.currentSignIndex];
+                
+                // Update progress
+                const progress = ((this.currentSignIndex + 1) / signs.length) * 100;
+                const progressBar = document.getElementById('learn-progress');
+                progressBar.style.width = `${progress}%`;
+                progressBar.textContent = `${Math.round(progress)}%`;
+                
+                // Display sign
+                document.getElementById('sign-label').textContent = sign.label;
+                document.getElementById('sign-description').textContent = sign.description;
+                
+                // Generate SVG animation
+                this.generateSignSVG('sign-animation-container', sign);
+                
+                this.speak(`${sign.label}. ${sign.description}`);
+            }
+
+            generateSignSVG(containerId, sign) {
+                const container = document.getElementById(containerId);
+                container.innerHTML = '';
+                
+                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                svg.setAttribute('width', '200');
+                svg.setAttribute('height', '200');
+                svg.setAttribute('viewBox', '0 0 200 200');
+                svg.classList.add('sign-svg');
+                
+                // Hand base
+                const hand = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+                hand.setAttribute('cx', '100');
+                hand.setAttribute('cy', '120');
+                hand.setAttribute('rx', '50');
+                hand.setAttribute('ry', '60');
+                hand.setAttribute('fill', '#FDB777');
+                hand.setAttribute('stroke', '#333');
+                hand.setAttribute('stroke-width', '2');
+                svg.appendChild(hand);
+                
+                // Generate unique sign variations
+                switch(sign.type) {
+                    case 'letter':
+                        this.generateLetterSign(svg, sign.id);
+                        break;
+                    case 'number':
+                        this.generateNumberSign(svg, sign.id);
+                        break;
+                    case 'greeting':
+                        this.generateGreetingSign(svg, sign.id);
+                        break;
+                    case 'emotion':
+                        this.generateEmotionSign(svg, sign.id);
+                        break;
+                }
+                
+                container.appendChild(svg);
+                
+                // Animate
+                gsap.from(svg, {
+                    scale: 0,
+                    rotation: -10,
+                    duration: 0.5,
+                    ease: 'back.out'
+                });
+            }
+
+            generateLetterSign(svg, letter) {
+                // Fingers for letters
+                const fingerPositions = {
+                    'A': [[80, 60], [90, 50], [100, 45], [110, 50]],
+                    'B': [[80, 40], [90, 30], [100, 25], [110, 30]],
+                    'C': [[70, 80, 90, 100]],
+                    'D': [[90, 40], [100, 35]],
+                    'E': [[80, 50], [90, 45], [100, 40], [110, 45]]
+                };
+                
+                const positions = fingerPositions[letter] || [[90, 50], [100, 45]];
+                
+                positions.forEach(pos => {
+                    if (pos.length === 2) {
+                        const finger = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                        finger.setAttribute('x', pos[0]);
+                        finger.setAttribute('y', pos[1]);
+                        finger.setAttribute('width', '8');
+                        finger.setAttribute('height', '40');
+                        finger.setAttribute('rx', '4');
+                        finger.setAttribute('fill', '#FDB777');
+                        finger.setAttribute('stroke', '#333');
+                        finger.setAttribute('stroke-width', '2');
+                        svg.appendChild(finger);
+                    }
+                });
+                
+                // Add letter text
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', '100');
+                text.setAttribute('y', '180');
+                text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('font-size', '24');
+                text.setAttribute('font-weight', 'bold');
+                text.setAttribute('fill', '#333');
+                text.textContent = letter;
+                svg.appendChild(text);
+            }
+
+            generateNumberSign(svg, number) {
+                const num = parseInt(number);
+                
+                for (let i = 0; i < num; i++) {
+                    const finger = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                    finger.setAttribute('x', 75 + (i * 12));
+                    finger.setAttribute('y', 50 - (i * 5));
+                    finger.setAttribute('width', '8');
+                    finger.setAttribute('height', '45');
+                    finger.setAttribute('rx', '4');
+                    finger.setAttribute('fill', '#FDB777');
+                    finger.setAttribute('stroke', '#333');
+                    finger.setAttribute('stroke-width', '2');
+                    svg.appendChild(finger);
+                }
+                
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', '100');
+                text.setAttribute('y', '180');
+                text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('font-size', '32');
+                text.setAttribute('font-weight', 'bold');
+                text.setAttribute('fill', '#333');
+                text.textContent = number;
+                svg.appendChild(text);
+            }
+
+            generateGreetingSign(svg, greeting) {
+                // Motion lines for greetings
+                const motionPaths = {
+                    'hello': 'M60,80 Q80,60 100,80',
+                    'goodbye': 'M100,80 Q120,60 140,80',
+                    'thanks': 'M100,70 L100,130',
+                    'please': 'M80,100 Q100,80 120,100',
+                    'sorry': 'M90,90 Q100,110 110,90'
+                };
+                
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('d', motionPaths[greeting] || 'M90,90 L110,110');
+                path.setAttribute('stroke', '#4A90E2');
+                path.setAttribute('stroke-width', '4');
+                path.setAttribute('fill', 'none');
+                path.setAttribute('stroke-dasharray', '5,5');
+                svg.appendChild(path);
+                
+                // Animated arrow
+                const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+                arrow.setAttribute('points', '100,65 105,75 95,75');
+                arrow.setAttribute('fill', '#4A90E2');
+                svg.appendChild(arrow);
+                
+                gsap.to(arrow, {
+                    y: 20,
+                    repeat: -1,
+                    yoyo: true,
+                    duration: 0.8,
+                    ease: 'power1.inOut'
+                });
+            }
+
+            generateEmotionSign(svg, emotion) {
+                // Face overlays for emotions
+                const face = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                face.setAttribute('cx', '100');
+                face.setAttribute('cy', '90');
+                face.setAttribute('r', '30');
+                face.setAttribute('fill', 'none');
+                face.setAttribute('stroke', '#333');
+                face.setAttribute('stroke-width', '2');
+                svg.appendChild(face);
+                
+                const emotionPaths = {
+                    'happy': 'M85,95 Q100,105 115,95',
+                    'sad': 'M85,100 Q100,90 115,100',
+                    'angry': 'M85,100 L115,100',
+                    'love': 'M85,95 Q100,100 115,95',
+                    'tired': 'M85,98 Q100,95 115,98'
+                };
+                
+                const mouth = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                mouth.setAttribute('d', emotionPaths[emotion] || 'M85,95 L115,95');
+                mouth.setAttribute('stroke', '#333');
+                mouth.setAttribute('stroke-width', '2');
+                mouth.setAttribute('fill', 'none');
+                svg.appendChild(mouth);
+                
+                // Eyes
+                const eye1 = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                eye1.setAttribute('cx', '90');
+                eye1.setAttribute('cy', '85');
+                eye1.setAttribute('r', '3');
+                eye1.setAttribute('fill', '#333');
+                svg.appendChild(eye1);
+                
+                const eye2 = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                eye2.setAttribute('cx', '110');
+                eye2.setAttribute('cy', '85');
+                eye2.setAttribute('r', '3');
+                eye2.setAttribute('fill', '#333');
+                svg.appendChild(eye2);
+            }
+
+            previousSign() {
+                if (this.currentSignIndex > 0) {
+                    this.currentSignIndex--;
+                    this.displaySign();
+                }
+            }
+
+            nextSign() {
+                const signs = this.currentLevelData.signs;
+                if (this.currentSignIndex < signs.length - 1) {
+                    this.currentSignIndex++;
+                    this.displaySign();
+                } else {
+                    // Complete learn mode, move to match game
+                    this.startMatchGame();
+                }
+            }
+
+            speakSign() {
+                const sign = this.currentLevelData.signs[this.currentSignIndex];
+                this.speak(`${sign.label}. ${sign.description}`);
+            }
+
+            // Match Game Mode
+            startMatchGame() {
+                this.showScreen('match-screen');
+                this.matchScore = 0;
+                this.matchTimer = 60;
+                this.currentSignIndex = 0;
+                
+                document.getElementById('match-score').textContent = `Score: ${this.matchScore}`;
+                this.startMatchTimer();
+                this.displayMatchQuestion();
+            }
+
+            startMatchTimer() {
+                clearInterval(this.timerInterval);
+                this.timerInterval = setInterval(() => {
+                    this.matchTimer--;
+                    document.getElementById('match-timer').textContent = `${this.matchTimer}s`;
+                    
+                    if (this.matchTimer <= 0) {
+                        this.endMatchGame();
+                    }
+                }, 1000);
+            }
+
+            displayMatchQuestion() {
+                const signs = this.currentLevelData.signs;
+                if (this.currentSignIndex >= signs.length) {
+                    this.endMatchGame();
+                    return;
+                }
+                
+                const currentSign = signs[this.currentSignIndex];
+                this.generateSignSVG('match-sign-animation', currentSign);
+                
+                // Generate options
+                const options = this.generateMatchOptions(currentSign);
+                const optionsContainer = document.getElementById('match-options');
+                optionsContainer.innerHTML = '';
+                
+                options.forEach(option => {
+                    const card = document.createElement('div');
+                    card.className = 'option-card';
+                    card.innerHTML = `<h3>${option}</h3>`;
+                    card.onclick = () => this.checkMatchAnswer(option, currentSign.label, card);
+                    optionsContainer.appendChild(card);
+                });
+            }
+
+            generateMatchOptions(correctSign) {
+                const signs = this.currentLevelData.signs;
+                const options = [correctSign.label];
+                
+                // Add random wrong answers
+                while (options.length < 4) {
+                    const randomSign = signs[Math.floor(Math.random() * signs.length)];
+                    if (!options.includes(randomSign.label)) {
+                        options.push(randomSign.label);
+                    }
+                }
+                
+                // Shuffle
+                return options.sort(() => Math.random() - 0.5);
+            }
+
+            checkMatchAnswer(selected, correct, card) {
+                if (selected === correct) {
+                    card.classList.add('correct');
+                    this.matchScore += 10;
+                    this.state.addXP(10);
+                    this.speak('Correct!');
+                    
+                    setTimeout(() => {
+                        this.currentSignIndex++;
+                        this.displayMatchQuestion();
+                    }, 1000);
+                } else {
+                    card.classList.add('wrong');
+                    this.speak('Try again!');
+                    
+                    setTimeout(() => {
+                        card.classList.remove('wrong');
+                    }, 500);
+                }
+                
+                document.getElementById('match-score').textContent = `Score: ${this.matchScore}`;
+            }
+
+            endMatchGame() {
+                clearInterval(this.timerInterval);
+                
+                // Get level ID from current data
+                const levelId = Object.keys(signDatabase).find(key => 
+                    signDatabase[key] === this.currentLevelData
+                );
+                
+                this.state.completeLevel(levelId);
+                this.state.addXP(50);
+                this.showCelebration(this.currentLevelData.name, this.currentLevelData.icon);
+            }
+
+            // Story Mode
+            startStoryMode() {
+                this.showScreen('story-screen');
+                this.currentSignIndex = 0;
+                this.displayStoryMission();
+            }
+
+            displayStoryMission() {
+                const missions = this.currentLevelData.missions;
+                if (this.currentSignIndex >= missions.length) {
+                    this.completeStoryMode();
+                    return;
+                }
+                
+                const mission = missions[this.currentSignIndex];
+                document.getElementById('story-title').textContent = mission.title;
+                document.getElementById('story-dialogue').textContent = mission.dialogue;
+                this.speak(mission.dialogue);
+                
+                // Generate story options
+                const optionsContainer = document.getElementById('story-options');
+                optionsContainer.innerHTML = '';
+                
+                mission.options.forEach(optionId => {
+                    // Find sign from all categories
+                    let signData = null;
+                    for (let category in signDatabase) {
+                        if (signDatabase[category].signs) {
+                            signData = signDatabase[category].signs.find(s => s.id === optionId);
+                            if (signData) break;
+                        }
+                    }
+                    
+                    const card = document.createElement('div');
+                    card.className = 'option-card';
+                    card.innerHTML = `<h3>${signData ? signData.label : optionId}</h3>`;
+                    card.onclick = () => this.checkStoryAnswer(optionId, mission.correctSign, card);
+                    optionsContainer.appendChild(card);
+                });
+            }
+
+            checkStoryAnswer(selected, correct, card) {
+                if (selected === correct) {
+                    card.classList.add('correct');
+                    this.state.addXP(20);
+                    this.speak('Perfect choice!');
+                    
+                    setTimeout(() => {
+                        this.currentSignIndex++;
+                        this.displayStoryMission();
+                    }, 1500);
+                } else {
+                    card.classList.add('wrong');
+                    this.speak('Think about what the person needs!');
+                    
+                    setTimeout(() => {
+                        card.classList.remove('wrong');
+                    }, 500);
+                }
+            }
+
+            completeStoryMode() {
+                this.state.completeLevel('story');
+                this.state.addXP(100);
+                
+                // Check if all levels complete
+                if (this.state.completedLevels.length >= 5) {
+                    this.showFinalCompletion();
+                } else {
+                    this.showCelebration('Story Missions', '📖');
+                }
+            }
+
+            // Celebration & Completion
+            showCelebration(levelName, badge) {
+                document.getElementById('celebration-badge').textContent = badge;
+                document.getElementById('celebration-message').textContent = 
+                    `You completed ${levelName}! Earned 50 XP and a badge!`;
+                
+                document.getElementById('celebration-overlay').classList.add('show');
+                document.getElementById('celebration-popup').classList.add('show');
+                
+                this.speak(`Congratulations! You completed ${levelName}!`);
+            }
+
+            closeCelebration() {
+                document.getElementById('celebration-overlay').classList.remove('show');
+                document.getElementById('celebration-popup').classList.remove('show');
+                
+                if (this.state.completedLevels.length >= 5) {
+                    this.showFinalCompletion();
+                } else {
+                    this.showLevelSelect();
+                }
+            }
+
+            showFinalCompletion() {
+                this.showScreen('completion-screen');
+                document.getElementById('final-xp').textContent = `Total XP: ${this.state.xp}`;
+                
+                // Display all badges
+                const badgesContainer = document.getElementById('final-badges');
+                badgesContainer.innerHTML = '';
+                
+                const allBadges = [
+                    { name: 'alphabet', icon: '✍️', label: 'Alphabet' },
+                    { name: 'numbers', icon: '🔢', label: 'Numbers' },
+                    { name: 'greetings', icon: '👋', label: 'Greetings' },
+                    { name: 'emotions', icon: '😊', label: 'Emotions' },
+                    { name: 'story', icon: '📖', label: 'Story' }
+                ];
+                
+                allBadges.forEach(badge => {
+                    const earned = this.state.badges.includes(badge.name);
+                    const badgeEl = document.createElement('div');
+                    badgeEl.className = `badge ${earned ? '' : 'locked'}`;
+                    badgeEl.innerHTML = `
+                        ${badge.icon}
+                        <div class="badge-name">${badge.label}</div>
+                    `;
+                    badgesContainer.appendChild(badgeEl);
+                });
+                
+                this.speak('Congratulations, Sign Hero! You have completed all levels and mastered Uganda Sign Language basics!');
+            }
+
+            restartGame() {
+                if (confirm('This will reset all your progress. Are you sure?')) {
+                    this.state.reset();
+                    this.showScreen('welcome-screen');
+                    this.speak('Welcome back! Let\'s start a new journey!');
+                }
+            }
+        }
+
+        // Initialize game
+        const game = new SignMasterGame();
+    </script>
+</body>
+</html>
