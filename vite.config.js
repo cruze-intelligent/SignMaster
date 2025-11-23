@@ -27,7 +27,14 @@ export default defineConfig({
   },
   server: {
     port: 3000,
-    open: true
+    open: true,
+    headers: {
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'SAMEORIGIN',
+      'X-XSS-Protection': '1; mode=block',
+      'Referrer-Policy': 'strict-origin-when-cross-origin',
+      'Permissions-Policy': 'geolocation=(), microphone=(), camera=()'
+    }
   },
   plugins: [
     VitePWA({
@@ -45,15 +52,15 @@ export default defineConfig({
         scope: '/SignMaster/',
         icons: [
           {
-            src: '/SignMaster/icon-192.png',
+            src: '/SignMaster/icon-192.svg',
             sizes: '192x192',
-            type: 'image/png',
+            type: 'image/svg+xml',
             purpose: 'any maskable'
           },
           {
-            src: '/SignMaster/icon-512.png',
+            src: '/SignMaster/icon-512.svg',
             sizes: '512x512',
-            type: 'image/png',
+            type: 'image/svg+xml',
             purpose: 'any maskable'
           }
         ]

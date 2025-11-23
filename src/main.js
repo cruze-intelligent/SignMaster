@@ -6,6 +6,7 @@
 
 // Import styles
 import './styles/theme.css';
+import './styles/enhancements.css';
 
 // Import services
 import cacheManager from './services/CacheManager.js';
@@ -126,8 +127,9 @@ class SignMasterApp {
     const navButtons = document.querySelectorAll('[data-nav]');
     navButtons.forEach(btn => {
       btn.addEventListener('click', (e) => {
-        const screen = e.target.dataset.nav;
-        this.navigate(screen);
+        const button = e.target.closest('[data-nav]');
+        const screen = button?.dataset.nav;
+        if (screen) this.navigate(screen);
       });
     });
   }
@@ -147,6 +149,15 @@ class SignMasterApp {
     const targetScreen = document.getElementById(`${screen}-screen`);
     if (targetScreen) {
       targetScreen.style.display = 'block';
+    }
+
+    // Update active nav button
+    document.querySelectorAll('.nav-item').forEach(btn => {
+      btn.classList.remove('active');
+    });
+    const activeNav = document.querySelector(`[data-nav="${screen}"]`);
+    if (activeNav) {
+      activeNav.classList.add('active');
     }
 
     // Load screen content
@@ -204,7 +215,7 @@ class SignMasterApp {
     
     // Render signs
     if (this.signGrid) {
-      this.signGrid.renderSigns(signs, category);
+      await this.signGrid.renderSigns(signs, category);
     }
   }
 
@@ -255,11 +266,11 @@ class SignMasterApp {
     // Certificate download handler
     document.getElementById('download-certificate')?.addEventListener('click', async () => {
       try {
-        const allBadges = await badgeManager.getAllBadges();
+        const earnedBadges = await badgeManager.getEarnedBadges();
         await certificateGenerator.generateCertificate({
           playerName: state.playerName,
           xp: state.xp,
-          badges: allBadges,
+          badges: earnedBadges,
           stats: badgeStats
         });
       } catch (error) {
@@ -272,7 +283,7 @@ class SignMasterApp {
    * Load badges screen
    */
   async loadBadges() {
-    const allBadges = await badgeManager.getAllBadges();
+    const allBadges = await badgeManager.getEarnedBadges();
     const progressive = await badgeManager.getProgressiveReveal();
     
     const container = document.getElementById('badges-content');

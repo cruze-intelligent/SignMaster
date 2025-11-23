@@ -12,6 +12,7 @@ class BadgeManager {
   constructor() {
     this.badges = badgesData.badges;
     this.tiers = badgesData.tiers;
+    this.listeners = new Map();
   }
 
   /**
@@ -109,7 +110,17 @@ class BadgeManager {
     await cacheManager.addBadge(earnedBadge);
     console.log(`🏆 Badge unlocked: ${badge.name} (+${earnedBadge.points} points)`);
     
+    // Emit event for UI updates
+    this.emit('badgeUnlocked', earnedBadge);
+    
     return earnedBadge;
+  }
+
+  /**
+   * Get all badges (earned and unearned)
+   */
+  getAllBadges() {
+    return this.badges;
   }
 
   /**
@@ -264,6 +275,36 @@ class BadgeManager {
       byCategory: categoryCounts,
       completion: Math.round((earned.length / this.badges.length) * 100)
     };
+  }
+
+  /**
+   * Event system for badge unlocks
+   */
+  on(event, callback) {
+    if (!this.listeners.has(event)) {
+      this.listeners.set(event, []);
+    }
+    this.listeners.get(event).push(callback);
+  }
+
+  off(event, callback) {
+    if (!this.listeners.has(event)) return;
+    const callbacks = this.listeners.get(event);
+    const index = callbacks.indexOf(callback);
+    if (index > -1) {
+      callbacks.splice(index, 1);
+    }
+  }
+
+  emit(event, data) {
+    if (!this.listeners.has(event)) return;
+    this.listeners.get(event).forEach(callback => {
+      try {
+        callback(data);
+      } catch (error) {
+        console.error(`Event listener error (${event}):`, error);
+      }
+    });
   }
 }
 

@@ -12,6 +12,7 @@
 import QRCode from 'qrcode';
 import cacheManager from './CacheManager.js';
 import badgeManager from './BadgeManager.js';
+import { sanitizeCertificateData, generateSecureId } from '../utils/security.js';
 
 class CertificateGenerator {
   constructor() {
@@ -37,7 +38,40 @@ class CertificateGenerator {
   /**
    * Generate and download certificate
    */
-  async generateCertificate(playerName, stats) {
+  async generateCertificate(data) {
+    // Handle both old and new parameter formats
+    let playerName, stats;
+    
+    if (typeof data === 'string') {
+      // Old format: (playerName, stats)
+      playerName = data;
+      stats = arguments[1];
+    } else {
+      // New format: ({ playerName, xp, badges, stats })
+      playerName = data.playerName || 'Player';
+      stats = {
+        xp: data.xp || 0,
+        badges: data.badges || [],
+        total: data.stats?.total || 0,
+        points: data.stats?.points || 0,
+        rank: data.stats?.rank || { name: 'Beginner', icon: '🌱' }
+      };
+    }
+    
+    // Sanitize input data
+    const sanitizedData = sanitizeCertificateData({
+      playerName,
+      xp: stats.xp || 0,
+      badges: stats.badges || [],
+      stats: {
+        total: stats.total || 0,
+        points: stats.points || 0,
+        rank: stats.rank || { name: 'Beginner', icon: '🌱' }
+      }
+    });
+    
+    playerName = sanitizedData.playerName;
+    
     const ctx = this.initCanvas();
     
     // Clear canvas
@@ -307,11 +341,8 @@ class CertificateGenerator {
    */
   generateCertificateId(playerName, stats) {
     const timestamp = Date.now();
-    const nameHash = playerName.split('').reduce((a, b) => {
-      a = ((a << 5) - a) + b.charCodeAt(0);
-      return a & a;
-    }, 0);
-    return `SM-${timestamp.toString(36)}-${Math.abs(nameHash).toString(36)}`.toUpperCase();
+    const secureRandom = generateSecureId().substring(0, 8);
+    return `SM-${timestamp.toString(36)}-${secureRandom}`.toUpperCase();
   }
 
   /**

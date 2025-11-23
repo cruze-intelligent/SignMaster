@@ -7,6 +7,7 @@
 
 import cacheManager from './CacheManager.js';
 import badgeManager from './BadgeManager.js';
+import { validatePlayerName, sanitizeXP, sanitizeInput } from '../utils/security.js';
 
 class StateManager {
   constructor() {
@@ -120,7 +121,25 @@ class StateManager {
    */
   async setState(updates) {
     const oldState = { ...this.state };
-    this.state = { ...this.state, ...updates };
+    
+    // Sanitize and validate updates
+    const sanitizedUpdates = { ...updates };
+    
+    if (updates.playerName !== undefined) {
+      const validation = validatePlayerName(updates.playerName);
+      if (!validation.valid) {
+        console.warn('Invalid player name:', validation.error);
+        delete sanitizedUpdates.playerName;
+      } else {
+        sanitizedUpdates.playerName = validation.sanitized;
+      }
+    }
+    
+    if (updates.xp !== undefined) {
+      sanitizedUpdates.xp = sanitizeXP(updates.xp);
+    }
+    
+    this.state = { ...this.state, ...sanitizedUpdates };
     
     await this.saveState();
     this.emit('stateChanged', { oldState, newState: this.state });
@@ -130,6 +149,10 @@ class StateManager {
    * Add XP and check for level up
    */
   async addXP(amount, reason = 'game') {
+    // Sanitize XP amount
+    amount = sanitizeXP(amount);
+    if (amount <= 0) return;
+    
     const oldXP = this.state.xp;
     const oldLevel = this.state.level;
     

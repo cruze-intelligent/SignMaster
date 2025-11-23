@@ -134,8 +134,8 @@ export class SignGrid {
   /**
    * Render sign cards in grid
    */
-  renderSigns(signs, category) {
-    this.clear();
+  async renderSigns(signs, category) {
+    await this.clear();
     
     signs.forEach((sign, index) => {
       const card = new SignCard(sign, category);

@@ -49,38 +49,36 @@ npm run preview
 
 The hybrid asset mapping system uses Tesseract.js OCR with manual verification:
 
-### Step 1: Run OCR Tool
+### Quick Start: 3-Step Process
 
+**Total time: ~30-50 minutes**
+
+#### Step 1: Generate CSV with OCR (15-20 min)
 ```powershell
 npm run map-assets
 ```
+✅ Processes 1,020 images and creates `tools/asset-review.csv`
 
-This processes all 1,020 images in `assets/all_extracted_signs/` and generates `tools/asset-review.csv`. Processing takes **15-20 minutes**.
+#### Step 2: Manual Review (10-30 min)
+1. Open `tools/asset-review.csv` in Excel/Google Sheets
+2. Review rows with confidence < 70%
+3. Correct `manualLabel` column where needed
+4. Mark as `verified = yes`
+5. Save file
 
-### Step 2: Manual Review
-
-Open `tools/asset-review.csv` in Excel/Sheets and review:
-
-- **ocrText** - AI-extracted text (confidence score shown)
-- **confidence** - OCR confidence percentage (review if <70%)
-- **suggestedLabel** - Recommended label for the sign
-- **manualLabel** - ✏️ **Fill this in** for low-confidence items
-- **verified** - Set to `yes` after manual review
-- **notes** - Optional comments
-
-Focus on rows where `confidence < 70` or `suggestedLabel` seems incorrect.
-
-### Step 3: Generate Production Manifest
-
+#### Step 3: Generate Manifest (2 min)
 ```powershell
 node tools/generate-manifest.js
 ```
+✅ Creates `src/data/signs-manifest.json` for production
 
-Creates `src/data/signs-manifest.json` with:
-- Category grouping
-- Sign metadata (id, label, filename, page, sequence, difficulty)
-- Verification status
-- Statistics on verified vs unverified signs
+**For detailed instructions, see [ASSET_MAPPING_GUIDE.md](./ASSET_MAPPING_GUIDE.md)**
+
+### What Each Tool Does
+
+- **asset-mapper.js** - Runs Tesseract.js OCR on sign images
+- **generate-manifest.js** - Converts reviewed CSV to JSON manifest
+- **generate-icons.html** - (Optional) Create icons from SVG template
 
 ## 🏗️ Tech Stack
 

@@ -13,8 +13,7 @@ import cacheManager from './CacheManager.js';
 
 class AssetLoader {
   constructor() {
-    this.loadQueue = [];
-    this.loading = new Set();
+    this.loadingPromises = new Map(); // Store active loading promises
     this.loaded = new Map();
     this.observers = new Map();
     this.supportsWebP = null;
@@ -53,54 +52,49 @@ class AssetLoader {
       return this.loaded.get(filename);
     }
 
-    // Check if loading
-    if (this.loading.has(filename)) {
-      return new Promise((resolve) => {
-        const checkInterval = setInterval(() => {
-          if (this.loaded.has(filename)) {
-            clearInterval(checkInterval);
-            resolve(this.loaded.get(filename));
-          }
-        }, 50);
-      });
+    // Check if already loading
+    if (this.loadingPromises.has(filename)) {
+      return this.loadingPromises.get(filename);
     }
 
-    this.loading.add(filename);
+    // Create new loading promise
+    const loadPromise = (async () => {
+      try {
+        // Try cache first
+        const cached = await cacheManager.getSignImage(filename);
+        if (cached) {
+          const url = URL.createObjectURL(cached);
+          this.loaded.set(filename, url);
+          return url;
+        }
 
-    try {
-      // Try cache first
-      const cached = await cacheManager.getSignImage(filename);
-      if (cached) {
-        const url = URL.createObjectURL(cached);
+        // Fetch from network
+        const path = `${import.meta.env.BASE_URL}assets/all_extracted_signs/${filename}`;
+        const response = await fetch(path);
+        
+        if (!response.ok) {
+          throw new Error(`Failed to load ${filename}`);
+        }
+
+        const blob = await response.blob();
+        
+        // Cache the image
+        await cacheManager.cacheSignImage(filename, blob, { category });
+
+        const url = URL.createObjectURL(blob);
         this.loaded.set(filename, url);
-        this.loading.delete(filename);
         return url;
+
+      } catch (error) {
+        console.error(`Error loading ${filename}:`, error);
+        throw error;
+      } finally {
+        this.loadingPromises.delete(filename);
       }
+    })();
 
-      // Fetch from network
-      const path = `${import.meta.env.BASE_URL}assets/all_extracted_signs/${filename}`;
-      const response = await fetch(path);
-      
-      if (!response.ok) {
-        throw new Error(`Failed to load ${filename}`);
-      }
-
-      const blob = await response.blob();
-      
-      // Cache the image
-      await cacheManager.cacheSignImage(filename, blob, { category });
-
-      const url = URL.createObjectURL(blob);
-      this.loaded.set(filename, url);
-      this.loading.delete(filename);
-
-      return url;
-
-    } catch (error) {
-      console.error(`Error loading ${filename}:`, error);
-      this.loading.delete(filename);
-      throw error;
-    }
+    this.loadingPromises.set(filename, loadPromise);
+    return loadPromise;
   }
 
   /**
