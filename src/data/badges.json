@@ -1,0 +1,313 @@
+{
+  "version": "1.0.0",
+  "tiers": {
+    "bronze": { "name": "Bronze", "color": "#CD7F32", "points": 5 },
+    "silver": { "name": "Silver", "color": "#C0C0C0", "points": 10 },
+    "gold": { "name": "Gold", "color": "#FFD700", "points": 25 },
+    "platinum": { "name": "Platinum", "color": "#E5E4E2", "points": 50 },
+    "diamond": { "name": "Diamond", "color": "#B9F2FF", "points": 100 }
+  },
+  "badges": [
+    {
+      "id": "first_sign",
+      "name": "First Steps",
+      "description": "Learn your first sign",
+      "icon": "🌱",
+      "tier": "bronze",
+      "category": "learning",
+      "unlockLevel": 1,
+      "condition": { "type": "signsLearned", "value": 1 }
+    },
+    {
+      "id": "five_signs",
+      "name": "Quick Learner",
+      "description": "Learn 5 signs",
+      "icon": "📚",
+      "tier": "bronze",
+      "category": "learning",
+      "unlockLevel": 1,
+      "condition": { "type": "signsLearned", "value": 5 }
+    },
+    {
+      "id": "ten_signs",
+      "name": "Sign Student",
+      "description": "Learn 10 signs",
+      "icon": "🎓",
+      "tier": "silver",
+      "category": "learning",
+      "unlockLevel": 1,
+      "condition": { "type": "signsLearned", "value": 10 }
+    },
+    {
+      "id": "twenty_signs",
+      "name": "Sign Enthusiast",
+      "description": "Learn 20 signs",
+      "icon": "⭐",
+      "tier": "silver",
+      "category": "learning",
+      "unlockLevel": 2,
+      "condition": { "type": "signsLearned", "value": 20 }
+    },
+    {
+      "id": "fifty_signs",
+      "name": "Sign Scholar",
+      "description": "Learn 50 signs",
+      "icon": "🌟",
+      "tier": "gold",
+      "category": "learning",
+      "unlockLevel": 3,
+      "condition": { "type": "signsLearned", "value": 50 }
+    },
+    {
+      "id": "hundred_signs",
+      "name": "Sign Master",
+      "description": "Learn 100 signs",
+      "icon": "💎",
+      "tier": "platinum",
+      "category": "learning",
+      "unlockLevel": 5,
+      "condition": { "type": "signsLearned", "value": 100 }
+    },
+    {
+      "id": "alphabet_master",
+      "name": "Alphabet Master",
+      "description": "Complete the Alphabet category",
+      "icon": "✍️",
+      "tier": "gold",
+      "category": "mastery",
+      "unlockLevel": 1,
+      "condition": { "type": "categoryComplete", "value": "alphabet" }
+    },
+    {
+      "id": "number_master",
+      "name": "Number Master",
+      "description": "Complete the Numbers category",
+      "icon": "🔢",
+      "tier": "gold",
+      "category": "mastery",
+      "unlockLevel": 2,
+      "condition": { "type": "categoryComplete", "value": "numbers" }
+    },
+    {
+      "id": "greeting_master",
+      "name": "Greeting Master",
+      "description": "Complete the Greetings category",
+      "icon": "👋",
+      "tier": "gold",
+      "category": "mastery",
+      "unlockLevel": 3,
+      "condition": { "type": "categoryComplete", "value": "greetings" }
+    },
+    {
+      "id": "emotion_master",
+      "name": "Emotion Master",
+      "description": "Complete the Emotions category",
+      "icon": "😊",
+      "tier": "gold",
+      "category": "mastery",
+      "unlockLevel": 4,
+      "condition": { "type": "categoryComplete", "value": "emotions" }
+    },
+    {
+      "id": "story_hero",
+      "name": "Story Hero",
+      "description": "Complete all Story Missions",
+      "icon": "📖",
+      "tier": "platinum",
+      "category": "mastery",
+      "unlockLevel": 5,
+      "condition": { "type": "categoryComplete", "value": "story" }
+    },
+    {
+      "id": "perfect_match",
+      "name": "Perfect Match",
+      "description": "Score 100% in a Match Game",
+      "icon": "🎯",
+      "tier": "silver",
+      "category": "mastery",
+      "unlockLevel": 2,
+      "condition": { "type": "perfectScore", "value": 100 }
+    },
+    {
+      "id": "speed_demon",
+      "name": "Speed Demon",
+      "description": "Complete a Match Game in under 30 seconds",
+      "icon": "⚡",
+      "tier": "gold",
+      "category": "speed",
+      "unlockLevel": 2,
+      "condition": { "type": "matchTime", "value": 30 }
+    },
+    {
+      "id": "lightning_fast",
+      "name": "Lightning Fast",
+      "description": "Complete a Match Game in under 20 seconds",
+      "icon": "⚡⚡",
+      "tier": "platinum",
+      "category": "speed",
+      "unlockLevel": 3,
+      "condition": { "type": "matchTime", "value": 20 }
+    },
+    {
+      "id": "five_streak",
+      "name": "On a Roll",
+      "description": "Get 5 correct answers in a row",
+      "icon": "🔥",
+      "tier": "bronze",
+      "category": "consistency",
+      "unlockLevel": 2,
+      "condition": { "type": "streak", "value": 5 }
+    },
+    {
+      "id": "ten_streak",
+      "name": "Unstoppable",
+      "description": "Get 10 correct answers in a row",
+      "icon": "🔥🔥",
+      "tier": "silver",
+      "category": "consistency",
+      "unlockLevel": 3,
+      "condition": { "type": "streak", "value": 10 }
+    },
+    {
+      "id": "twenty_streak",
+      "name": "Legendary Streak",
+      "description": "Get 20 correct answers in a row",
+      "icon": "🔥🔥🔥",
+      "tier": "platinum",
+      "category": "consistency",
+      "unlockLevel": 4,
+      "condition": { "type": "streak", "value": 20 }
+    },
+    {
+      "id": "hundred_xp",
+      "name": "XP Collector",
+      "description": "Earn 100 XP",
+      "icon": "💫",
+      "tier": "bronze",
+      "category": "achievement",
+      "unlockLevel": 1,
+      "condition": { "type": "totalXP", "value": 100 }
+    },
+    {
+      "id": "five_hundred_xp",
+      "name": "XP Hunter",
+      "description": "Earn 500 XP",
+      "icon": "✨",
+      "tier": "silver",
+      "category": "achievement",
+      "unlockLevel": 3,
+      "condition": { "type": "totalXP", "value": 500 }
+    },
+    {
+      "id": "thousand_xp",
+      "name": "XP Champion",
+      "description": "Earn 1000 XP",
+      "icon": "🌠",
+      "tier": "gold",
+      "category": "achievement",
+      "unlockLevel": 5,
+      "condition": { "type": "totalXP", "value": 1000 }
+    },
+    {
+      "id": "five_thousand_xp",
+      "name": "XP Legend",
+      "description": "Earn 5000 XP",
+      "icon": "💥",
+      "tier": "diamond",
+      "category": "achievement",
+      "unlockLevel": 6,
+      "condition": { "type": "totalXP", "value": 5000 }
+    },
+    {
+      "id": "daily_return",
+      "name": "Dedicated Learner",
+      "description": "Play for 3 days in a row",
+      "icon": "📅",
+      "tier": "silver",
+      "category": "consistency",
+      "unlockLevel": 1,
+      "condition": { "type": "dailyStreak", "value": 3 }
+    },
+    {
+      "id": "weekly_warrior",
+      "name": "Weekly Warrior",
+      "description": "Play for 7 days in a row",
+      "icon": "📆",
+      "tier": "gold",
+      "category": "consistency",
+      "unlockLevel": 1,
+      "condition": { "type": "dailyStreak", "value": 7 }
+    },
+    {
+      "id": "early_bird",
+      "name": "Early Bird",
+      "description": "Play before 9 AM",
+      "icon": "🌅",
+      "tier": "bronze",
+      "category": "special",
+      "unlockLevel": 1,
+      "condition": { "type": "timeOfDay", "value": "morning" }
+    },
+    {
+      "id": "night_owl",
+      "name": "Night Owl",
+      "description": "Play after 10 PM",
+      "icon": "🦉",
+      "tier": "bronze",
+      "category": "special",
+      "unlockLevel": 1,
+      "condition": { "type": "timeOfDay", "value": "night" }
+    },
+    {
+      "id": "helper_hero",
+      "name": "Helper Hero",
+      "description": "Help others learn by sharing",
+      "icon": "🤝",
+      "tier": "silver",
+      "category": "special",
+      "unlockLevel": 3,
+      "condition": { "type": "shareCount", "value": 1 }
+    },
+    {
+      "id": "perfectionist",
+      "name": "Perfectionist",
+      "description": "Complete 5 levels with 100% accuracy",
+      "icon": "💯",
+      "tier": "platinum",
+      "category": "mastery",
+      "unlockLevel": 5,
+      "condition": { "type": "perfectLevels", "value": 5 }
+    },
+    {
+      "id": "grand_master",
+      "name": "Grand Master",
+      "description": "Complete all categories and reach level 6",
+      "icon": "👑",
+      "tier": "diamond",
+      "category": "mastery",
+      "unlockLevel": 6,
+      "condition": { "type": "allComplete", "value": true }
+    },
+    {
+      "id": "secret_explorer",
+      "name": "Secret Explorer",
+      "description": "Find the hidden easter egg",
+      "icon": "🥚",
+      "tier": "gold",
+      "category": "special",
+      "unlockLevel": 1,
+      "condition": { "type": "secret", "value": "easter_egg" },
+      "hidden": true
+    },
+    {
+      "id": "voice_master",
+      "name": "Voice Master",
+      "description": "Use voice narration for 50 signs",
+      "icon": "🔊",
+      "tier": "silver",
+      "category": "special",
+      "unlockLevel": 2,
+      "condition": { "type": "voiceUsage", "value": 50 }
+    }
+  ]
+}

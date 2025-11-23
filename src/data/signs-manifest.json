@@ -1,0 +1,44 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2025-11-22T00:00:00.000Z",
+  "categories": {
+    "alphabet": {
+      "name": "Alphabet",
+      "signs": [
+        {
+          "id": "alphabet_a",
+          "label": "A",
+          "filename": "p2_1.png",
+          "page": 2,
+          "sequence": 1,
+          "path": "assets/all_extracted_signs/p2_1.png",
+          "verified": false,
+          "description": "Letter A",
+          "difficulty": "beginner"
+        }
+      ]
+    },
+    "numbers": {
+      "name": "Numbers",
+      "signs": [
+        {
+          "id": "numbers_1",
+          "label": "1",
+          "filename": "p8_1.png",
+          "page": 8,
+          "sequence": 1,
+          "path": "assets/all_extracted_signs/p8_1.png",
+          "verified": false,
+          "description": "Number 1",
+          "difficulty": "beginner"
+        }
+      ]
+    }
+  },
+  "statistics": {
+    "totalSigns": 2,
+    "verifiedSigns": 0,
+    "categoriesCount": 2
+  },
+  "note": "This is a placeholder manifest. Run 'npm run map-assets' and 'node tools/generate-manifest.js' to generate the full manifest with all 1,020 signs."
+}

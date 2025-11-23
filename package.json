@@ -1,0 +1,41 @@
+{
+  "name": "signmaster-usl",
+  "version": "1.0.0",
+  "description": "Interactive educational game for learning Uganda Sign Language with gamification, badges, and certification",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "map-assets": "node tools/asset-mapper.js",
+    "deploy": "npm run build && gh-pages -d dist"
+  },
+  "keywords": [
+    "sign-language",
+    "education",
+    "gamification",
+    "uganda",
+    "accessibility",
+    "pwa"
+  ],
+  "author": "Cruze Tech (cruze-tech.com)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cruze-tech/SignMaster"
+  },
+  "homepage": "https://games.cruze-tech.com/signmaster",
+  "dependencies": {
+    "gsap": "^3.12.5",
+    "howler": "^2.2.4",
+    "idb": "^8.0.0",
+    "qrcode": "^1.5.3"
+  },
+  "devDependencies": {
+    "vite": "^5.4.11",
+    "vite-plugin-pwa": "^0.20.5",
+    "tesseract.js": "^5.1.1",
+    "gh-pages": "^6.1.1",
+    "csv-writer": "^1.6.0"
+  }
+}

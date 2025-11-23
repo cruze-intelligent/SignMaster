@@ -1,0 +1,16 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Red background (Uganda flag color) -->
+  <rect width="512" height="512" fill="#D90000" rx="85"/>
+  
+  <!-- Yellow circle background -->
+  <circle cx="256" cy="256" r="160" fill="#FCDC04"/>
+  
+  <!-- Hand sign emoji representation -->
+  <text x="256" y="330" font-size="200" text-anchor="middle" fill="#000000">🤟</text>
+  
+  <!-- SignMaster text -->
+  <text x="256" y="450" font-size="42" font-weight="bold" text-anchor="middle" fill="#FFFFFF">SignMaster</text>
+  
+  <!-- Subtitle -->
+  <text x="256" y="485" font-size="24" text-anchor="middle" fill="#FCDC04">Learn USL</text>
+</svg>
