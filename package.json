@@ -26,6 +26,7 @@
   },
   "homepage": "https://games.cruze-tech.com/signmaster",
   "dependencies": {
+    "csv-parse": "^6.1.0",
     "gsap": "^3.12.5",
     "howler": "^2.2.4",
     "idb": "^8.0.0",

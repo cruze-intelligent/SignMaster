@@ -203,9 +203,10 @@ async function processAssets() {
   console.log('\n✨ Asset mapping complete!\n');
 }
 
-// Run if called directly
-if (import.meta.url === `file://${process.argv[1]}`) {
-  processAssets().catch(console.error);
-}
+// Auto-run when called directly
+processAssets().catch(err => {
+  console.error('❌ Error:', err);
+  process.exit(1);
+});
 
 export { processAssets, getCategoryFromPage, parseFilename };

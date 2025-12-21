@@ -15,7 +15,7 @@ import { parse } from 'csv-parse/sync';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const INPUT_CSV = path.join(__dirname, 'asset-review.csv');
+const INPUT_CSV = path.join(__dirname, 'asset-review-clean.csv');
 const OUTPUT_JSON = path.join(__dirname, '../src/data/signs-manifest.json');
 
 async function generateManifest() {
@@ -31,7 +31,9 @@ async function generateManifest() {
   const csvContent = fs.readFileSync(INPUT_CSV, 'utf-8');
   const records = parse(csvContent, {
     columns: true,
-    skip_empty_lines: true
+    skip_empty_lines: true,
+    relax_quotes: true,
+    relax_column_count: true
   });
   
   console.log(`✅ Loaded ${records.length} records\n`);
@@ -47,9 +49,19 @@ async function generateManifest() {
   let unverified = 0;
   
   records.forEach(record => {
-    const category = record['Category'] || record.category;
-    const label = record['Manual Label'] || record.manualLabel || record['Suggested Label'] || record.suggestedLabel;
+    const filename = record['Filename'] || record.filename;
+    const category = record['Category'] || record.category || 'uncategorized';
+    const label = record['Manual Label'] || record.manualLabel || record['Suggested Label'] || record.suggestedLabel || 'unknown';
     const isVerified = (record['Verified (yes/no)'] || record.verified || '').toLowerCase() === 'yes';
+    
+    // Skip if essential fields are missing
+    if (!filename || !category || !label || label === 'unknown') {
+      // Only warn if we have at least one valid field (to avoid spamming for completely empty rows)
+      if (filename || category || label) {
+        console.warn(`⚠️  Skipping invalid record: ${filename || 'unknown'} (missing: ${!filename ? 'filename ' : ''}${!category ? 'category ' : ''}${!label || label === 'unknown' ? 'label' : ''})`);
+      }
+      return;
+    }
     
     if (isVerified) verified++;
     else unverified++;
@@ -64,10 +76,10 @@ async function generateManifest() {
     const sign = {
       id: label.toLowerCase().replace(/\s+/g, '_'),
       label: label,
-      filename: record['Filename'] || record.filename,
+      filename: filename,
       page: parseInt(record['Page'] || record.page),
       sequence: parseInt(record['Sequence'] || record.sequence),
-      path: `/SignMaster/assets/all_extracted_signs/${record['Filename'] || record.filename}`,
+      path: `/SignMaster/assets/all_extracted_signs/${filename}`,
       verified: isVerified,
       description: `The sign for ${label}`,
       difficulty: category === 'alphabet' ? 'beginner' : category === 'numbers' ? 'beginner' : 'intermediate'
