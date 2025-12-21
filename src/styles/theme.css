@@ -72,15 +72,6 @@
   --z-toast: 3000;
 }
 
-/* High Contrast Mode */
-.high-contrast {
-  --color-background: #000000;
-  --color-surface: #1A1A1A;
-  --color-text: #FFFFFF;
-  --color-text-secondary: #CCCCCC;
-  --color-border: #444444;
-}
-
 /* Base Styles */
 * {
   box-sizing: border-box;

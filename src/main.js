@@ -15,6 +15,7 @@ import badgeManager from './services/BadgeManager.js';
 import manifestLoader from './services/ManifestLoader.js';
 import assetLoader from './services/AssetLoader.js';
 import certificateGenerator from './services/CertificateGenerator.js';
+import searchEngine from './services/SearchEngine.js';
 
 // Import components
 import { SignGrid } from './components/SignCard.js';
@@ -27,6 +28,7 @@ class SignMasterApp {
   constructor() {
     this.initialized = false;
     this.signGrid = null;
+    this.currentCategory = null;
   }
 
   /**
@@ -48,6 +50,10 @@ class SignMasterApp {
         assetLoader.init(),
         manifestLoader.loadManifest()
       ]);
+
+      // Initialize search engine with manifest
+      const manifest = manifestLoader.getManifest();
+      await searchEngine.init(manifest);
 
       // Update daily streak
       await stateManager.updateDailyStreak();
@@ -162,8 +168,17 @@ class SignMasterApp {
 
     // Load screen content
     switch(screen) {
+      case 'welcome':
+        // No special loading needed
+        break;
       case 'categories':
         this.loadCategories();
+        break;
+      case 'search':
+        this.loadSearch();
+        break;
+      case 'quiz':
+        this.loadQuiz();
         break;
       case 'progress':
         this.loadProgress();
@@ -207,16 +222,171 @@ class SignMasterApp {
   async startCategory(category) {
     console.log(`Starting category: ${category}`);
     
+    this.currentCategory = category;
+    
     // Load signs for category
     const signs = await manifestLoader.getCategorySigns(category);
     
     // Navigate to game screen
-    this.navigate('game');
+    document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+    document.getElementById('game-screen').style.display = 'block';
+    
+    // Update category title
+    const titleEl = document.getElementById('category-title');
+    if (titleEl) {
+      titleEl.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+    }
+    
+    // Setup back button
+    const backBtn = document.getElementById('back-to-categories');
+    if (backBtn) {
+      backBtn.onclick = () => this.navigate('categories');
+    }
     
     // Render signs
     if (this.signGrid) {
       await this.signGrid.renderSigns(signs, category);
     }
+  }
+
+  /**
+   * Load search screen
+   */
+  loadSearch() {
+    const searchInput = document.getElementById('search-input');
+    const searchBtn = document.getElementById('search-btn');
+    const suggestionsEl = document.getElementById('search-suggestions');
+    const resultsEl = document.getElementById('search-results');
+
+    if (!searchInput || !searchBtn) return;
+
+    // Show popular suggestions initially
+    this.showSearchSuggestions([]);
+
+    // Search button handler
+    searchBtn.onclick = () => this.performSearch(searchInput.value);
+
+    // Enter key handler
+    searchInput.onkeyup = (e) => {
+      if (e.key === 'Enter') {
+        this.performSearch(searchInput.value);
+      } else {
+        // Show suggestions as user types
+        const query = searchInput.value.trim();
+        if (query.length > 0) {
+          const suggestions = searchEngine.getSuggestions(query, 8);
+          this.showSearchSuggestions(suggestions);
+        } else {
+          this.showSearchSuggestions([]);
+        }
+      }
+    };
+
+    // Clear results when navigating to search
+    resultsEl.innerHTML = `
+      <div class="search-empty">
+        <div class="search-empty-icon">🔍</div>
+        <h3>Search for Signs</h3>
+        <p>Enter a word, letter, number, or phrase to find its sign language translation</p>
+      </div>
+    `;
+  }
+
+  /**
+   * Show search suggestions
+   */
+  showSearchSuggestions(suggestions) {
+    const suggestionsEl = document.getElementById('search-suggestions');
+    if (!suggestionsEl) return;
+
+    if (suggestions.length === 0) {
+      // Show popular terms
+      const popular = searchEngine.getPopularTerms(12);
+      suggestionsEl.innerHTML = `
+        <h4>Popular Searches</h4>
+        <div class="suggestion-chips">
+          ${popular.map(term => `
+            <button class="suggestion-chip" data-term="${term}">
+              ${term}
+            </button>
+          `).join('')}
+        </div>
+      `;
+      suggestionsEl.classList.add('visible');
+    } else {
+      suggestionsEl.innerHTML = `
+        <h4>Suggestions</h4>
+        <div class="suggestion-chips">
+          ${suggestions.map(term => `
+            <button class="suggestion-chip" data-term="${term}">
+              ${term}
+            </button>
+          `).join('')}
+        </div>
+      `;
+      suggestionsEl.classList.add('visible');
+    }
+
+    // Add click handlers to suggestion chips
+    suggestionsEl.querySelectorAll('.suggestion-chip').forEach(chip => {
+      chip.onclick = () => {
+        const term = chip.dataset.term;
+        document.getElementById('search-input').value = term;
+        this.performSearch(term);
+      };
+    });
+  }
+
+  /**
+   * Perform search
+   */
+  async performSearch(query) {
+    const resultsEl = document.getElementById('search-results');
+    if (!resultsEl || !query) return;
+
+    const results = searchEngine.search(query);
+
+    if (results.length === 0) {
+      resultsEl.innerHTML = `
+        <div class="search-empty">
+          <div class="search-empty-icon">😔</div>
+          <h3>No Results Found</h3>
+          <p>No signs match "${query}". Try different words or browse categories.</p>
+          <button class="btn-primary" data-nav="categories">Browse Categories</button>
+        </div>
+      `;
+      
+      // Add navigation handler
+      const browseBtn = resultsEl.querySelector('[data-nav]');
+      if (browseBtn) {
+        browseBtn.onclick = () => this.navigate('categories');
+      }
+    } else {
+      resultsEl.innerHTML = `
+        <div class="search-results-header">
+          <h3>Found ${results.length} sign${results.length > 1 ? 's' : ''} for "${query}"</h3>
+        </div>
+        <div class="search-results-grid" id="search-results-grid"></div>
+      `;
+
+      // Render signs using SignGrid
+      const gridEl = document.getElementById('search-results-grid');
+      if (gridEl && this.signGrid) {
+        // Temporarily replace grid container
+        const originalContainer = this.signGrid.container;
+        this.signGrid.container = gridEl;
+        await this.signGrid.renderSigns(results, 'search-results');
+        this.signGrid.container = originalContainer;
+      }
+    }
+  }
+
+  /**
+   * Load quiz screen
+   */
+  loadQuiz() {
+    // Quiz mode is placeholder for now
+    console.log('Quiz mode - Coming soon!');
   }
 
   /**

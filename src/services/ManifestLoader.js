@@ -47,6 +47,13 @@ class ManifestLoader {
   }
 
   /**
+   * Get the raw manifest object
+   */
+  getManifest() {
+    return this.manifest;
+  }
+
+  /**
    * Get signs for a specific category
    */
   async getCategorySigns(category) {

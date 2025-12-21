@@ -72,27 +72,102 @@
         <div id="welcome-screen" class="screen">
           <div class="welcome-content">
             <h2>Welcome to SignMaster!</h2>
-            <p>Learn Uganda Sign Language through interactive games</p>
-            <div class="welcome-actions">
-              <button class="btn-primary" data-nav="categories">
-                🎮 Start Learning
-              </button>
-              <button class="btn-secondary" data-nav="progress">
-                📊 My Progress
-              </button>
+            <p class="welcome-subtitle">Learn Uganda Sign Language in 3 fun ways</p>
+            
+            <div class="learning-modes">
+              <!-- Category Learning -->
+              <div class="mode-card" data-nav="categories">
+                <div class="mode-icon">📚</div>
+                <h3>Learn by Category</h3>
+                <p>Browse signs organized by topics like Numbers, Food, Actions, and more</p>
+                <button class="btn-mode">Start Learning →</button>
+              </div>
+
+              <!-- Search Learning -->
+              <div class="mode-card" data-nav="search">
+                <div class="mode-icon">🔍</div>
+                <h3>Search & Translate</h3>
+                <p>Enter any word, phrase, or letter to see its sign language translation</p>
+                <button class="btn-mode">Search Signs →</button>
+              </div>
+
+              <!-- Quiz/Story Mode -->
+              <div class="mode-card" data-nav="quiz">
+                <div class="mode-icon">🎮</div>
+                <h3>Interactive Stories</h3>
+                <p>Practice through engaging quizzes and storyline dialogues</p>
+                <button class="btn-mode">Start Quiz →</button>
+              </div>
+            </div>
+
+            <div class="quick-stats">
+              <button class="stats-link" data-nav="progress">📊 View My Progress</button>
             </div>
           </div>
         </div>
 
         <!-- Categories Screen -->
         <div id="categories-screen" class="screen" style="display: none;">
-          <h2>Choose a Category</h2>
+          <div class="screen-header">
+            <button class="btn-back" data-nav="welcome">← Back</button>
+            <h2>Choose a Category</h2>
+          </div>
           <div id="categories-list" class="categories-grid"></div>
         </div>
 
-        <!-- Game Screen -->
+        <!-- Category Signs Screen -->
         <div id="game-screen" class="screen" style="display: none;">
+          <div class="screen-header">
+            <button class="btn-back" id="back-to-categories">← Categories</button>
+            <h2 id="category-title">Signs</h2>
+          </div>
           <div id="sign-grid" class="grid grid-3"></div>
+        </div>
+
+        <!-- Search Screen -->
+        <div id="search-screen" class="screen" style="display: none;">
+          <div class="screen-header">
+            <button class="btn-back" data-nav="welcome">← Back</button>
+            <h2>Search Signs</h2>
+          </div>
+          <div class="search-container">
+            <div class="search-box">
+              <input 
+                type="text" 
+                id="search-input" 
+                placeholder="Type a word, letter, number, or phrase..."
+                autocomplete="off"
+              />
+              <button id="search-btn" class="btn-search">🔍 Search</button>
+            </div>
+            <div id="search-suggestions" class="search-suggestions"></div>
+            <div id="search-results" class="search-results"></div>
+          </div>
+        </div>
+
+        <!-- Quiz/Story Screen -->
+        <div id="quiz-screen" class="screen" style="display: none;">
+          <div class="screen-header">
+            <button class="btn-back" data-nav="welcome">← Back</button>
+            <h2>Interactive Learning</h2>
+          </div>
+          <div id="quiz-content" class="quiz-container">
+            <div class="quiz-placeholder">
+              <div class="placeholder-icon">🎮</div>
+              <h3>Coming Soon!</h3>
+              <p>Interactive stories and quizzes are being crafted for an immersive learning experience.</p>
+              <div class="quiz-preview">
+                <h4>What to Expect:</h4>
+                <ul>
+                  <li>📖 Story-based learning scenarios</li>
+                  <li>🎯 Multiple choice quizzes</li>
+                  <li>💬 Dialogue practice sessions</li>
+                  <li>🏆 Achievement milestones</li>
+                </ul>
+              </div>
+              <button class="btn-primary" data-nav="categories">Try Category Learning Instead</button>
+            </div>
+          </div>
         </div>
 
         <!-- Progress Screen -->
@@ -114,13 +189,17 @@
 
     <!-- Navigation -->
     <nav class="app-nav">
-      <button class="nav-item" data-nav="categories">
-        <span class="nav-icon">🎮</span>
-        <span class="nav-label">Learn</span>
+      <button class="nav-item" data-nav="welcome">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">Home</span>
       </button>
-      <button class="nav-item" data-nav="badges">
-        <span class="nav-icon">🏆</span>
-        <span class="nav-label">Badges</span>
+      <button class="nav-item" data-nav="categories">
+        <span class="nav-icon">📚</span>
+        <span class="nav-label">Categories</span>
+      </button>
+      <button class="nav-item" data-nav="search">
+        <span class="nav-icon">🔍</span>
+        <span class="nav-label">Search</span>
       </button>
       <button class="nav-item" data-nav="progress">
         <span class="nav-icon">📊</span>
