@@ -10,6 +10,154 @@ class TranslationService {
     this.translations = new Map();
     this.listeners = [];
     
+    // Acholi to English dictionary for search
+    // These map Acholi words to English words that match sign labels
+    this.acholiToEnglish = {
+      // Food
+      'cak': 'milk',
+      'bel': 'millet',
+      'kal': 'sorghum',
+      'kwon': 'bread',
+      'ringo': 'meat',
+      'rec': 'fish',
+      'tong': 'egg',
+      'nyig': 'beans',
+      'lapena': 'banana',
+      'cam': 'food',
+      'kado': 'groundnuts',
+      'yen': 'vegetables',
+      'olwedo': 'cassava',
+      'boo': 'pumpkin',
+      'pii': 'water',
+      'kong': 'beer',
+      'cai': 'tea',
+      'kawa': 'coffee',
+      'mucele': 'rice',
+      'layata': 'sweet potato',
+      'odii': 'simsim',
+      
+      // Numbers
+      'acel': 'one',
+      'aryo': 'two',
+      'adek': 'three',
+      'angwen': 'four',
+      'abic': 'five',
+      'abicel': 'six',
+      'abiro': 'seven',
+      'aboro': 'eight',
+      'abongwen': 'nine',
+      'apar': 'ten',
+      'pyeracel': 'eleven',
+      'pyeraryo': 'twelve',
+      'pyeradek': 'thirteen',
+      'pyerangwen': 'fourteen',
+      'pyerabic': 'fifteen',
+      'pyerabicel': 'sixteen',
+      'pyerabiro': 'seventeen',
+      'pyeraboro': 'eighteen',
+      'pyerabongwen': 'nineteen',
+      'pyeraryo': 'twenty',
+      'pyeradek': 'thirty',
+      'pyerangwen': 'forty',
+      'pyerabic': 'fifty',
+      'miya': 'hundred',
+      'alip': 'thousand',
+      
+      // Family
+      'mama': 'mother',
+      'baba': 'father',
+      'wod': 'son',
+      'nya': 'daughter',
+      'omin': 'brother',
+      'lamin': 'sister',
+      'kwaro': 'grandfather',
+      'dayo': 'grandmother',
+      'coo': 'man',
+      'dako': 'woman',
+      'latin': 'child',
+      'lutino': 'children',
+      'wat': 'relative',
+      'cwiny': 'husband',
+      'dakone': 'wife',
+      
+      // Greetings
+      'apwoyo': 'thank you',
+      'atye maber': 'fine',
+      'itye nining': 'how are you',
+      'ber': 'good',
+      'marac': 'bad',
+      
+      // Colors
+      'tar': 'white',
+      'col': 'black',
+      'makwar': 'red',
+      'matut': 'green',
+      'ma raburabura': 'yellow',
+      'bulu': 'blue',
+      
+      // Animals
+      'dyel': 'goat',
+      'romo': 'sheep',
+      'dyagi': 'cattle',
+      'gweno': 'chicken',
+      'gwok': 'dog',
+      'paka': 'cat',
+      'lyec': 'elephant',
+      'labwor': 'lion',
+      'abuya': 'monkey',
+      'twon': 'bull',
+      
+      // Body parts
+      'wi': 'head',
+      'wang': 'eye',
+      'it': 'ear',
+      'um': 'nose',
+      'dogi': 'mouth',
+      'cin': 'hand',
+      'tyeni': 'leg',
+      'ic': 'stomach',
+      'cogo': 'bone',
+      'rem': 'blood',
+      
+      // Actions
+      'camo': 'eat',
+      'mato': 'drink',
+      'nino': 'sleep',
+      'woto': 'walk',
+      'ringo': 'run',
+      'pwonyo': 'teach',
+      'kwano': 'read',
+      'cono': 'write',
+      'miyo': 'give',
+      'gamo': 'receive',
+      'neno': 'see',
+      'winyo': 'hear',
+      
+      // Places
+      'gang': 'home',
+      'cuk': 'school',
+      'ot': 'house',
+      'paco': 'village',
+      'nam': 'lake',
+      'kulu': 'river',
+      'got': 'mountain',
+      
+      // Time
+      'tin': 'today',
+      'diki': 'tomorrow',
+      'lawo': 'yesterday',
+      'odikinino': 'morning',
+      'odiko': 'evening',
+      'dyewor': 'night',
+      
+      // Common words
+      'eyo': 'yes',
+      'pe': 'no',
+      'tika': 'please',
+      'kare': 'time',
+      'cawa': 'hour'
+    };
+    
     // Built-in translations for common UI strings
     this.builtInTranslations = {
       en: {
@@ -242,6 +390,66 @@ class TranslationService {
    */
   offLanguageChange(callback) {
     this.listeners = this.listeners.filter(cb => cb !== callback);
+  }
+
+  /**
+   * Translate Acholi search query to English for sign lookup
+   * Uses local dictionary first, then falls back to Google Translate
+   */
+  async translateSearchQuery(query) {
+    if (this.currentLanguage === 'en') {
+      return query; // No translation needed
+    }
+    
+    const queryLower = query.toLowerCase().trim();
+    
+    // First, check our local Acholi-to-English dictionary
+    if (this.acholiToEnglish[queryLower]) {
+      console.log(`🔤 Local translation: "${query}" → "${this.acholiToEnglish[queryLower]}"`);
+      return this.acholiToEnglish[queryLower];
+    }
+    
+    // Check if query contains multiple words - translate each
+    const words = queryLower.split(/\s+/);
+    if (words.length > 1) {
+      const translatedWords = words.map(word => 
+        this.acholiToEnglish[word] || word
+      );
+      const localTranslation = translatedWords.join(' ');
+      if (localTranslation !== queryLower) {
+        console.log(`🔤 Multi-word translation: "${query}" → "${localTranslation}"`);
+        return localTranslation;
+      }
+    }
+    
+    // Fall back to Google Translate API (Acholi → English)
+    try {
+      const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=ach&tl=en&dt=t&q=${encodeURIComponent(query)}`;
+      
+      const response = await fetch(url);
+      const data = await response.json();
+      
+      if (data && data[0] && data[0][0] && data[0][0][0]) {
+        const translated = data[0][0][0].toLowerCase();
+        console.log(`🌐 API translation: "${query}" → "${translated}"`);
+        return translated;
+      }
+    } catch (error) {
+      console.warn('Google Translate failed:', error);
+    }
+    
+    // Return original if translation fails
+    return query;
+  }
+
+  /**
+   * Get search placeholder based on current language
+   */
+  getSearchPlaceholder() {
+    if (this.currentLanguage === 'ach') {
+      return 'Yeny ki Acholi onyo English...';
+    }
+    return 'Search signs...';
   }
 }
 

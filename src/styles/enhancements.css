@@ -1666,3 +1666,41 @@
     order: 2;
   }
 }
+
+/* ========== Translation & Search Enhancements ========== */
+
+.translation-note {
+  font-size: var(--font-size-sm);
+  color: var(--color-primary);
+  margin-top: var(--spacing-xs);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.search-results-header h3 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: var(--font-size-lg);
+}
+
+.search-results-header {
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 2px solid var(--color-border);
+}
+
+/* Language indicator on search */
+.language-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: linear-gradient(135deg, var(--color-primary) 0%, #A00000 100%);
+  color: white;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  border-radius: 12px;
+  margin-left: var(--spacing-sm);
+}
+

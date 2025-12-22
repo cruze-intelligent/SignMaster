@@ -276,6 +276,9 @@ class SignMasterApp {
 
     if (!searchInput || !searchBtn) return;
 
+    // Update placeholder based on language
+    searchInput.placeholder = translationService.getSearchPlaceholder();
+
     // Show popular suggestions initially
     this.showSearchSuggestions([]);
 
@@ -299,11 +302,16 @@ class SignMasterApp {
     };
 
     // Clear results when navigating to search
+    const emptyTitle = translationService.getLanguage() === 'ach' ? 'Yeny Lanyut' : 'Search for Signs';
+    const emptyDesc = translationService.getLanguage() === 'ach' 
+      ? 'Ket lok, ceke, namba, onyo lok me nongo lanyut mere'
+      : 'Enter a word, letter, number, or phrase to find its sign language translation';
+    
     resultsEl.innerHTML = `
       <div class="search-empty">
         <div class="search-empty-icon">🔍</div>
-        <h3>Search for Signs</h3>
-        <p>Enter a word, letter, number, or phrase to find its sign language translation</p>
+        <h3>${emptyTitle}</h3>
+        <p>${emptyDesc}</p>
       </div>
     `;
   }
@@ -360,15 +368,31 @@ class SignMasterApp {
     const resultsEl = document.getElementById('search-results');
     if (!resultsEl || !query) return;
 
-    const results = searchEngine.search(query);
+    // Translate query if in Acholi mode
+    let searchQuery = query;
+    let translatedFrom = null;
+    
+    if (translationService.getLanguage() === 'ach') {
+      const translated = await translationService.translateSearchQuery(query);
+      if (translated.toLowerCase() !== query.toLowerCase()) {
+        translatedFrom = query;
+        searchQuery = translated;
+      }
+    }
+
+    const results = searchEngine.search(searchQuery);
 
     if (results.length === 0) {
+      const noResultsMsg = translatedFrom 
+        ? `No signs match "${query}" (searched: "${searchQuery}").`
+        : `No signs match "${query}".`;
+      
       resultsEl.innerHTML = `
         <div class="search-empty">
           <div class="search-empty-icon">😔</div>
-          <h3>No Results Found</h3>
-          <p>No signs match "${query}". Try different words or browse categories.</p>
-          <button class="btn-primary" data-nav="categories">Browse Categories</button>
+          <h3>${translationService.getLanguage() === 'ach' ? 'Pe Ononge' : 'No Results Found'}</h3>
+          <p>${noResultsMsg} ${translationService.getLanguage() === 'ach' ? 'Tem lok mukene onyo nen buce.' : 'Try different words or browse categories.'}</p>
+          <button class="btn-primary" data-nav="categories">${translationService.t('categories')}</button>
         </div>
       `;
       
@@ -378,9 +402,14 @@ class SignMasterApp {
         browseBtn.onclick = () => this.navigate('categories');
       }
     } else {
+      const headerText = translatedFrom 
+        ? `Found ${results.length} sign${results.length > 1 ? 's' : ''} for "${query}" → "${searchQuery}"`
+        : `Found ${results.length} sign${results.length > 1 ? 's' : ''} for "${query}"`;
+      
       resultsEl.innerHTML = `
         <div class="search-results-header">
-          <h3>Found ${results.length} sign${results.length > 1 ? 's' : ''} for "${query}"</h3>
+          <h3>${headerText}</h3>
+          ${translatedFrom ? `<p class="translation-note">🔤 Translated from Acholi</p>` : ''}
         </div>
         <div class="search-results-grid" id="search-results-grid"></div>
       `;
