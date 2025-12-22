@@ -7,7 +7,7 @@
   /* Colors - Uganda Flag inspired */
   --color-primary: #D90000;
   --color-secondary: #FCDC04;
-  --color-accent: #000000;
+  --color-accent: #D90000;
   
   /* UI Colors */
   --color-background: #FFFFFF;
@@ -109,7 +109,7 @@ button {
 
 /* Sign Card Styles */
 .sign-card {
-  background: var(--color-surface);
+  background: #FFFFFF;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
   overflow: hidden;
@@ -129,7 +129,7 @@ button {
 .sign-card__image-wrapper {
   position: relative;
   aspect-ratio: 1;
-  background: var(--color-background);
+  background: #FFFFFF;
   border-radius: var(--radius-md);
   overflow: hidden;
   margin-bottom: var(--spacing-md);
@@ -199,8 +199,8 @@ button {
 .badge-unlock-modal__overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(4px);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
 }
 
 .badge-unlock-modal__content {

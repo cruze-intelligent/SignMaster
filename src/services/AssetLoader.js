@@ -93,7 +93,7 @@ class AssetLoader {
         }
         
         if (!response.ok) {
-          throw new Error(`Failed to load ${filename}`);
+          throw new Error(`Failed to load ${filename}: ${response.status}`);
         }
 
         const blob = await response.blob();
@@ -121,25 +121,39 @@ class AssetLoader {
    * Lazy load image with Intersection Observer
    */
   lazyLoadImage(imgElement, filename, category) {
-    // Set placeholder
-    imgElement.style.filter = 'blur(10px)';
+    // Set initial blur placeholder
+    imgElement.style.filter = 'blur(8px)';
     imgElement.style.transition = 'filter 0.3s ease';
 
     const observer = new IntersectionObserver(async (entries) => {
-      entries.forEach(async (entry) => {
+      for (const entry of entries) {
         if (entry.isIntersecting) {
+          observer.unobserve(imgElement); // Unobserve immediately to prevent duplicate loads
+          
           try {
             const url = await this.loadSignImage(filename, category);
-            imgElement.src = url;
-            imgElement.style.filter = 'none';
-            observer.unobserve(imgElement);
+            if (url) {
+              imgElement.src = url;
+              imgElement.style.filter = 'none';
+              
+              // Hide the loader
+              const wrapper = imgElement.closest('.sign-card__image-wrapper');
+              const loader = wrapper?.querySelector('.sign-card__loader');
+              if (loader) {
+                loader.style.display = 'none';
+              }
+            }
           } catch (error) {
-            console.error('Lazy load error:', error);
+            console.error(`Failed to load ${filename}:`, error);
+            // Show error state
+            imgElement.style.filter = 'none';
+            imgElement.alt = 'Failed to load';
           }
         }
-      });
+      }
     }, {
-      rootMargin: '50px'
+      rootMargin: '100px', // Load images 100px before they enter viewport
+      threshold: 0
     });
 
     observer.observe(imgElement);

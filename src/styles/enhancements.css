@@ -281,7 +281,7 @@
 
 /* Sign Card Styling */
 .sign-card {
-  background: white;
+  background: #FFFFFF !important;
   border-radius: var(--radius-lg);
   overflow: hidden;
   cursor: pointer;
@@ -663,26 +663,8 @@
   }
 }
 
-/* Dark Mode Support */
-@media (prefers-color-scheme: dark) {
-  :root:not(.light-mode) {
-    --color-background: #1a1a1a;
-    --color-surface: #2d2d2d;
-    --color-text: #ffffff;
-    --color-text-secondary: #b3b3b3;
-    --color-border: #404040;
-  }
-  
-  :root:not(.light-mode) .app-container {
-    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-  }
-  
-  :root:not(.light-mode) .welcome-content,
-  :root:not(.light-mode) .category-card,
-  :root:not(.light-mode) .badge-card {
-    background: var(--color-surface);
-  }
-}
+/* Dark Mode Support - DISABLED for consistent light theme */
+/* Dark mode removed to ensure all backgrounds remain white/light */
 
 /* ===== NEW: 3 LEARNING MODES INTERFACE ===== */
 

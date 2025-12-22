@@ -196,10 +196,15 @@ class SignMasterApp {
    * Load categories screen
    */
   async loadCategories() {
+    console.log('🔵 Loading categories...');
     const categories = await manifestLoader.getCategories();
+    console.log('📋 Categories loaded:', categories);
     const container = document.getElementById('categories-list');
     
-    if (!container) return;
+    if (!container) {
+      console.error('❌ Categories container not found!');
+      return;
+    }
 
     container.innerHTML = categories.map(cat => `
       <div class="category-card" data-category="${cat}">
@@ -220,12 +225,13 @@ class SignMasterApp {
    * Start learning a category
    */
   async startCategory(category) {
-    console.log(`Starting category: ${category}`);
+    console.log(`🟢 Starting category: ${category}`);
     
     this.currentCategory = category;
     
     // Load signs for category
     const signs = await manifestLoader.getCategorySigns(category);
+    console.log(`📝 Loaded ${signs.length} signs for category: ${category}`);
     
     // Navigate to game screen
     document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
@@ -246,6 +252,9 @@ class SignMasterApp {
     // Render signs
     if (this.signGrid) {
       await this.signGrid.renderSigns(signs, category);
+      console.log('✅ Signs rendered!');
+    } else {
+      console.error('❌ SignGrid not initialized!');
     }
   }
 

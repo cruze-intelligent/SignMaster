@@ -44,26 +44,25 @@ export class SignCard {
     const img = this.element.querySelector('.sign-card__image');
     assetLoader.lazyLoadImage(img, this.sign.filename, this.category);
     
-    // Hide loader when image loads
+    // Hide loader when image loads (backup listener)
     img.addEventListener('load', () => {
       this.loaded = true;
-      this.element.querySelector('.sign-card__loader').style.display = 'none';
-      this.animateIn();
+      const loader = this.element.querySelector('.sign-card__loader');
+      if (loader) loader.style.display = 'none';
     });
     
     return this.element;
   }
 
   /**
-   * Animate card entrance
+   * Animate card entrance - only called explicitly
    */
   animateIn() {
-    gsap.from(this.element, {
-      scale: 0,
-      rotation: -10,
-      opacity: 0,
-      duration: 0.5,
-      ease: 'back.out(1.7)'
+    // Simple fade in without transform conflicts
+    gsap.to(this.element, {
+      opacity: 1,
+      duration: 0.3,
+      ease: 'power2.out'
     });
   }
 
@@ -95,16 +94,12 @@ export class SignCard {
    */
   remove() {
     return new Promise((resolve) => {
-      gsap.to(this.element, {
-        scale: 0,
-        opacity: 0,
-        rotation: 360,
-        duration: 0.5,
-        onComplete: () => {
-          this.element.remove();
-          resolve();
-        }
-      });
+      if (!this.element || !this.element.parentNode) {
+        resolve();
+        return;
+      }
+      this.element.remove();
+      resolve();
     });
   }
 
@@ -135,25 +130,42 @@ export class SignGrid {
    * Render sign cards in grid
    */
   async renderSigns(signs, category) {
-    await this.clear();
+    // Clear existing cards synchronously (no animation)
+    this.cards.forEach(card => {
+      if (card.element && card.element.parentNode) {
+        card.element.parentNode.removeChild(card.element);
+      }
+    });
+    this.cards = [];
+    
+    if (!this.container) {
+      console.error('❌ Container is null!');
+      return;
+    }
+    
+    // Also clear container's innerHTML to be safe
+    this.container.innerHTML = '';
+    
+    // Limit stagger to first 12 cards only (visible ones)
+    const maxStagger = 12;
     
     signs.forEach((sign, index) => {
       const card = new SignCard(sign, category);
       this.cards.push(card);
       
       const cardElement = card.render();
-      
-      // Stagger animation
-      gsap.from(cardElement, {
-        opacity: 0,
-        y: 50,
-        duration: 0.5,
-        delay: index * 0.1,
-        ease: 'power2.out'
-      });
-      
       this.container.appendChild(cardElement);
+      
+      // Only animate first few visible cards with short stagger
+      if (index < maxStagger) {
+        gsap.fromTo(cardElement, 
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.3, delay: index * 0.05 }
+        );
+      }
     });
+    
+    console.log(`✅ Rendered ${signs.length} sign cards`);
   }
 
   /**
