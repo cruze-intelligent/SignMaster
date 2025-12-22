@@ -379,7 +379,7 @@ class CertificateGenerator {
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0,0,0,0.9);
+      background: rgba(255,255,255,0.95);
       z-index: 10000;
       display: flex;
       align-items: center;
@@ -391,7 +391,7 @@ class CertificateGenerator {
     img.src = dataUrl;
     img.style.maxWidth = '100%';
     img.style.maxHeight = '100%';
-    img.style.boxShadow = '0 0 50px rgba(0,0,0,0.5)';
+    img.style.boxShadow = '0 0 50px rgba(217,0,0,0.3)';
 
     modal.appendChild(img);
     modal.onclick = () => modal.remove();

@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "map-assets": "node tools/asset-mapper.js",
+    "optimize-images": "node tools/optimize-images.js",
     "deploy": "npm run build && gh-pages -d dist"
   },
   "keywords": [
@@ -35,6 +36,7 @@
   "devDependencies": {
     "csv-writer": "^1.6.0",
     "gh-pages": "^6.1.1",
+    "sharp": "^0.33.0",
     "tesseract.js": "^5.1.1",
     "vite": "^7.2.4",
     "vite-plugin-pwa": "^1.1.0"

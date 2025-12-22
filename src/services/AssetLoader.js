@@ -42,7 +42,7 @@ class AssetLoader {
   }
 
   /**
-   * Load sign image with caching
+   * Load sign image with caching - tries WebP first, falls back to PNG
    */
   async loadSignImage(filename, category = 'unknown') {
     await this.init();
@@ -60,7 +60,7 @@ class AssetLoader {
     // Create new loading promise
     const loadPromise = (async () => {
       try {
-        // Try cache first
+        // Try cache first (both WebP and PNG)
         const cached = await cacheManager.getSignImage(filename);
         if (cached) {
           const url = URL.createObjectURL(cached);
@@ -68,9 +68,29 @@ class AssetLoader {
           return url;
         }
 
-        // Fetch from network
-        const path = `${import.meta.env.BASE_URL}assets/all_extracted_signs/${filename}`;
-        const response = await fetch(path);
+        // Try WebP first if supported, then PNG fallback
+        let response;
+        let actualFilename = filename;
+        
+        if (this.supportsWebP) {
+          const webpFilename = filename.replace(/\.png$/i, '.webp');
+          const webpPath = `${import.meta.env.BASE_URL}assets/optimized_signs/${webpFilename}`;
+          
+          try {
+            response = await fetch(webpPath);
+            if (response.ok) {
+              actualFilename = webpFilename;
+            }
+          } catch (e) {
+            // WebP not available, will fallback to PNG
+          }
+        }
+        
+        // Fallback to original PNG
+        if (!response || !response.ok) {
+          const pngPath = `${import.meta.env.BASE_URL}assets/all_extracted_signs/${filename}`;
+          response = await fetch(pngPath);
+        }
         
         if (!response.ok) {
           throw new Error(`Failed to load ${filename}`);
