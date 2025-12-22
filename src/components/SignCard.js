@@ -5,6 +5,7 @@
  */
 
 import assetLoader from '../services/AssetLoader.js';
+import signModal from './SignModal.js';
 import { gsap } from 'gsap';
 
 export class SignCard {
@@ -39,6 +40,11 @@ export class SignCard {
         ${this.sign.verified ? '<span class="sign-card__verified">✓</span>' : ''}
       </div>
     `;
+    
+    // Add click handler to open modal
+    this.element.addEventListener('click', () => {
+      signModal.open(this.sign, this.category);
+    });
     
     // Lazy load image
     const img = this.element.querySelector('.sign-card__image');

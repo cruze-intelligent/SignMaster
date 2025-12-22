@@ -186,28 +186,37 @@ class CertificateGenerator {
     ctx.fillText('has successfully completed the SignMaster program', this.width / 2, 390);
     ctx.fillText('and demonstrated proficiency in Uganda Sign Language', this.width / 2, 420);
 
-    // Stats section
+    // Stats section - Enhanced with more tracked data
     ctx.font = 'bold 24px Arial, sans-serif';
     ctx.fillStyle = '#D90000';
     
-    const statsY = 480;
-    const spacing = 40;
+    const statsY = 470;
+    const spacing = 35;
+    const colWidth = 280;
+    const leftCol = this.width / 2 - colWidth;
+    const rightCol = this.width / 2 + 30;
     
-    // XP
-    ctx.fillText(`Total XP: ${stats.xp}`, this.width / 2 - 200, statsY);
+    // Row 1: XP and Signs Learned
+    ctx.textAlign = 'left';
+    ctx.fillText(`⭐ Total XP: ${stats.xp}`, leftCol, statsY);
+    ctx.fillText(`📚 Signs Learned: ${stats.signsLearned || 0}`, rightCol, statsY);
     
-    // Badges
+    // Row 2: Badges and Accuracy
     const badgeCount = stats.badges ? stats.badges.length : 0;
-    ctx.fillText(`Badges Earned: ${badgeCount}`, this.width / 2 + 200, statsY);
+    ctx.fillText(`🏆 Badges: ${badgeCount}`, leftCol, statsY + spacing);
+    ctx.fillText(`🎯 Accuracy: ${stats.accuracy || 0}%`, rightCol, statsY + spacing);
     
-    // Badge points
+    // Row 3: Categories and Streak
     const badgeStats = await badgeManager.getBadgeStats();
     ctx.font = '20px Arial, sans-serif';
     ctx.fillStyle = '#4A90E2';
-    ctx.fillText(`Badge Points: ${badgeStats.points}`, this.width / 2 - 200, statsY + spacing);
+    const catsText = `${stats.categoriesCompleted || 0}/${stats.categoriesTotal || 12}`;
+    ctx.fillText(`📂 Categories: ${catsText}`, leftCol, statsY + spacing * 2);
+    ctx.fillText(`🔥 Daily Streak: ${stats.dailyStreak || 0} days`, rightCol, statsY + spacing * 2);
     
-    // Rank
-    ctx.fillText(`Rank: ${badgeStats.rank.rank}`, this.width / 2 + 200, statsY + spacing);
+    // Row 4: Badge Points and Rank
+    ctx.fillText(`💎 Badge Points: ${badgeStats.points}`, leftCol, statsY + spacing * 3);
+    ctx.fillText(`🏅 Rank: ${badgeStats.rank.name}`, rightCol, statsY + spacing * 3);
 
     // Date
     const date = new Date().toLocaleDateString('en-US', {
@@ -216,9 +225,10 @@ class CertificateGenerator {
       day: 'numeric'
     });
     
+    ctx.textAlign = 'center';
     ctx.font = '16px Arial, sans-serif';
     ctx.fillStyle = '#666';
-    ctx.fillText(`Issued: ${date}`, this.width / 2, 590);
+    ctx.fillText(`Issued: ${date}`, this.width / 2, 620);
 
     ctx.restore();
   }

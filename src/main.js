@@ -16,6 +16,7 @@ import manifestLoader from './services/ManifestLoader.js';
 import assetLoader from './services/AssetLoader.js';
 import certificateGenerator from './services/CertificateGenerator.js';
 import searchEngine from './services/SearchEngine.js';
+import translationService from './services/TranslationService.js';
 
 // Import components
 import { SignGrid } from './components/SignCard.js';
@@ -48,8 +49,14 @@ class SignMasterApp {
         cacheManager.init(),
         stateManager.init(),
         assetLoader.init(),
-        manifestLoader.loadManifest()
+        manifestLoader.loadManifest(),
+        translationService.init()
       ]);
+
+      // Listen for language changes
+      translationService.onLanguageChange(() => {
+        this.updateTranslations();
+      });
 
       // Initialize search engine with manifest
       const manifest = manifestLoader.getManifest();
@@ -399,46 +406,121 @@ class SignMasterApp {
   }
 
   /**
-   * Load progress screen
+   * Load progress screen with polished UI
    */
   async loadProgress() {
     const state = stateManager.getState();
     const stats = stateManager.getStats();
     const badgeStats = await badgeManager.getBadgeStats();
+    const manifest = manifestLoader.getManifest();
+    const t = (key) => translationService.t(key);
+    
+    // Calculate additional stats
+    const totalSigns = manifest?.signs?.length || 920;
+    const signsLearned = stats.signsLearned || 0;
+    const progressPercent = Math.round((signsLearned / totalSigns) * 100);
+    const categoriesTotal = manifest?.categories?.length || 12;
+    const categoriesCompleted = state.stats?.categoriesCompleted?.length || 0;
+    const accuracy = state.stats?.averageAccuracy || 0;
+    const dailyStreak = state.stats?.dailyStreak || 0;
     
     const container = document.getElementById('progress-content');
     if (!container) return;
 
     container.innerHTML = `
-      <div class="progress-summary">
-        <h2>Your Progress</h2>
-        <div class="stats-grid">
-          <div class="stat">
-            <div class="stat-value">${state.xp}</div>
-            <div class="stat-label">Total XP</div>
+      <div class="progress-dashboard">
+        <!-- Hero Section -->
+        <div class="progress-hero">
+          <div class="progress-hero__avatar">
+            <div class="avatar-circle">
+              <span class="avatar-icon">${badgeStats.rank.icon}</span>
+            </div>
+            <div class="avatar-level">Lv.${state.level}</div>
           </div>
-          <div class="stat">
-            <div class="stat-value">${state.level}</div>
-            <div class="stat-label">Level</div>
-          </div>
-          <div class="stat">
-            <div class="stat-value">${stats.signsLearned}</div>
-            <div class="stat-label">Signs Learned</div>
-          </div>
-          <div class="stat">
-            <div class="stat-value">${badgeStats.total}</div>
-            <div class="stat-label">Badges Earned</div>
+          <div class="progress-hero__info">
+            <h2 class="player-name">${state.playerName}</h2>
+            <div class="player-rank">
+              <span class="rank-badge">${badgeStats.rank.icon}</span>
+              <span class="rank-name">${badgeStats.rank.name}</span>
+            </div>
           </div>
         </div>
         
-        <div class="rank-display">
-          <h3>Rank: ${badgeStats.rank.name}</h3>
-          <div class="rank-icon">${badgeStats.rank.icon}</div>
+        <!-- XP Progress Bar -->
+        <div class="xp-progress-section">
+          <div class="xp-header">
+            <span class="xp-label">⭐ ${t('total_xp')}</span>
+            <span class="xp-value">${state.xp.toLocaleString()}</span>
+          </div>
+          <div class="xp-progress-bar">
+            <div class="xp-progress-fill" style="width: ${Math.min(progressPercent, 100)}%"></div>
+          </div>
+          <div class="xp-footer">
+            <span>${signsLearned} / ${totalSigns} ${t('signs_learned').toLowerCase()}</span>
+            <span>${progressPercent}%</span>
+          </div>
         </div>
-
-        <button id="download-certificate" class="btn-primary">
-          📜 Download Certificate
-        </button>
+        
+        <!-- Stats Grid -->
+        <div class="stats-dashboard">
+          <div class="stat-card stat-card--primary">
+            <div class="stat-card__icon">📚</div>
+            <div class="stat-card__content">
+              <div class="stat-card__value">${signsLearned}</div>
+              <div class="stat-card__label">${t('signs_learned')}</div>
+            </div>
+          </div>
+          
+          <div class="stat-card stat-card--secondary">
+            <div class="stat-card__icon">🏆</div>
+            <div class="stat-card__content">
+              <div class="stat-card__value">${badgeStats.total}</div>
+              <div class="stat-card__label">${t('badges_earned')}</div>
+            </div>
+          </div>
+          
+          <div class="stat-card stat-card--accent">
+            <div class="stat-card__icon">🔥</div>
+            <div class="stat-card__content">
+              <div class="stat-card__value">${dailyStreak}</div>
+              <div class="stat-card__label">${t('learning_streak')}</div>
+            </div>
+          </div>
+          
+          <div class="stat-card stat-card--success">
+            <div class="stat-card__icon">🎯</div>
+            <div class="stat-card__content">
+              <div class="stat-card__value">${accuracy}%</div>
+              <div class="stat-card__label">${t('accuracy')}</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Categories Progress -->
+        <div class="categories-progress">
+          <h3>📂 ${t('categories_completed')}</h3>
+          <div class="categories-bar">
+            <div class="categories-fill" style="width: ${(categoriesCompleted / categoriesTotal) * 100}%"></div>
+          </div>
+          <div class="categories-count">${categoriesCompleted} / ${categoriesTotal}</div>
+        </div>
+        
+        <!-- Badge Points -->
+        <div class="badge-points-section">
+          <div class="badge-points-card">
+            <span class="badge-points-icon">💎</span>
+            <span class="badge-points-value">${badgeStats.points}</span>
+            <span class="badge-points-label">Badge Points</span>
+          </div>
+        </div>
+        
+        <!-- Actions -->
+        <div class="progress-actions">
+          <button id="download-certificate" class="btn-primary btn-certificate">
+            <span class="btn-icon">📜</span>
+            <span class="btn-text">${t('download_certificate')}</span>
+          </button>
+        </div>
       </div>
     `;
 
@@ -449,6 +531,11 @@ class SignMasterApp {
         await certificateGenerator.generateCertificate({
           playerName: state.playerName,
           xp: state.xp,
+          signsLearned: signsLearned,
+          accuracy: accuracy,
+          dailyStreak: dailyStreak,
+          categoriesCompleted: categoriesCompleted,
+          categoriesTotal: categoriesTotal,
           badges: earnedBadges,
           stats: badgeStats
         });
@@ -513,34 +600,128 @@ class SignMasterApp {
   }
 
   /**
-   * Load settings screen
+   * Load settings screen with language option
    */
   loadSettings() {
     const state = stateManager.getState();
     const container = document.getElementById('settings-content');
+    const t = (key) => translationService.t(key);
+    const currentLang = translationService.getLanguage();
+    const languages = translationService.getAvailableLanguages();
     
     if (!container) return;
 
     container.innerHTML = `
-      <h2>Settings</h2>
-      <div class="settings-form">
-        <label>
-          <input type="checkbox" id="setting-sound" ${state.settings.soundEnabled ? 'checked' : ''}>
-          Sound Effects
-        </label>
-        <label>
-          <input type="checkbox" id="setting-voice" ${state.settings.voiceEnabled ? 'checked' : ''}>
-          Voice Narration
-        </label>
-        <label>
-          <input type="checkbox" id="setting-contrast" ${state.settings.highContrast ? 'checked' : ''}>
-          High Contrast Mode
-        </label>
+      <div class="settings-dashboard">
+        <h2>⚙️ ${t('settings')}</h2>
+        
+        <!-- Player Profile Section -->
+        <div class="settings-section">
+          <h3>👤 ${t('player_name')}</h3>
+          <div class="settings-input-group">
+            <input type="text" id="player-name-input" 
+                   class="settings-input" 
+                   value="${state.playerName}" 
+                   placeholder="${t('player_name')}" 
+                   maxlength="30">
+            <button id="save-name-btn" class="btn-secondary btn-sm">Save</button>
+          </div>
+        </div>
+        
+        <!-- Language Section -->
+        <div class="settings-section">
+          <h3>🌍 ${t('language')}</h3>
+          <div class="language-selector">
+            ${languages.map(lang => `
+              <label class="language-option ${lang.code === currentLang ? 'active' : ''}">
+                <input type="radio" name="language" value="${lang.code}" 
+                       ${lang.code === currentLang ? 'checked' : ''}>
+                <div class="language-option__content">
+                  <span class="language-flag">${lang.code === 'en' ? '🇬🇧' : '🇺🇬'}</span>
+                  <span class="language-name">${lang.name}</span>
+                  <span class="language-native">${lang.native}</span>
+                </div>
+              </label>
+            `).join('')}
+          </div>
+        </div>
+        
+        <!-- Preferences Section -->
+        <div class="settings-section">
+          <h3>🎨 Preferences</h3>
+          <div class="settings-toggles">
+            <label class="settings-toggle">
+              <span class="toggle-icon">🔊</span>
+              <span class="toggle-label">${t('sound_effects')}</span>
+              <input type="checkbox" id="setting-sound" 
+                     ${state.settings.soundEnabled ? 'checked' : ''}>
+              <span class="toggle-slider"></span>
+            </label>
+            
+            <label class="settings-toggle">
+              <span class="toggle-icon">🗣️</span>
+              <span class="toggle-label">${t('voice_narration')}</span>
+              <input type="checkbox" id="setting-voice" 
+                     ${state.settings.voiceEnabled ? 'checked' : ''}>
+              <span class="toggle-slider"></span>
+            </label>
+            
+            <label class="settings-toggle">
+              <span class="toggle-icon">🌓</span>
+              <span class="toggle-label">${t('high_contrast')}</span>
+              <input type="checkbox" id="setting-contrast" 
+                     ${state.settings.highContrast ? 'checked' : ''}>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+        
+        <!-- About Section -->
+        <div class="settings-section settings-about">
+          <h3>ℹ️ ${t('about')}</h3>
+          <p class="about-text">
+            SignMaster is an educational game for learning Uganda Sign Language (USL).
+            Developed by <strong>Cruze Tech</strong>.
+          </p>
+          <p class="version-text">Version 2.0.0</p>
+        </div>
       </div>
     `;
 
+    // Player name save handler
+    document.getElementById('save-name-btn')?.addEventListener('click', async () => {
+      const nameInput = document.getElementById('player-name-input');
+      if (nameInput && nameInput.value.trim()) {
+        await stateManager.setState({ playerName: nameInput.value.trim() });
+        // Show saved feedback
+        const btn = document.getElementById('save-name-btn');
+        btn.textContent = '✓ Saved';
+        btn.classList.add('saved');
+        setTimeout(() => {
+          btn.textContent = 'Save';
+          btn.classList.remove('saved');
+        }, 2000);
+      }
+    });
+
+    // Language change handler
+    container.querySelectorAll('input[name="language"]').forEach(input => {
+      input.addEventListener('change', async (e) => {
+        const langCode = e.target.value;
+        await translationService.setLanguage(langCode);
+        
+        // Update active class
+        container.querySelectorAll('.language-option').forEach(opt => {
+          opt.classList.toggle('active', opt.querySelector('input').value === langCode);
+        });
+        
+        // Reload settings to update translations
+        this.loadSettings();
+      });
+    });
+
     // Settings handlers
-    container.querySelectorAll('input[type="checkbox"]').forEach(input => {
+    container.querySelectorAll('.settings-toggle input[type="checkbox"]').forEach(input => {
       input.addEventListener('change', async (e) => {
         const setting = e.target.id.replace('setting-', '');
         const value = e.target.checked;
@@ -556,6 +737,28 @@ class SignMasterApp {
         await stateManager.updateSettings(updates);
       });
     });
+  }
+
+  /**
+   * Update all translations when language changes
+   */
+  updateTranslations() {
+    // Re-render current screen if needed
+    const activeNav = document.querySelector('.nav-item.active');
+    if (activeNav) {
+      const screen = activeNav.dataset.nav;
+      if (screen) {
+        // Reload screen content with new translations
+        switch(screen) {
+          case 'progress':
+            this.loadProgress();
+            break;
+          case 'settings':
+            this.loadSettings();
+            break;
+        }
+      }
+    }
   }
 
   /**
