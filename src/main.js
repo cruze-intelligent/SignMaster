@@ -1257,16 +1257,40 @@ class SignMasterApp {
    * Show level up celebration
    */
   showLevelUp(data) {
-    console.log('🎉 Level Up!', data);
-    // TODO: Implement level up animation
+    const toast = document.createElement('div');
+    toast.className = 'toast toast-levelup';
+    toast.innerHTML = `
+      <div class="toast-icon">🎉</div>
+      <div class="toast-body">
+        <strong>Level Up!</strong>
+        <span>You reached Level ${data?.level || '?'}</span>
+      </div>
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+      toast.classList.add('toast-exit');
+      setTimeout(() => toast.remove(), 400);
+    }, 3000);
   }
 
   /**
    * Handle sign completed
    */
   onSignCompleted(data) {
-    console.log('Sign completed:', data);
-    // TODO: Show feedback animation
+    const toast = document.createElement('div');
+    toast.className = 'toast toast-success';
+    toast.innerHTML = `
+      <div class="toast-icon">✅</div>
+      <div class="toast-body">
+        <strong>Learned!</strong>
+        <span>${data?.label || 'Sign'} mastered</span>
+      </div>
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+      toast.classList.add('toast-exit');
+      setTimeout(() => toast.remove(), 400);
+    }, 2500);
   }
 
   /**
@@ -1293,10 +1317,23 @@ class SignMasterApp {
   }
 
   /**
-   * Show error message
+   * Show error message as styled toast
    */
   showError(message) {
-    alert(message); // TODO: Better error UI
+    const toast = document.createElement('div');
+    toast.className = 'toast toast-error';
+    toast.innerHTML = `
+      <div class="toast-icon">⚠️</div>
+      <div class="toast-body">
+        <strong>Error</strong>
+        <span>${message}</span>
+      </div>
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+      toast.classList.add('toast-exit');
+      setTimeout(() => toast.remove(), 400);
+    }, 4000);
   }
 }
 

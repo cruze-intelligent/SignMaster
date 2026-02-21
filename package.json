@@ -5,10 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node tools/optimize-images.js",
     "build": "vite build",
     "preview": "vite preview",
     "map-assets": "node tools/asset-mapper.js",
     "optimize-images": "node tools/optimize-images.js",
+    "audit": "node tools/audit-manifest.cjs",
     "deploy": "npm run build && gh-pages -d dist",
     "test": "vitest run"
   },
