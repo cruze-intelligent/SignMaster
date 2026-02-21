@@ -3,14 +3,22 @@
  * Optimizes PNG images and converts to WebP for better performance
  * Uses sharp for high-quality image processing
  * 
+ * Skips processing if all WebP files already exist (safe for CI).
  * Run: npm install sharp --save-dev
  * Then: node tools/optimize-images.js
  */
 
-import { readdir, stat } from 'fs/promises';
+import { readdir, stat, access } from 'fs/promises';
 import { join, basename, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import sharp from 'sharp';
+
+let sharp;
+try {
+  sharp = (await import('sharp')).default;
+} catch {
+  console.log('⏩ sharp not available — skipping image optimization (WebPs already committed)');
+  process.exit(0);
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -78,16 +86,37 @@ async function optimizeAllImages() {
     const files = await readdir(SOURCE_DIR);
     const pngFiles = files.filter(f => f.toLowerCase().endsWith('.png'));
 
-    console.log(`Found ${pngFiles.length} PNG images to optimize\n`);
+    console.log(`Found ${pngFiles.length} PNG images\n`);
+
+    // Check if all WebPs already exist — skip if so (CI-safe)
+    let existingCount = 0;
+    for (const f of pngFiles) {
+      const webpPath = join(OUTPUT_DIR, f.replace(/\.png$/i, '.webp'));
+      try {
+        await access(webpPath);
+        existingCount++;
+      } catch { /* doesn't exist */ }
+    }
+    if (existingCount === pngFiles.length && pngFiles.length > 0) {
+      console.log(`✅ All ${existingCount} WebP images already exist — skipping optimization`);
+      return;
+    }
+    console.log(`${existingCount}/${pngFiles.length} WebP files exist — optimizing remaining...\n`);
 
     // Process in batches of 10 for better performance
     const BATCH_SIZE = 10;
     for (let i = 0; i < pngFiles.length; i += BATCH_SIZE) {
       const batch = pngFiles.slice(i, i + BATCH_SIZE);
       await Promise.all(
-        batch.map(file => {
+        batch.map(async (file) => {
           const sourcePath = join(SOURCE_DIR, file);
           const outputPath = join(OUTPUT_DIR, file);
+          // Skip if WebP already exists
+          const webpPath = outputPath.replace(/\.png$/i, '.webp');
+          try {
+            await access(webpPath);
+            return; // already optimized
+          } catch { /* needs optimization */ }
           return optimizeImage(sourcePath, outputPath);
         })
       );
