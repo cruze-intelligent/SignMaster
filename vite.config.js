@@ -39,7 +39,7 @@ export default defineConfig({
   plugins: [
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'robots.txt', 'assets/**/*.png'],
+      includeAssets: ['robots.txt', 'icon-192.svg', 'icon-512.svg'],
       manifest: {
         name: 'SignMaster: Learn Uganda Sign Language',
         short_name: 'SignMaster USL',
@@ -50,6 +50,7 @@ export default defineConfig({
         orientation: 'portrait-primary',
         start_url: '/SignMaster/',
         scope: '/SignMaster/',
+        categories: ['education', 'games'],
         icons: [
           {
             src: '/SignMaster/icon-192.svg',
@@ -63,10 +64,30 @@ export default defineConfig({
             type: 'image/svg+xml',
             purpose: 'any maskable'
           }
+        ],
+        shortcuts: [
+          {
+            name: 'Browse Categories',
+            short_name: 'Categories',
+            url: '/SignMaster/',
+            icons: [{ src: '/SignMaster/icon-192.svg', sizes: '192x192' }]
+          },
+          {
+            name: 'Search Signs',
+            short_name: 'Search',
+            url: '/SignMaster/',
+            icons: [{ src: '/SignMaster/icon-192.svg', sizes: '192x192' }]
+          }
         ]
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,png,jpg,jpeg,svg,ico,woff,woff2}'],
+        // Only precache essential app shell — sign images cache on-demand via runtime caching
+        globPatterns: ['**/*.{js,css,html,svg,ico,woff,woff2}'],
+        navigateFallback: '/SignMaster/index.html',
+        navigateFallbackDenylist: [
+          /\.(?:png|jpg|jpeg|webp|svg|gif|ico|woff|woff2)$/i,
+          /\/assets\//i
+        ],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/cdnjs\.cloudflare\.com\/.*/i,
@@ -83,13 +104,32 @@ export default defineConfig({
             }
           },
           {
-            urlPattern: /\/assets\/all_extracted_signs\/.*/i,
+            // Cache sign images on-demand as users browse categories
+            urlPattern: /\/assets\/optimized_signs\/.*/i,
             handler: 'CacheFirst',
             options: {
               cacheName: 'sign-images',
               expiration: {
                 maxEntries: 1100,
                 maxAgeSeconds: 60 * 60 * 24 * 90 // 90 days
+              },
+              cacheableResponse: {
+                statuses: [0, 200]
+              }
+            }
+          },
+          {
+            // Cache Google Translate API responses for offline translation
+            urlPattern: /^https:\/\/translate\.googleapis\.com\/.*/i,
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'translation-cache',
+              expiration: {
+                maxEntries: 100,
+                maxAgeSeconds: 60 * 60 * 24 * 7 // 1 week
+              },
+              cacheableResponse: {
+                statuses: [0, 200]
               }
             }
           }

@@ -71,11 +71,11 @@ class AssetLoader {
         // Try WebP first if supported, then PNG fallback
         let response;
         let actualFilename = filename;
-        
+
         if (this.supportsWebP) {
           const webpFilename = filename.replace(/\.png$/i, '.webp');
           const webpPath = `${import.meta.env.BASE_URL}assets/optimized_signs/${webpFilename}`;
-          
+
           try {
             response = await fetch(webpPath);
             if (response.ok) {
@@ -85,19 +85,19 @@ class AssetLoader {
             // WebP not available, will fallback to PNG
           }
         }
-        
+
         // Fallback to original PNG
         if (!response || !response.ok) {
           const pngPath = `${import.meta.env.BASE_URL}assets/all_extracted_signs/${filename}`;
           response = await fetch(pngPath);
         }
-        
+
         if (!response.ok) {
           throw new Error(`Failed to load ${filename}: ${response.status}`);
         }
 
         const blob = await response.blob();
-        
+
         // Cache the image
         await cacheManager.cacheSignImage(filename, blob, { category });
 
@@ -106,8 +106,11 @@ class AssetLoader {
         return url;
 
       } catch (error) {
-        console.error(`Error loading ${filename}:`, error);
-        throw error;
+        console.warn(`⚠️ Image unavailable: ${filename} — using placeholder`);
+        // Return a clean SVG placeholder instead of crashing
+        const placeholder = this.getPlaceholderDataURI();
+        this.loaded.set(filename, placeholder);
+        return placeholder;
       } finally {
         this.loadingPromises.delete(filename);
       }
@@ -115,6 +118,18 @@ class AssetLoader {
 
     this.loadingPromises.set(filename, loadPromise);
     return loadPromise;
+  }
+
+  /**
+   * Generate a placeholder SVG data URI for unavailable images
+   */
+  getPlaceholderDataURI() {
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+      <rect width="200" height="200" fill="#f0f0f0" rx="12"/>
+      <text x="100" y="90" text-anchor="middle" font-size="40" fill="#ccc">🤟</text>
+      <text x="100" y="130" text-anchor="middle" font-size="12" fill="#999" font-family="sans-serif">Image unavailable</text>
+    </svg>`;
+    return `data:image/svg+xml;base64,${btoa(svg)}`;
   }
 
   /**
@@ -129,13 +144,13 @@ class AssetLoader {
       for (const entry of entries) {
         if (entry.isIntersecting) {
           observer.unobserve(imgElement); // Unobserve immediately to prevent duplicate loads
-          
+
           try {
             const url = await this.loadSignImage(filename, category);
             if (url) {
               imgElement.src = url;
               imgElement.style.filter = 'none';
-              
+
               // Hide the loader
               const wrapper = imgElement.closest('.sign-card__image-wrapper');
               const loader = wrapper?.querySelector('.sign-card__loader');
@@ -164,7 +179,7 @@ class AssetLoader {
    * Preload next N signs for smoother experience
    */
   async preloadSigns(filenames, category) {
-    const preloadPromises = filenames.slice(0, 3).map(filename => 
+    const preloadPromises = filenames.slice(0, 3).map(filename =>
       this.loadSignImage(filename, category).catch(err => {
         console.warn(`Preload failed for ${filename}:`, err);
       })
@@ -184,7 +199,7 @@ class AssetLoader {
     try {
       // Load full image
       const url = await this.loadSignImage(filename, category);
-      
+
       // Fade in smoothly
       const tempImg = new Image();
       tempImg.onload = () => {
@@ -256,10 +271,10 @@ class AssetLoader {
     this.loaded.forEach((url) => {
       URL.revokeObjectURL(url);
     });
-    
+
     this.loaded.clear();
-    this.loading.clear();
-    
+    this.loadingPromises.clear();
+
     // Disconnect all observers
     this.observers.forEach((observer) => {
       observer.disconnect();
@@ -275,7 +290,7 @@ class AssetLoader {
   getStats() {
     return {
       loaded: this.loaded.size,
-      loading: this.loading.size,
+      loading: this.loadingPromises.size,
       observers: this.observers.size
     };
   }

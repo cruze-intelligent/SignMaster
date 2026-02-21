@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "map-assets": "node tools/asset-mapper.js",
     "optimize-images": "node tools/optimize-images.js",
-    "deploy": "npm run build && gh-pages -d dist"
+    "deploy": "npm run build && gh-pages -d dist",
+    "test": "vitest run"
   },
   "keywords": [
     "sign-language",
@@ -39,6 +40,7 @@
     "sharp": "^0.33.0",
     "tesseract.js": "^5.1.1",
     "vite": "^7.2.4",
-    "vite-plugin-pwa": "^1.1.0"
+    "vite-plugin-pwa": "^1.1.0",
+    "vitest": "^4.0.18"
   }
 }

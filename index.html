@@ -1,35 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self';">
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' blob: https://translate.googleapis.com https://cdnjs.cloudflare.com;">
   <meta name="description" content="Learn Uganda Sign Language with 1,020+ real signs, badges, and certificates">
   <meta name="keywords" content="Uganda Sign Language, USL, sign language learning, educational game, deaf community">
   <meta name="author" content="Cruze Tech">
-  
+
   <!-- PWA Meta Tags -->
   <meta name="theme-color" content="#D90000">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="SignMaster USL">
-  
+
   <!-- Open Graph -->
   <meta property="og:title" content="SignMaster: Learn Uganda Sign Language">
   <meta property="og:description" content="Interactive educational game with 1,020+ real signs">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://games.cruze-tech.com/signmaster">
-  
-  <!-- Icons -->
-  <link rel="icon" type="image/svg+xml" href="/icon-192.svg">
-  <link rel="apple-touch-icon" href="/icon-192.png">
-  
-  <!-- Manifest -->
-  <link rel="manifest" href="/manifest.json">
-  
+
+  <!-- Icons (relative paths so Vite's base applies correctly) -->
+  <link rel="icon" type="image/svg+xml" href="./icon-192.svg">
+  <link rel="apple-touch-icon" href="./icon-192.svg">
+
+  <!-- Manifest is auto-injected by VitePWA during build -->
+
   <title>SignMaster: Learn Uganda Sign Language</title>
 </head>
+
 <body>
   <!-- Loading Screen -->
   <div id="loader" class="loader">
@@ -73,7 +75,7 @@
           <div class="welcome-content">
             <h2>Welcome to SignMaster!</h2>
             <p class="welcome-subtitle">Learn Uganda Sign Language in 3 fun ways</p>
-            
+
             <div class="learning-modes">
               <!-- Category Learning -->
               <div class="mode-card" data-nav="categories">
@@ -132,12 +134,8 @@
           </div>
           <div class="search-container">
             <div class="search-box">
-              <input 
-                type="text" 
-                id="search-input" 
-                placeholder="Type a word, letter, number, or phrase..."
-                autocomplete="off"
-              />
+              <input type="text" id="search-input" placeholder="Type a word, letter, number, or phrase..."
+                autocomplete="off" />
               <button id="search-btn" class="btn-search">🔍 Search</button>
             </div>
             <div id="search-suggestions" class="search-suggestions"></div>
@@ -149,23 +147,82 @@
         <div id="quiz-screen" class="screen" style="display: none;">
           <div class="screen-header">
             <button class="btn-back" data-nav="welcome">← Back</button>
-            <h2>Interactive Learning</h2>
+            <h2>Sign Quiz</h2>
           </div>
           <div id="quiz-content" class="quiz-container">
-            <div class="quiz-placeholder">
-              <div class="placeholder-icon">🎮</div>
-              <h3>Coming Soon!</h3>
-              <p>Interactive stories and quizzes are being crafted for an immersive learning experience.</p>
-              <div class="quiz-preview">
-                <h4>What to Expect:</h4>
-                <ul>
-                  <li>📖 Story-based learning scenarios</li>
-                  <li>🎯 Multiple choice quizzes</li>
-                  <li>💬 Dialogue practice sessions</li>
-                  <li>🏆 Achievement milestones</li>
-                </ul>
+            <!-- Quiz setup (shown before quiz starts) -->
+            <div id="quiz-setup" class="quiz-setup">
+              <div class="quiz-setup-icon">🎯</div>
+              <h3>Test Your Knowledge</h3>
+              <p>How well do you know Uganda Sign Language? Pick a category and find out!</p>
+              <div class="quiz-category-select">
+                <label for="quiz-category">Category:</label>
+                <select id="quiz-category">
+                  <option value="all">All Categories (Mixed)</option>
+                </select>
               </div>
-              <button class="btn-primary" data-nav="categories">Try Category Learning Instead</button>
+              <div class="quiz-difficulty-select">
+                <label for="quiz-count">Questions:</label>
+                <select id="quiz-count">
+                  <option value="5">5 Questions</option>
+                  <option value="10" selected>10 Questions</option>
+                  <option value="20">20 Questions</option>
+                </select>
+              </div>
+              <button id="quiz-start-btn" class="btn-primary btn-quiz-start">Start Quiz 🚀</button>
+            </div>
+
+            <!-- Active quiz (shown during quiz) -->
+            <div id="quiz-active" class="quiz-active" style="display: none;">
+              <div class="quiz-progress-bar">
+                <div class="quiz-progress-fill" id="quiz-progress-fill"></div>
+              </div>
+              <div class="quiz-stats-row">
+                <span id="quiz-question-num">1/10</span>
+                <span id="quiz-score-display">Score: 0</span>
+                <span id="quiz-streak-display">🔥 0</span>
+              </div>
+              <div class="quiz-question-area">
+                <p class="quiz-prompt">What sign is shown below?</p>
+                <div class="quiz-image-wrapper">
+                  <img id="quiz-sign-image" class="quiz-sign-image" src="" alt="Sign to identify" />
+                  <div id="quiz-image-loader" class="quiz-image-loader">
+                    <div class="loader-spinner"></div>
+                  </div>
+                </div>
+              </div>
+              <div id="quiz-options" class="quiz-options"></div>
+              <div id="quiz-feedback" class="quiz-feedback" style="display: none;"></div>
+              <button id="quiz-next-btn" class="btn-primary btn-quiz-next" style="display: none;">Next Question
+                →</button>
+            </div>
+
+            <!-- Quiz results (shown after quiz ends) -->
+            <div id="quiz-results" class="quiz-results" style="display: none;">
+              <div id="quiz-results-icon" class="quiz-results-icon">🏆</div>
+              <h3 id="quiz-results-title">Quiz Complete!</h3>
+              <div class="quiz-results-stats">
+                <div class="result-stat">
+                  <span class="result-stat-value" id="quiz-final-score">0</span>
+                  <span class="result-stat-label">Score</span>
+                </div>
+                <div class="result-stat">
+                  <span class="result-stat-value" id="quiz-correct-count">0/10</span>
+                  <span class="result-stat-label">Correct</span>
+                </div>
+                <div class="result-stat">
+                  <span class="result-stat-value" id="quiz-best-streak">0</span>
+                  <span class="result-stat-label">Best Streak</span>
+                </div>
+                <div class="result-stat">
+                  <span class="result-stat-value" id="quiz-xp-earned">+0 XP</span>
+                  <span class="result-stat-label">XP Earned</span>
+                </div>
+              </div>
+              <div class="quiz-results-actions">
+                <button id="quiz-retry-btn" class="btn-primary">Play Again 🔄</button>
+                <button class="btn-secondary" data-nav="categories">Back to Learning 📚</button>
+              </div>
             </div>
           </div>
         </div>
@@ -219,7 +276,7 @@
         <strong>Cruze Tech</strong> - Tech For You, Tech For Me
       </p>
       <p>
-        <a href="https://cruze-tech.com" target="_blank">cruze-tech.com</a> | 
+        <a href="https://cruze-tech.com" target="_blank">cruze-tech.com</a> |
         <a href="https://games.cruze-tech.com" target="_blank">games.cruze-tech.com</a>
       </p>
     </div>
@@ -261,12 +318,21 @@
     }
 
     @keyframes spin {
-      to { transform: rotate(360deg); }
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.1); }
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.1);
+      }
     }
 
     /* Basic layout */
@@ -279,7 +345,7 @@
       background: #D90000;
       color: white;
       padding: 1rem 0;
-      box-shadow: 0 2px 4px rgba(217,0,0,0.08);
+      box-shadow: 0 2px 4px rgba(217, 0, 0, 0.08);
     }
 
     .header-content {
@@ -332,7 +398,7 @@
       display: flex;
       justify-content: space-around;
       padding: 0.5rem 0;
-      box-shadow: 0 -2px 4px rgba(217,0,0,0.05);
+      box-shadow: 0 -2px 4px rgba(217, 0, 0, 0.05);
     }
 
     .nav-item {
@@ -365,7 +431,8 @@
       text-align: center;
       color: #666;
       font-size: 0.875rem;
-      margin-bottom: 80px; /* Space for nav */
+      margin-bottom: 80px;
+      /* Space for nav */
     }
 
     .welcome-content {
@@ -381,7 +448,8 @@
       margin-top: 2rem;
     }
 
-    .btn-primary, .btn-secondary {
+    .btn-primary,
+    .btn-secondary {
       padding: 1rem 2rem;
       font-size: 1rem;
       border-radius: 0.5rem;
@@ -401,7 +469,8 @@
       border: 2px solid #e0e0e0;
     }
 
-    .btn-primary:hover, .btn-secondary:hover {
+    .btn-primary:hover,
+    .btn-secondary:hover {
       transform: scale(1.05);
     }
 
@@ -412,4 +481,5 @@
     }
   </style>
 </body>
+
 </html>
