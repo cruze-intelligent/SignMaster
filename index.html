@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' blob: https://translate.googleapis.com https://cdnjs.cloudflare.com;">
+    content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' blob: https://translate.googleapis.com https://cdnjs.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com;">
   <meta name="description" content="Learn Uganda Sign Language with 1,020+ real signs, badges, and certificates">
   <meta name="keywords" content="Uganda Sign Language, USL, sign language learning, educational game, deaf community">
   <meta name="author" content="Cruze Tech">
@@ -30,6 +30,15 @@
   <!-- Manifest is auto-injected by VitePWA during build -->
 
   <title>SignMaster: Learn Uganda Sign Language</title>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KF3S36GBRR"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag('js', new Date());
+
+    gtag('config', 'G-KF3S36GBRR');
+  </script>
 </head>
 
 <body>
