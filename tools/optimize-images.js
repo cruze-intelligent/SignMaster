@@ -3,20 +3,28 @@
  * Optimizes PNG images and converts to WebP for better performance
  * Uses sharp for high-quality image processing
  * 
+ * Skips processing if all WebP files already exist (safe for CI).
  * Run: npm install sharp --save-dev
  * Then: node tools/optimize-images.js
  */
 
-import { readdir, stat } from 'fs/promises';
+import { readdir, stat, access } from 'fs/promises';
 import { join, basename, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import sharp from 'sharp';
+
+let sharp;
+try {
+  sharp = (await import('sharp')).default;
+} catch {
+  console.log('⏩ sharp not available — skipping image optimization (WebPs already committed)');
+  process.exit(0);
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const SOURCE_DIR = join(__dirname, '..', 'assets', 'all_extracted_signs');
-const OUTPUT_DIR = join(__dirname, '..', 'assets', 'optimized_signs');
+const SOURCE_DIR = join(__dirname, '..', 'public', 'assets', 'all_extracted_signs');
+const OUTPUT_DIR = join(__dirname, '..', 'public', 'assets', 'optimized_signs');
 const WEBP_QUALITY = 85; // 85% quality for WebP
 const MAX_DIMENSION = 600; // Max width/height for images
 
@@ -36,10 +44,10 @@ async function optimizeImage(sourcePath, outputPath) {
     // Get original file size
     const originalStats = await stat(sourcePath);
     stats.originalSize += originalStats.size;
-    
+
     // Change extension to .webp
     const webpPath = outputPath.replace(/\.png$/i, '.webp');
-    
+
     // Process image: resize if needed, convert to WebP, compress
     const info = await sharp(sourcePath)
       .resize(MAX_DIMENSION, MAX_DIMENSION, {
@@ -48,13 +56,13 @@ async function optimizeImage(sourcePath, outputPath) {
       })
       .webp({ quality: WEBP_QUALITY, effort: 6 })
       .toFile(webpPath);
-    
+
     stats.optimizedSize += info.size;
     stats.processed++;
-    
+
     const reduction = ((1 - info.size / originalStats.size) * 100).toFixed(1);
     console.log(`✓ ${basename(sourcePath)} → ${basename(webpPath)} - ${reduction}% smaller`);
-    
+
   } catch (error) {
     stats.errors++;
     console.error(`✗ Error processing ${basename(sourcePath)}:`, error.message);
@@ -66,37 +74,58 @@ async function optimizeImage(sourcePath, outputPath) {
  */
 async function optimizeAllImages() {
   console.log('🎨 Starting image optimization to WebP...\n');
-  
+
   try {
     // Dynamically import mkdir
     const { mkdir } = await import('fs/promises');
-    
+
     // Create output directory
     await mkdir(OUTPUT_DIR, { recursive: true });
-    
+
     // Get all PNG files
     const files = await readdir(SOURCE_DIR);
     const pngFiles = files.filter(f => f.toLowerCase().endsWith('.png'));
-    
-    console.log(`Found ${pngFiles.length} PNG images to optimize\n`);
-    
+
+    console.log(`Found ${pngFiles.length} PNG images\n`);
+
+    // Check if all WebPs already exist — skip if so (CI-safe)
+    let existingCount = 0;
+    for (const f of pngFiles) {
+      const webpPath = join(OUTPUT_DIR, f.replace(/\.png$/i, '.webp'));
+      try {
+        await access(webpPath);
+        existingCount++;
+      } catch { /* doesn't exist */ }
+    }
+    if (existingCount === pngFiles.length && pngFiles.length > 0) {
+      console.log(`✅ All ${existingCount} WebP images already exist — skipping optimization`);
+      return;
+    }
+    console.log(`${existingCount}/${pngFiles.length} WebP files exist — optimizing remaining...\n`);
+
     // Process in batches of 10 for better performance
     const BATCH_SIZE = 10;
     for (let i = 0; i < pngFiles.length; i += BATCH_SIZE) {
       const batch = pngFiles.slice(i, i + BATCH_SIZE);
       await Promise.all(
-        batch.map(file => {
+        batch.map(async (file) => {
           const sourcePath = join(SOURCE_DIR, file);
           const outputPath = join(OUTPUT_DIR, file);
+          // Skip if WebP already exists
+          const webpPath = outputPath.replace(/\.png$/i, '.webp');
+          try {
+            await access(webpPath);
+            return; // already optimized
+          } catch { /* needs optimization */ }
           return optimizeImage(sourcePath, outputPath);
         })
       );
-      
+
       // Progress update
       const progress = Math.min(i + BATCH_SIZE, pngFiles.length);
       console.log(`\nProgress: ${progress}/${pngFiles.length} images processed\n`);
     }
-    
+
     // Final statistics
     console.log('\n' + '='.repeat(50));
     console.log('✨ Optimization Complete!\n');
@@ -108,7 +137,7 @@ async function optimizeAllImages() {
     console.log(`   - Total reduction: ${((1 - stats.optimizedSize / stats.originalSize) * 100).toFixed(1)}%`);
     console.log(`   - Format: WebP for modern browsers`);
     console.log('='.repeat(50));
-    
+
   } catch (error) {
     console.error('❌ Fatal error:', error);
     process.exit(1);

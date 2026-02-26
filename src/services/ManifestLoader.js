@@ -5,6 +5,10 @@
  * convenient methods to access signs by category, difficulty, etc.
  */
 
+// Static import so Vite bundles the JSON at build time
+// (runtime fetch of src/data/ path fails in production builds)
+import manifestData from '../data/signs-manifest.json';
+
 class ManifestLoader {
   constructor() {
     this.manifest = null;
@@ -13,29 +17,43 @@ class ManifestLoader {
 
   /**
    * Load the manifest (singleton pattern)
+   * Applies verified-only filter as defense-in-depth
    */
   async loadManifest() {
     if (this.manifest) return this.manifest;
-    if (this.loading) return this.loading;
 
-    this.loading = (async () => {
-      try {
-        const response = await fetch(`${import.meta.env.BASE_URL}src/data/signs-manifest.json`);
-        if (!response.ok) {
-          throw new Error('Failed to load manifest');
-        }
-        this.manifest = await response.json();
-        console.log(`📋 Manifest loaded: ${Object.keys(this.manifest.categories).length} categories`);
-        return this.manifest;
-      } catch (error) {
-        console.error('Error loading manifest:', error);
-        throw error;
-      } finally {
-        this.loading = null;
+    try {
+      this.manifest = this.filterVerifiedOnly(manifestData);
+      const signCount = this.getVerifiedSignCount();
+      console.log(`📋 Manifest loaded: ${Object.keys(this.manifest.categories).length} categories, ${signCount} verified signs`);
+      return this.manifest;
+    } catch (error) {
+      console.error('Error loading manifest:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Filter manifest to only include verified signs (defense-in-depth)
+   */
+  filterVerifiedOnly(data) {
+    const filtered = { ...data, categories: {} };
+    for (const [key, cat] of Object.entries(data.categories)) {
+      const verifiedSigns = cat.signs.filter(s => s.verified === true);
+      if (verifiedSigns.length > 0) {
+        filtered.categories[key] = { ...cat, signs: verifiedSigns };
       }
-    })();
+    }
+    return filtered;
+  }
 
-    return this.loading;
+  /**
+   * Get total count of verified signs
+   */
+  getVerifiedSignCount() {
+    if (!this.manifest) return 0;
+    return Object.values(this.manifest.categories)
+      .reduce((sum, cat) => sum + cat.signs.length, 0);
   }
 
   /**
@@ -79,14 +97,14 @@ class ManifestLoader {
   async getSignsByDifficulty(difficulty) {
     const manifest = await this.loadManifest();
     const signs = [];
-    
+
     for (const category in manifest.categories) {
       const categorySigns = manifest.categories[category].signs.filter(
         s => s.difficulty === difficulty
       );
       signs.push(...categorySigns);
     }
-    
+
     return signs;
   }
 
@@ -96,11 +114,11 @@ class ManifestLoader {
   async getTotalSignCount() {
     const manifest = await this.loadManifest();
     let total = 0;
-    
+
     for (const category in manifest.categories) {
       total += manifest.categories[category].signs.length;
     }
-    
+
     return total;
   }
 
@@ -110,7 +128,7 @@ class ManifestLoader {
   async getCategoryStats() {
     const manifest = await this.loadManifest();
     const stats = {};
-    
+
     for (const category in manifest.categories) {
       const signs = manifest.categories[category].signs;
       stats[category] = {
@@ -123,7 +141,7 @@ class ManifestLoader {
         }
       };
     }
-    
+
     return stats;
   }
 
@@ -134,14 +152,14 @@ class ManifestLoader {
     const manifest = await this.loadManifest();
     const results = [];
     const lowerQuery = query.toLowerCase();
-    
+
     for (const category in manifest.categories) {
       const categorySigns = manifest.categories[category].signs.filter(
         s => s.label.toLowerCase().includes(lowerQuery)
       );
       results.push(...categorySigns.map(s => ({ ...s, category })));
     }
-    
+
     return results;
   }
 }
