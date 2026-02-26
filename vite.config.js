@@ -48,8 +48,9 @@ export default defineConfig({
         background_color: '#f8f9fa',
         display: 'standalone',
         orientation: 'portrait-primary',
-        start_url: '/SignMaster/',
-        scope: '/SignMaster/',
+        // use relative paths so the app installs correctly regardless of hostname or subfolder
+        start_url: '.',
+        scope: '.',
         icons: [
           {
             src: '/SignMaster/icon-192.svg',

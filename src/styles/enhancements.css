@@ -192,6 +192,22 @@
   box-shadow: 0 6px 20px rgba(217, 0, 0, 0.4);
 }
 
+/* install button shown in mobile PWAs */
+.btn-install {
+  position: fixed;
+  bottom: var(--spacing-md);
+  right: var(--spacing-md);
+  z-index: 9999;
+  display: none; /* default hidden until prompt available */
+}
+
+/* ensure the install button is hidden on desktops */
+@media (min-width: 768px) {
+  .btn-install {
+    display: none !important;
+  }
+}
+
 .btn-primary:active {
   transform: translateY(0);
 }

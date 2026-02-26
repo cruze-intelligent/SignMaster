@@ -10,6 +10,7 @@ An interactive educational game for learning Uganda Sign Language (USL) with 1,0
 - **30 Progressive Badges** - 5-tier achievement system (Bronze → Diamond) with 1,540 total points
 - **Motivational Certificates** - Downloadable certificates with Cruze Tech branding and QR codes
 - **Offline PWA** - Works completely offline with IndexedDB caching
+- **Mobile installation** - Installable on phones/tablets via a prompt or custom button (supports Android/iOS web apps)
 - **12 Categories** - Alphabet, Numbers, Greetings, Emotions, Family, School, Food, Colors, Animals, Places, and more
 - **Gamification** - XP system, levels, streaks, leaderboard ranks
 - **Voice Narration** - Audio pronunciation for accessibility
@@ -45,7 +46,22 @@ npm run build
 npm run preview
 ```
 
-## 📦 Asset Mapping Workflow
+## � Mobile PWA & Installation
+
+The application is configured as a Progressive Web App using [VitePWA](https://github.com/antfu/vite-plugin-pwa) and Workbox. A service worker (`dist/sw.js`) is generated during the production build, providing offline access to all core assets and data.
+
+**Testing on mobile:**
+
+1. Run a production build (`npm run build`) and serve the `dist` folder over HTTPS. You can use `npm run preview` locally, but real‑device testing requires HTTPS or a hosted environment.
+2. Open the URL in a mobile browser (Chrome, Edge, Safari, etc.).
+3. After a few seconds the browser will fire `beforeinstallprompt` and a small **Install App** button will appear at the bottom‑right of the screen (only on devices with a narrow viewport).
+4. Tap the button or choose **Add to Home screen** from the browser menu. The app will launch in **standalone** mode from then on and continue to work offline.
+
+> Note: `start_url` and `scope` are now defined as `.` in `vite.config.js` so the app installs correctly regardless of the hosting path.
+
+You can also install the app manually through the browser's menu on desktop, but the custom button is intentionally hidden on wider screens.
+
+## �📦 Asset Mapping Workflow
 
 The hybrid asset mapping system uses Tesseract.js OCR with manual verification:
 

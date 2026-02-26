@@ -18,6 +18,50 @@ import certificateGenerator from './services/CertificateGenerator.js';
 import searchEngine from './services/SearchEngine.js';
 import translationService from './services/TranslationService.js';
 
+// PWA install handling --------------------------------------------------
+let deferredPrompt = null;
+
+function isMobile() {
+  return /Mobi|Android/i.test(navigator.userAgent) || window.matchMedia('(max-width: 768px)').matches;
+}
+
+function showInstallButton() {
+  const btn = document.getElementById('install-app-btn');
+  if (btn) btn.style.display = 'block';
+}
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  if (isMobile()) {
+    showInstallButton();
+  }
+});
+
+window.addEventListener('appinstalled', () => {
+  console.log('✅ PWA installed');
+  const btn = document.getElementById('install-app-btn');
+  if (btn) btn.style.display = 'none';
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const installBtn = document.createElement('button');
+  installBtn.id = 'install-app-btn';
+  installBtn.className = 'btn-primary btn-install';
+  installBtn.textContent = 'Install App';
+  installBtn.style.display = 'none';
+  installBtn.addEventListener('click', async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log('📥 Install outcome:', outcome);
+    deferredPrompt = null;
+    installBtn.style.display = 'none';
+  });
+  document.body.appendChild(installBtn);
+});
+
+
 // Import components
 import { SignGrid } from './components/SignCard.js';
 import badgeUnlockModal from './components/BadgeUnlock.js';
