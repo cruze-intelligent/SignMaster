@@ -160,8 +160,7 @@ export function validateURL(url) {
     
     // Whitelist allowed domains
     const allowedDomains = [
-      'cruze-tech.com',
-      'games.cruze-tech.com',
+      'cruzeintelligentsystems.com',
       'localhost',
       'github.io'
     ];

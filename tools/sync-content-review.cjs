@@ -10,10 +10,11 @@ const REVIEW_JSON_PATH = path.join(ROOT, 'src', 'data', 'content-review.json');
 const REVIEW_CSV_PATH = path.join(ROOT, 'tools', 'content-review.csv');
 
 const SOURCE_REFS = [
-  'https://unadeaf.or.ug/about/',
+  'https://unadeaf.or.ug/',
+  'https://unadeaf.or.ug/IWDP2025/',
   'https://ncdc.go.ug/wp-content/uploads/2024/02/UGANDAN-SIGN-LANGUAGE-SYLLABUS-BOOK.pdf',
-  'https://fsnr.kyu.ac.ug/master-of-science-in-ugandan-sign-language-translation-and-interpreting-gmni/',
-  'https://ncdc.go.ug/wp-content/uploads/2025/05/Terminology-Development-Handbook-Jan-2025_BOOK-WEB-FILE.pdf'
+  'https://glottolog.org/resource/reference/id/319429',
+  'https://fsnr.kyu.ac.ug/master-of-science-in-ugandan-sign-language-translation-and-interpreting-gmni/'
 ];
 
 const SUSPICIOUS_PATTERNS = [
@@ -30,6 +31,155 @@ const SUSPICIOUS_PATTERNS = [
   /\?/,
   /location\/place/i
 ];
+
+const CATEGORY_HOLD_PATTERNS = {
+  numbers: [
+    /chart/i,
+    /correct/i,
+    /wrong/i,
+    /try again/i,
+    /well done/i,
+    /addition/i,
+    /subtraction/i,
+    /multiplication/i,
+    /division/i,
+    /equals/i,
+    /greater than/i,
+    /less than/i,
+    /fraction/i,
+    /counting end/i,
+    /single/i,
+    /double/i,
+    /triple/i,
+    /many/i,
+    /few/i,
+    /enough/i,
+    /pattern/i,
+    /grouping/i,
+    /balance/i,
+    /change/i
+  ],
+  greetings: [
+    /^Success$/i,
+    /^Well done$/i,
+    /^Crowd$/i,
+    /^Meeting$/i,
+    /^Visit$/i,
+    /^Introduce$/i,
+    /^Socializing$/i,
+    /^Group$/i,
+    /^Together$/i,
+    /^Alone$/i,
+    /^Conversation$/i,
+    /^Speech$/i,
+    /^Language$/i,
+    /^Communication$/i,
+    /^Community$/i,
+    /^Society$/i,
+    /^Culture$/i,
+    /^Tradition$/i,
+    /^History$/i,
+    /^Rights$/i,
+    /^Duty$/i,
+    /^Freedom$/i,
+    /^Justice$/i,
+    /^Peace$/i,
+    /^Respect$/i,
+    /^Unity$/i,
+    /^Progress$/i,
+    /^Change$/i,
+    /^Action$/i,
+    /^Movement$/i,
+    /^Skill$/i,
+    /^Ability$/i,
+    /^Effort$/i,
+    /^Goal$/i,
+    /^Achievement$/i,
+    /^Challenge$/i,
+    /^Opportunity$/i,
+    /^Result$/i,
+    /^Experience$/i,
+    /^Knowledge$/i,
+    /^Wisdom$/i,
+    /^Understanding$/i,
+    /^Learning$/i,
+    /^Failure$/i,
+    /^Results$/i
+  ],
+  family: [
+    /^Single$/i,
+    /^Marriage$/i,
+    /^Wedding$/i,
+    /^Divorced$/i,
+    /^Widow$/i,
+    /^Widower$/i,
+    /^Engagement$/i,
+    /^Relationship$/i,
+    /^Care$/i,
+    /^Responsibility$/i,
+    /^Family House$/i,
+    /^Ancestry$/i
+  ],
+  emotions: [
+    /^Health$/i,
+    /^Treatment$/i,
+    /^Recovery$/i,
+    /^Emergency$/i
+  ],
+  school: [
+    /^Education$/i,
+    /^Subject$/i,
+    /^Result$/i,
+    /^Success$/i,
+    /^Failure$/i
+  ],
+  food: [
+    /^Healthy Food$/i,
+    /^Vegetables & Fruits$/i
+  ],
+  colors: [
+    /^Light$/i,
+    /^Dark$/i,
+    /^Bright$/i,
+    /^Dull$/i,
+    /^Rainbow$/i,
+    /^Mixture$/i,
+    /^Pattern$/i,
+    /^Striped$/i,
+    /^Spotted$/i,
+    /^Plain$/i,
+    /^Beautiful$/i,
+    /^Ugly$/i,
+    /^Choice$/i
+  ],
+  places: [
+    /^Map$/i,
+    /^Road$/i,
+    /^Street$/i,
+    /^Path$/i,
+    /^Bridge$/i,
+    /^Border$/i,
+    /^Distance$/i,
+    /^Near$/i,
+    /^Far$/i,
+    /^Direction$/i,
+    /^North$/i,
+    /^South$/i,
+    /^East$/i,
+    /^West$/i,
+    /^Compass$/i,
+    /^Left$/i,
+    /^Right$/i,
+    /^Straight$/i,
+    /^Mountain$/i,
+    /^Hill$/i,
+    /^River$/i,
+    /^Lake$/i,
+    /^Forest$/i,
+    /^Desert$/i,
+    /^Island$/i
+  ]
+};
 
 function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
@@ -78,6 +228,20 @@ function inferStatus(originalLabel, cleanedLabel) {
   };
 }
 
+function inferCategoryStatus(category, originalLabel, cleanedLabel) {
+  const patterns = CATEGORY_HOLD_PATTERNS[category] || [];
+  const matchedPattern = patterns.find(pattern => pattern.test(cleanedLabel) || pattern.test(originalLabel));
+
+  if (matchedPattern) {
+    return {
+      status: 'hold',
+      reviewNotes: `Auto-held during second-pass review because "${originalLabel}" is too abstract or weakly anchored for the current accuracy-first release.`
+    };
+  }
+
+  return null;
+}
+
 function buildAcholiLookup(glossary) {
   const lookup = new Map();
   for (const entry of glossary.searchTerms || []) {
@@ -118,7 +282,8 @@ function buildReviewRecords() {
   for (const [category, categoryData] of Object.entries(manifest.categories)) {
     for (const sign of categoryData.signs) {
       const approvedLabel = canonicalLabel(sign.label);
-      const statusInfo = inferStatus(sign.label, approvedLabel);
+      const statusInfo = inferCategoryStatus(category, sign.label, approvedLabel)
+        || inferStatus(sign.label, approvedLabel);
 
       records.push({
         id: sign.id,

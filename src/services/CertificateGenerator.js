@@ -5,8 +5,8 @@
  * - Player name and completion date
  * - Total XP and earned badges
  * - Badge points and leaderboard rank
- * - QR code linking to games.cruze-tech.com/signmaster
- * - Cruze Tech branding and tagline
+ * - QR code linking to cruzeintelligentsystems.com
+ * - Cruze Intelligent Systems(U) Ltd branding
  */
 
 import QRCode from 'qrcode';
@@ -130,35 +130,29 @@ class CertificateGenerator {
   }
 
   /**
-   * Draw header with Cruze Tech logo and title
+   * Draw header with company branding and title
    */
   async drawHeader(ctx) {
-    // Cruze Tech Logo (simplified text-based)
     ctx.save();
     ctx.fillStyle = '#D90000';
-    ctx.font = 'bold 32px Arial, sans-serif';
+    ctx.font = 'bold 26px Arial, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('CRUZE TECH', this.width / 2, 80);
-
-    // Tagline
-    ctx.font = '16px Arial, sans-serif';
-    ctx.fillStyle = '#666';
-    ctx.fillText('Tech For You, Tech For Me', this.width / 2, 110);
+    ctx.fillText('CRUZE INTELLIGENT SYSTEMS(U) LTD', this.width / 2, 86);
 
     // Website
     ctx.font = '14px Arial, sans-serif';
     ctx.fillStyle = '#4A90E2';
-    ctx.fillText('cruze-tech.com', this.width / 2, 135);
+    ctx.fillText('cruzeintelligentsystems.com', this.width / 2, 118);
 
     // Certificate title
     ctx.font = 'bold 48px Georgia, serif';
     ctx.fillStyle = '#1a1a1a';
-    ctx.fillText('Certificate of Learning Progress', this.width / 2, 200);
+    ctx.fillText('Certificate of Learning Progress', this.width / 2, 188);
 
     // SignMaster subtitle
     ctx.font = '28px Arial, sans-serif';
     ctx.fillStyle = '#D90000';
-    ctx.fillText('SignMaster: Uganda Sign Language', this.width / 2, 240);
+    ctx.fillText('SignMaster: Uganda Sign Language', this.width / 2, 228);
 
     ctx.restore();
   }
@@ -277,7 +271,7 @@ class CertificateGenerator {
    */
   async drawQRCode(ctx) {
     try {
-      const qrUrl = 'https://games.cruze-tech.com/signmaster';
+      const qrUrl = 'https://cruzeintelligentsystems.com';
       const qrDataUrl = await QRCode.toDataURL(qrUrl, {
         width: 120,
         margin: 1,
@@ -336,7 +330,7 @@ class CertificateGenerator {
     // Center: Verify link
     ctx.textAlign = 'center';
     ctx.fillStyle = '#4A90E2';
-    ctx.fillText('games.cruze-tech.com/signmaster', this.width / 2, footerY);
+      ctx.fillText('cruzeintelligentsystems.com', this.width / 2, footerY);
     
     // Right: Date
     ctx.textAlign = 'right';

@@ -25,13 +25,13 @@
     "accessibility",
     "pwa"
   ],
-  "author": "Cruze Tech (cruze-tech.com)",
+  "author": "Cruze Intelligent Systems(U) Ltd (cruzeintelligentsystems.com)",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/cruze-tech/SignMaster"
   },
-  "homepage": "https://games.cruze-tech.com/signmaster",
+  "homepage": "https://cruzeintelligentsystems.com",
   "dependencies": {
     "csv-parse": "^6.1.0",
     "gsap": "^3.12.5",

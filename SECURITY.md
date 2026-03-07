@@ -37,7 +37,7 @@
 
 ### 6. URL Validation
 - **Function**: `validateURL()`
-- **Whitelist**: Only allows cruze-tech.com domains
+- **Whitelist**: Only allows cruzeintelligentsystems.com domains
 - **Protection**: Prevents open redirect vulnerabilities
 
 ### 7. Certificate Data Sanitization
@@ -155,7 +155,7 @@ npm audit fix --force
 ## Contact
 
 For security issues:
-- Email: security@cruze-tech.com
+- Website: https://cruzeintelligentsystems.com
 - GitHub Issues: https://github.com/cruze-tech/SignMaster/issues
 
 **Please report security vulnerabilities privately before public disclosure.**

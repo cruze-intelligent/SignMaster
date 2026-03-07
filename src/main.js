@@ -193,6 +193,7 @@ class SignMasterApp {
 
     // Setup navigation
     this.setupNavigation();
+    this.setupComingSoonCard();
 
     // Update progress display
     this.updateProgressDisplay();
@@ -210,6 +211,15 @@ class SignMasterApp {
         const screen = button?.dataset.nav;
         if (screen) this.navigate(screen);
       });
+    });
+  }
+
+  setupComingSoonCard() {
+    const storyCard = document.getElementById('stories-coming-soon');
+    if (!storyCard) return;
+
+    storyCard.addEventListener('click', () => {
+      this.showInfoToast('Interactive Stories are coming soon while we verify the underlying content.');
     });
   }
 
@@ -1280,7 +1290,7 @@ class SignMasterApp {
           <h3>ℹ️ ${t('about')}</h3>
           <p class="about-text">
             SignMaster is an educational game for learning Uganda Sign Language (USL) from a reviewed in-app sign set.
-            Developed by <strong>Cruze Tech</strong>.
+            Developed by <strong>Cruze Intelligent Systems(U) Ltd</strong>.
           </p>
           <p class="version-text">Version 2.0.0</p>
         </div>
@@ -1512,6 +1522,23 @@ class SignMasterApp {
       toast.classList.add('toast-exit');
       setTimeout(() => toast.remove(), 400);
     }, 4000);
+  }
+
+  showInfoToast(message) {
+    const toast = document.createElement('div');
+    toast.className = 'toast toast-levelup';
+    toast.innerHTML = `
+      <div class="toast-icon">🕒</div>
+      <div class="toast-body">
+        <strong>Coming Soon</strong>
+        <span>${message}</span>
+      </div>
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+      toast.classList.add('toast-exit');
+      setTimeout(() => toast.remove(), 400);
+    }, 3000);
   }
 }
 

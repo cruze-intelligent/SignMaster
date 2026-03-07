@@ -856,6 +856,16 @@
   transform: scaleX(1);
 }
 
+.mode-card--coming-soon {
+  border-style: dashed;
+  border-color: rgba(217, 0, 0, 0.35);
+  background: linear-gradient(135deg, #fffdf5 0%, #fff7e0 100%);
+}
+
+.mode-card--coming-soon .btn-mode {
+  background: #b85c00;
+}
+
 .mode-icon {
   font-size: 4rem;
   margin-bottom: 1rem;
