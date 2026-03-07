@@ -384,6 +384,14 @@
   font-size: var(--font-size-sm);
 }
 
+.sign-card--learned {
+  border-color: rgba(76, 175, 80, 0.35);
+}
+
+.sign-card--learned .sign-card__label {
+  background: linear-gradient(180deg, #ffffff 0%, #f5fff5 100%);
+}
+
 .spinner {
   width: 40px;
   height: 40px;
@@ -524,6 +532,40 @@
 .category-card p {
   color: var(--color-text-secondary);
   font-size: var(--font-size-sm);
+}
+
+.category-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+}
+
+.category-card__status {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-success);
+  color: white;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.category-card__progress {
+  margin: var(--spacing-md) 0 var(--spacing-sm);
+}
+
+.category-card__meta {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+}
+
+.category-card--complete {
+  border: 2px solid rgba(76, 175, 80, 0.35);
 }
 
 /* Enhanced Progress Indicators */
@@ -1198,6 +1240,12 @@
   line-height: 1.5;
 }
 
+.sign-modal__acholi {
+  margin-bottom: 1rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
 .sign-modal__meta {
   display: flex;
   gap: 1rem;
@@ -1213,6 +1261,92 @@
   font-size: 0.875rem;
   color: var(--color-text-secondary);
   text-transform: capitalize;
+}
+
+.sign-modal__notice {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  background: rgba(217, 0, 0, 0.06);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.sign-modal__details,
+.sign-modal__checklist,
+.sign-modal__related {
+  margin-top: 1.25rem;
+  text-align: left;
+}
+
+.sign-modal__section-title {
+  margin-bottom: 0.75rem;
+  color: var(--color-text);
+  font-size: 1rem;
+}
+
+.sign-modal__detail-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.sign-modal__detail-item {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.sign-modal__detail-label {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.sign-modal__detail-value {
+  color: var(--color-text);
+  line-height: 1.5;
+}
+
+.sign-modal__check-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.sign-modal__check-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.sign-modal__related-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.sign-modal__related-chip {
+  border: none;
+  border-radius: var(--radius-full);
+  padding: 0.65rem 0.9rem;
+  background: linear-gradient(135deg, rgba(217, 0, 0, 0.08) 0%, rgba(252, 220, 4, 0.16) 100%);
+  color: var(--color-text);
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.sign-modal__related-chip:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 .sign-modal__actions {
@@ -1236,6 +1370,11 @@
   color: white !important;
 }
 
+.sign-modal__learn--done {
+  background: var(--color-success) !important;
+  cursor: default;
+}
+
 .sign-modal__practice {
   background: var(--color-surface) !important;
   border: 2px solid var(--color-primary) !important;
@@ -1250,6 +1389,10 @@
 
   .sign-modal__actions {
     flex-direction: column;
+  }
+
+  .sign-modal__check-grid {
+    grid-template-columns: 1fr;
   }
 
   .sign-modal__title {

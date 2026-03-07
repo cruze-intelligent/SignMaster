@@ -1,31 +1,32 @@
 /**
- * ManifestLoader - Load and manage signs manifest
- * 
- * Handles loading the signs-manifest.json file and provides
- * convenient methods to access signs by category, difficulty, etc.
+ * ManifestLoader - Load and manage the reviewed sign manifest.
+ *
+ * The runtime catalog is built by merging the legacy sign manifest with the
+ * review ledger so only approved signs remain visible in the app.
  */
 
-// Static import so Vite bundles the JSON at build time
-// (runtime fetch of src/data/ path fails in production builds)
 import manifestData from '../data/signs-manifest.json';
+import contentReviewData from '../data/content-review.json';
 
 class ManifestLoader {
   constructor() {
     this.manifest = null;
-    this.loading = null;
+    this.reviewIndex = null;
   }
 
   /**
-   * Load the manifest (singleton pattern)
-   * Applies verified-only filter as defense-in-depth
+   * Load the manifest (singleton pattern).
    */
   async loadManifest() {
     if (this.manifest) return this.manifest;
 
     try {
-      this.manifest = this.filterVerifiedOnly(manifestData);
-      const signCount = this.getVerifiedSignCount();
-      console.log(`📋 Manifest loaded: ${Object.keys(this.manifest.categories).length} categories, ${signCount} verified signs`);
+      this.reviewIndex = this.buildReviewIndex(contentReviewData);
+      this.manifest = this.applyContentReview(manifestData, this.reviewIndex, contentReviewData);
+      const signCount = this.getApprovedSignCount();
+      console.log(
+        `📋 Manifest loaded: ${Object.keys(this.manifest.categories).length} categories, ${signCount} approved signs`
+      );
       return this.manifest;
     } catch (error) {
       console.error('Error loading manifest:', error);
@@ -34,30 +35,113 @@ class ManifestLoader {
   }
 
   /**
-   * Filter manifest to only include verified signs (defense-in-depth)
+   * Build a lookup table for reviewed rows.
    */
-  filterVerifiedOnly(data) {
-    const filtered = { ...data, categories: {} };
-    for (const [key, cat] of Object.entries(data.categories)) {
-      const verifiedSigns = cat.signs.filter(s => s.verified === true);
-      if (verifiedSigns.length > 0) {
-        filtered.categories[key] = { ...cat, signs: verifiedSigns };
+  buildReviewIndex(reviewData) {
+    const index = new Map();
+    for (const record of reviewData.records || []) {
+      index.set(record.id, record);
+    }
+    return index;
+  }
+
+  /**
+   * Merge the legacy manifest with review metadata and keep approved signs only.
+   */
+  applyContentReview(baseManifest, reviewIndex, reviewData) {
+    const reviewedManifest = {
+      ...baseManifest,
+      categories: {},
+      contentDisclaimer:
+        'Only signs marked approved in the local content review ledger are shown. Media provenance stays with the existing repository assets unless a reviewed override is recorded.',
+      reviewSummary: reviewData.summary,
+      sourceAnchors: reviewData.sourceAnchors || []
+    };
+
+    for (const [categoryKey, categoryData] of Object.entries(baseManifest.categories || {})) {
+      const approvedSigns = categoryData.signs
+        .map(sign => this.mergeReviewedSign(sign, categoryKey, reviewIndex.get(sign.id)))
+        .filter(Boolean);
+
+      if (approvedSigns.length > 0) {
+        reviewedManifest.categories[categoryKey] = {
+          ...categoryData,
+          signs: approvedSigns
+        };
       }
     }
-    return filtered;
+
+    return reviewedManifest;
   }
 
   /**
-   * Get total count of verified signs
+   * Merge a single sign with its review entry.
    */
-  getVerifiedSignCount() {
-    if (!this.manifest) return 0;
-    return Object.values(this.manifest.categories)
-      .reduce((sum, cat) => sum + cat.signs.length, 0);
+  mergeReviewedSign(sign, categoryKey, reviewRecord) {
+    if (!reviewRecord || reviewRecord.status !== 'approved') {
+      return null;
+    }
+
+    const override = reviewRecord.assetOverride || {};
+
+    return {
+      ...sign,
+      category: categoryKey,
+      originalLabel: sign.label,
+      label: reviewRecord.approvedLabel || sign.label,
+      acholiLabel: reviewRecord.acholiLabel || '',
+      reviewStatus: reviewRecord.status,
+      reviewNotes: reviewRecord.reviewNotes || '',
+      sourceRefs: reviewRecord.sourceRefs || [],
+      licenseStatus: reviewRecord.licenseStatus || 'existing-repo-asset',
+      instruction: {
+        handshape: reviewRecord.instruction?.handshape || '',
+        location: reviewRecord.instruction?.location || '',
+        orientation: reviewRecord.instruction?.orientation || '',
+        movement: reviewRecord.instruction?.movement || '',
+        usageTip: reviewRecord.instruction?.usageTip || ''
+      },
+      searchAliases: this.getSearchAliases(sign, reviewRecord),
+      filename: override.filename || sign.filename,
+      path: override.path || sign.path
+    };
+  }
+
+  getSearchAliases(sign, reviewRecord) {
+    const aliases = new Set();
+
+    if (reviewRecord?.approvedLabel && reviewRecord.approvedLabel !== sign.label) {
+      aliases.add(reviewRecord.approvedLabel);
+    }
+
+    if (sign.label) {
+      aliases.add(sign.label);
+    }
+
+    if (reviewRecord?.acholiLabel) {
+      aliases.add(reviewRecord.acholiLabel);
+    }
+
+    return Array.from(aliases);
   }
 
   /**
-   * Get all categories
+   * Get total count of approved signs.
+   */
+  getApprovedSignCount() {
+    if (!this.manifest) return 0;
+    return Object.values(this.manifest.categories).reduce((sum, category) => sum + category.signs.length, 0);
+  }
+
+  /**
+   * Get the review summary.
+   */
+  getReviewSummary() {
+    return this.manifest?.reviewSummary || contentReviewData.summary || null;
+  }
+
+  /**
+   * Get all category keys.
    */
   async getCategories() {
     const manifest = await this.loadManifest();
@@ -65,14 +149,14 @@ class ManifestLoader {
   }
 
   /**
-   * Get the raw manifest object
+   * Get the raw reviewed manifest object.
    */
   getManifest() {
     return this.manifest;
   }
 
   /**
-   * Get signs for a specific category
+   * Get signs for a specific category.
    */
   async getCategorySigns(category) {
     const manifest = await this.loadManifest();
@@ -80,64 +164,63 @@ class ManifestLoader {
   }
 
   /**
-   * Get sign by ID
+   * Get category metadata including the display name.
+   */
+  async getCategory(category) {
+    const manifest = await this.loadManifest();
+    return manifest.categories[category] || null;
+  }
+
+  /**
+   * Get sign by ID.
    */
   async getSignById(signId) {
     const manifest = await this.loadManifest();
-    for (const category in manifest.categories) {
-      const sign = manifest.categories[category].signs.find(s => s.id === signId);
+    for (const category of Object.values(manifest.categories)) {
+      const sign = category.signs.find(entry => entry.id === signId);
       if (sign) return sign;
     }
     return null;
   }
 
   /**
-   * Get signs by difficulty
+   * Get signs by difficulty.
    */
   async getSignsByDifficulty(difficulty) {
     const manifest = await this.loadManifest();
     const signs = [];
 
-    for (const category in manifest.categories) {
-      const categorySigns = manifest.categories[category].signs.filter(
-        s => s.difficulty === difficulty
-      );
-      signs.push(...categorySigns);
+    for (const category of Object.values(manifest.categories)) {
+      signs.push(...category.signs.filter(sign => sign.difficulty === difficulty));
     }
 
     return signs;
   }
 
   /**
-   * Get total sign count
+   * Get total approved sign count.
    */
   async getTotalSignCount() {
     const manifest = await this.loadManifest();
-    let total = 0;
-
-    for (const category in manifest.categories) {
-      total += manifest.categories[category].signs.length;
-    }
-
-    return total;
+    return Object.values(manifest.categories).reduce((sum, category) => sum + category.signs.length, 0);
   }
 
   /**
-   * Get category statistics
+   * Get per-category statistics for the approved subset.
    */
   async getCategoryStats() {
     const manifest = await this.loadManifest();
     const stats = {};
 
-    for (const category in manifest.categories) {
-      const signs = manifest.categories[category].signs;
-      stats[category] = {
+    for (const [categoryKey, category] of Object.entries(manifest.categories)) {
+      const signs = category.signs;
+      stats[categoryKey] = {
         total: signs.length,
-        verified: signs.filter(s => s.verified).length,
+        approved: signs.length,
         difficulties: {
-          beginner: signs.filter(s => s.difficulty === 'beginner').length,
-          intermediate: signs.filter(s => s.difficulty === 'intermediate').length,
-          advanced: signs.filter(s => s.difficulty === 'advanced').length
+          beginner: signs.filter(sign => sign.difficulty === 'beginner').length,
+          intermediate: signs.filter(sign => sign.difficulty === 'intermediate').length,
+          advanced: signs.filter(sign => sign.difficulty === 'advanced').length
         }
       };
     }
@@ -146,24 +229,27 @@ class ManifestLoader {
   }
 
   /**
-   * Search signs by label
+   * Search signs by label and related aliases.
    */
   async searchSigns(query) {
     const manifest = await this.loadManifest();
-    const results = [];
     const lowerQuery = query.toLowerCase();
+    const results = [];
 
-    for (const category in manifest.categories) {
-      const categorySigns = manifest.categories[category].signs.filter(
-        s => s.label.toLowerCase().includes(lowerQuery)
-      );
-      results.push(...categorySigns.map(s => ({ ...s, category })));
+    for (const [categoryKey, category] of Object.entries(manifest.categories)) {
+      const categoryResults = category.signs.filter(sign => {
+        const searchTexts = [sign.label, sign.originalLabel, sign.acholiLabel, ...(sign.searchAliases || [])]
+          .filter(Boolean)
+          .map(value => value.toLowerCase());
+        return searchTexts.some(value => value.includes(lowerQuery));
+      });
+
+      results.push(...categoryResults.map(sign => ({ ...sign, category: categoryKey })));
     }
 
     return results;
   }
 }
 
-// Export singleton
 const manifestLoader = new ManifestLoader();
 export default manifestLoader;

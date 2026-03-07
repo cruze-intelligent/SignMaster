@@ -5,6 +5,7 @@
  */
 
 import assetLoader from '../services/AssetLoader.js';
+import stateManager from '../services/StateManager.js';
 import signModal from './SignModal.js';
 import { gsap } from 'gsap';
 
@@ -20,8 +21,11 @@ export class SignCard {
    * Render the sign card
    */
   render() {
+    const learned = stateManager.isSignLearned(this.sign.id);
+    const resolvedCategory = this.sign.category || this.category;
+
     this.element = document.createElement('div');
-    this.element.className = 'sign-card';
+    this.element.className = `sign-card ${learned ? 'sign-card--learned' : ''}`;
     this.element.setAttribute('data-sign-id', this.sign.id);
     
     this.element.innerHTML = `
@@ -37,18 +41,18 @@ export class SignCard {
           </div>
         </div>
         <div class="sign-card__label">${this.sign.label}</div>
-        ${this.sign.verified ? '<span class="sign-card__verified">✓</span>' : ''}
+        ${learned ? '<span class="sign-card__verified" aria-label="Learned">✓</span>' : ''}
       </div>
     `;
     
     // Add click handler to open modal
     this.element.addEventListener('click', () => {
-      signModal.open(this.sign, this.category);
+      signModal.open(this.sign, resolvedCategory);
     });
     
     // Lazy load image
     const img = this.element.querySelector('.sign-card__image');
-    assetLoader.lazyLoadImage(img, this.sign.filename, this.category);
+    assetLoader.lazyLoadImage(img, this.sign.filename, resolvedCategory);
     
     // Hide loader when image loads (backup listener)
     img.addEventListener('load', () => {
@@ -117,6 +121,22 @@ export class SignCard {
     const label = this.element.querySelector('.sign-card__label');
     if (label) {
       label.textContent = sign.label;
+    }
+
+    const learnedBadge = this.element.querySelector('.sign-card__verified');
+    const learned = stateManager.isSignLearned(sign.id);
+    this.element.classList.toggle('sign-card--learned', learned);
+
+    if (learned && !learnedBadge) {
+      const badge = document.createElement('span');
+      badge.className = 'sign-card__verified';
+      badge.textContent = '✓';
+      badge.setAttribute('aria-label', 'Learned');
+      this.element.querySelector('.sign-card__inner')?.appendChild(badge);
+    }
+
+    if (!learned && learnedBadge) {
+      learnedBadge.remove();
     }
   }
 }

@@ -153,7 +153,7 @@ class CertificateGenerator {
     // Certificate title
     ctx.font = 'bold 48px Georgia, serif';
     ctx.fillStyle = '#1a1a1a';
-    ctx.fillText('Certificate of Achievement', this.width / 2, 200);
+    ctx.fillText('Certificate of Learning Progress', this.width / 2, 200);
 
     // SignMaster subtitle
     ctx.font = '28px Arial, sans-serif';
@@ -183,8 +183,8 @@ class CertificateGenerator {
     // Achievement text
     ctx.font = '18px Georgia, serif';
     ctx.fillStyle = '#666';
-    ctx.fillText('has successfully completed the SignMaster program', this.width / 2, 390);
-    ctx.fillText('and demonstrated proficiency in Uganda Sign Language', this.width / 2, 420);
+    ctx.fillText('has completed the current SignMaster reviewed learning set', this.width / 2, 390);
+    ctx.fillText('and built consistent practice in Uganda Sign Language', this.width / 2, 420);
 
     // Stats section - Enhanced with more tracked data
     ctx.font = 'bold 24px Arial, sans-serif';

@@ -24,6 +24,7 @@ class SearchEngine {
    */
   buildSearchIndex() {
     if (!this.manifest?.categories) return;
+    this.searchIndex.clear();
 
     Object.entries(this.manifest.categories).forEach(([catKey, category]) => {
       category.signs.forEach(sign => {
@@ -49,20 +50,25 @@ class SearchEngine {
    */
   generateSearchTerms(sign) {
     const terms = new Set();
-
-    // Add label words
-    if (sign.label) {
-      const label = sign.label.toLowerCase();
-      terms.add(label);
-      
-      // Add individual words
-      label.split(/\s+/).forEach(word => {
+    const addTermsFromText = (value) => {
+      if (!value) return;
+      const text = value.toLowerCase();
+      terms.add(text);
+      text.split(/\s+/).forEach(word => {
         if (word.length > 1) terms.add(word);
       });
-      
-      // Add label without special characters
-      const cleaned = label.replace(/[^a-z0-9\s]/g, '');
-      if (cleaned !== label) terms.add(cleaned);
+      const cleaned = text.replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+      if (cleaned && cleaned !== text) {
+        terms.add(cleaned);
+      }
+    };
+
+    addTermsFromText(sign.label);
+    addTermsFromText(sign.originalLabel);
+    addTermsFromText(sign.acholiLabel);
+
+    if (Array.isArray(sign.searchAliases)) {
+      sign.searchAliases.forEach(addTermsFromText);
     }
 
     // Add ID parts
@@ -84,30 +90,36 @@ class SearchEngine {
     if (!this.initialized || !query) return [];
 
     const searchQuery = query.toLowerCase().trim();
+    const normalizedQuery = searchQuery.replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+    const candidateQueries = Array.from(new Set([searchQuery, normalizedQuery].filter(Boolean)));
     const results = new Map();
     const scores = new Map();
 
     // Exact match
-    if (this.searchIndex.has(searchQuery)) {
-      this.searchIndex.get(searchQuery).forEach(sign => {
-        const key = sign.id;
-        results.set(key, sign);
-        scores.set(key, 100);
-      });
-    }
+    candidateQueries.forEach(candidate => {
+      if (this.searchIndex.has(candidate)) {
+        this.searchIndex.get(candidate).forEach(sign => {
+          const key = sign.id;
+          results.set(key, sign);
+          scores.set(key, 100);
+        });
+      }
+    });
 
     // Partial matches
     this.searchIndex.forEach((signs, term) => {
-      if (term.includes(searchQuery) || searchQuery.includes(term)) {
-        const score = this.calculateMatchScore(term, searchQuery);
-        signs.forEach(sign => {
-          const key = sign.id;
-          if (!results.has(key) || scores.get(key) < score) {
-            results.set(key, sign);
-            scores.set(key, score);
-          }
-        });
-      }
+      candidateQueries.forEach(candidate => {
+        if (term.includes(candidate) || candidate.includes(term)) {
+          const score = this.calculateMatchScore(term, candidate);
+          signs.forEach(sign => {
+            const key = sign.id;
+            if (!results.has(key) || scores.get(key) < score) {
+              results.set(key, sign);
+              scores.set(key, score);
+            }
+          });
+        }
+      });
     });
 
     // Sort by score

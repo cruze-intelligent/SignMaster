@@ -11,6 +11,9 @@
     "map-assets": "node tools/asset-mapper.js",
     "optimize-images": "node tools/optimize-images.js",
     "audit": "node tools/audit-manifest.cjs",
+    "content-review:seed": "node tools/sync-content-review.cjs seed",
+    "content-review:export": "node tools/sync-content-review.cjs export",
+    "content-review:import": "node tools/sync-content-review.cjs import",
     "deploy": "npm run build && gh-pages -d dist",
     "test": "vitest run"
   },

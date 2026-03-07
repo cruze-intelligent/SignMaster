@@ -74,6 +74,16 @@ class SignMasterApp {
     this.initialized = false;
     this.signGrid = null;
     this.currentCategory = null;
+    this.pendingQuizCategory = null;
+  }
+
+  getVisibleScreen() {
+    return document.querySelector('.screen[style*="display: block"]')?.id || null;
+  }
+
+  formatCategoryName(category, fallback = null) {
+    if (fallback) return fallback;
+    return category ? category.charAt(0).toUpperCase() + category.slice(1) : '';
   }
 
   /**
@@ -149,14 +159,25 @@ class SignMasterApp {
       this.updateXPDisplay(data.newXP, data.level);
     });
 
-    // Sign completed
-    stateManager.on('signCompleted', (data) => {
+    stateManager.on('signCompleted', data => {
       this.onSignCompleted(data);
+    });
+
+    stateManager.on('signLearned', data => {
+      this.onSignLearned(data);
     });
 
     // Listen for badge manager unlocks
     badgeManager.on('badgeUnlocked', async (badge) => {
       await badgeUnlockModal.show(badge);
+    });
+
+    document.addEventListener('signLearned', async event => {
+      await this.handleLearnedSign(event.detail);
+    });
+
+    document.addEventListener('startPractice', event => {
+      this.handlePracticeRequest(event.detail);
     });
   }
 
@@ -175,6 +196,7 @@ class SignMasterApp {
 
     // Update progress display
     this.updateProgressDisplay();
+    this.applyStaticTranslations();
   }
 
   /**
@@ -243,12 +265,55 @@ class SignMasterApp {
     }
   }
 
+  async handleLearnedSign(detail) {
+    const sign = detail?.sign;
+    const category = detail?.category || this.currentCategory;
+    if (!sign || !category) return;
+
+    await stateManager.markSignLearned(sign.id, category, sign.label);
+    await this.refreshLearningViews(category);
+  }
+
+  handlePracticeRequest(detail) {
+    const category = detail?.category || detail?.sign?.category || this.currentCategory;
+    if (!category) return;
+
+    this.pendingQuizCategory = category;
+    this.navigate('quiz');
+  }
+
+  async refreshLearningViews(category = null) {
+    const visibleScreen = this.getVisibleScreen();
+
+    this.updateProgressDisplay();
+
+    if (visibleScreen === 'categories-screen') {
+      await this.loadCategories();
+    }
+
+    if (visibleScreen === 'game-screen' && category) {
+      await this.startCategory(category);
+    }
+
+    if (visibleScreen === 'search-screen') {
+      const currentQuery = document.getElementById('search-input')?.value?.trim();
+      if (currentQuery) {
+        await this.performSearch(currentQuery);
+      }
+    }
+
+    if (visibleScreen === 'progress-screen') {
+      await this.loadProgress();
+    }
+  }
+
   /**
    * Load categories screen
    */
   async loadCategories() {
     console.log('🔵 Loading categories...');
     const categories = await manifestLoader.getCategories();
+    const manifest = manifestLoader.getManifest();
     console.log('📋 Categories loaded:', categories);
     const container = document.getElementById('categories-list');
 
@@ -257,11 +322,27 @@ class SignMasterApp {
       return;
     }
 
-    container.innerHTML = categories.map(cat => `
-      <div class="category-card" data-category="${cat}">
-        <h3>${cat}</h3>
-      </div>
-    `).join('');
+    const categoryCards = await Promise.all(categories.map(async cat => {
+      const categoryData = manifest?.categories?.[cat];
+      const progress = await stateManager.getCategoryLearningProgress(cat);
+      const displayName = this.formatCategoryName(cat, categoryData?.name);
+
+      return `
+        <div class="category-card ${progress.completed ? 'category-card--complete' : ''}" data-category="${cat}">
+          <div class="category-card__header">
+            <h3>${displayName}</h3>
+            ${progress.completed ? '<span class="category-card__status">✓</span>' : ''}
+          </div>
+          <p>${progress.learned} / ${progress.total} ${translationService.t('reviewed_signs')}</p>
+          <div class="progress-bar category-card__progress">
+            <div class="progress-bar__fill" style="width: ${progress.percent}%"></div>
+          </div>
+          <span class="category-card__meta">${translationService.t('category_progress')}: ${progress.percent}%</span>
+        </div>
+      `;
+    }));
+
+    container.innerHTML = categoryCards.join('');
 
     // Add click handlers
     container.querySelectorAll('.category-card').forEach(card => {
@@ -291,7 +372,8 @@ class SignMasterApp {
     // Update category title
     const titleEl = document.getElementById('category-title');
     if (titleEl) {
-      titleEl.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+      const categoryData = await manifestLoader.getCategory(category);
+      titleEl.textContent = this.formatCategoryName(category, categoryData?.name);
     }
 
     // Setup back button
@@ -412,31 +494,31 @@ class SignMasterApp {
     const resultsEl = document.getElementById('search-results');
     if (!resultsEl || !query) return;
 
-    // Translate query if in Acholi mode
-    let searchQuery = query;
-    let translatedFrom = null;
-
-    if (translationService.getLanguage() === 'ach') {
-      const translated = await translationService.translateSearchQuery(query);
-      if (translated.toLowerCase() !== query.toLowerCase()) {
-        translatedFrom = query;
-        searchQuery = translated;
-      }
+    const searchMeta = translationService.resolveSearchQuery(query);
+    const searchTerms = [query];
+    if (searchMeta.translated && searchMeta.resolvedQuery) {
+      searchTerms.unshift(searchMeta.resolvedQuery);
     }
 
-    const results = searchEngine.search(searchQuery);
+    const resultsById = new Map();
+    searchTerms.forEach(term => {
+      searchEngine.search(term).forEach(sign => {
+        resultsById.set(sign.id, sign);
+      });
+    });
+    const results = Array.from(resultsById.values());
 
     if (results.length === 0) {
-      const noResultsMsg = translatedFrom
-        ? `No signs match "${query}" (searched: "${searchQuery}").`
+      const noResultsMsg = searchMeta.translated
+        ? `No signs match "${query}" (searched: "${searchMeta.resolvedQuery}").`
         : `No signs match "${query}".`;
 
       resultsEl.innerHTML = `
         <div class="search-empty">
           <div class="search-empty-icon">😔</div>
-          <h3>${translationService.getLanguage() === 'ach' ? 'Pe Ononge' : 'No Results Found'}</h3>
+          <h3>${translationService.t('no_results')}</h3>
           <p>${noResultsMsg} ${translationService.getLanguage() === 'ach' ? 'Tem lok mukene onyo nen buce.' : 'Try different words or browse categories.'}</p>
-          <button class="btn-primary" data-nav="categories">${translationService.t('categories')}</button>
+          <button class="btn-primary" data-nav="categories">${translationService.t('browse_categories')}</button>
         </div>
       `;
 
@@ -446,14 +528,14 @@ class SignMasterApp {
         browseBtn.onclick = () => this.navigate('categories');
       }
     } else {
-      const headerText = translatedFrom
-        ? `Found ${results.length} sign${results.length > 1 ? 's' : ''} for "${query}" → "${searchQuery}"`
+      const headerText = searchMeta.translated
+        ? `Found ${results.length} sign${results.length > 1 ? 's' : ''} for "${query}" → "${searchMeta.resolvedQuery}"`
         : `Found ${results.length} sign${results.length > 1 ? 's' : ''} for "${query}"`;
 
       resultsEl.innerHTML = `
         <div class="search-results-header">
           <h3>${headerText}</h3>
-          ${translatedFrom ? `<p class="translation-note">🔤 Translated from Acholi</p>` : ''}
+          ${searchMeta.translated ? `<p class="translation-note">🔤 ${translationService.t('translated_from_acholi')}</p>` : ''}
         </div>
         <div class="search-results-grid" id="search-results-grid"></div>
       `;
@@ -494,8 +576,13 @@ class SignMasterApp {
       for (const cat of categories) {
         const opt = document.createElement('option');
         opt.value = cat;
-        opt.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
+        opt.textContent = this.formatCategoryName(cat, manifestLoader.getManifest()?.categories?.[cat]?.name);
         categorySelect.appendChild(opt);
+      }
+
+      if (this.pendingQuizCategory && categories.includes(this.pendingQuizCategory)) {
+        categorySelect.value = this.pendingQuizCategory;
+        this.pendingQuizCategory = null;
       }
     }
 
@@ -1192,7 +1279,7 @@ class SignMasterApp {
         <div class="settings-section settings-about">
           <h3>ℹ️ ${t('about')}</h3>
           <p class="about-text">
-            SignMaster is an educational game for learning Uganda Sign Language (USL).
+            SignMaster is an educational game for learning Uganda Sign Language (USL) from a reviewed in-app sign set.
             Developed by <strong>Cruze Tech</strong>.
           </p>
           <p class="version-text">Version 2.0.0</p>
@@ -1255,6 +1342,14 @@ class SignMasterApp {
    * Update all translations when language changes
    */
   updateTranslations() {
+    this.applyStaticTranslations();
+    const visibleScreen = this.getVisibleScreen();
+
+    if (visibleScreen === 'game-screen' && this.currentCategory) {
+      this.startCategory(this.currentCategory);
+      return;
+    }
+
     // Re-render current screen if needed
     const activeNav = document.querySelector('.nav-item.active');
     if (activeNav) {
@@ -1268,8 +1363,30 @@ class SignMasterApp {
           case 'settings':
             this.loadSettings();
             break;
+          case 'categories':
+            this.loadCategories();
+            break;
+          case 'search':
+            this.loadSearch();
+            break;
+          case 'quiz':
+            this.loadQuiz();
+            break;
         }
       }
+    }
+  }
+
+  applyStaticTranslations() {
+    document.querySelector('[data-nav="welcome"] .nav-label')?.replaceChildren(document.createTextNode(translationService.t('home')));
+    document.querySelector('[data-nav="categories"] .nav-label')?.replaceChildren(document.createTextNode(translationService.t('categories')));
+    document.querySelector('[data-nav="search"] .nav-label')?.replaceChildren(document.createTextNode(translationService.t('search')));
+    document.querySelector('[data-nav="progress"] .nav-label')?.replaceChildren(document.createTextNode(translationService.t('progress')));
+    document.querySelector('[data-nav="settings"] .nav-label')?.replaceChildren(document.createTextNode(translationService.t('settings')));
+
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+      searchInput.placeholder = translationService.getSearchPlaceholder();
     }
   }
 
@@ -1328,6 +1445,23 @@ class SignMasterApp {
       <div class="toast-body">
         <strong>Learned!</strong>
         <span>${data?.label || 'Sign'} mastered</span>
+      </div>
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+      toast.classList.add('toast-exit');
+      setTimeout(() => toast.remove(), 400);
+    }, 2500);
+  }
+
+  onSignLearned(data) {
+    const toast = document.createElement('div');
+    toast.className = 'toast toast-success';
+    toast.innerHTML = `
+      <div class="toast-icon">✅</div>
+      <div class="toast-body">
+        <strong>Learned!</strong>
+        <span>${data?.label || 'Sign'} saved to your progress</span>
       </div>
     `;
     document.body.appendChild(toast);

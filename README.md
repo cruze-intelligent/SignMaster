@@ -1,17 +1,17 @@
 # 🤟 SignMaster: Learn Uganda Sign Language
 
-An interactive PWA for learning Uganda Sign Language (USL) with 676 verified signs, gamification, and offline support.
+An interactive PWA for learning Uganda Sign Language (USL) with a reviewed sign set, gamification, and offline support.
 
 ![Build Status](https://github.com/cruze-tech/SignMaster/actions/workflows/deploy.yml/badge.svg)
 
 ## ✨ Features
 
-- **676 Verified Signs** — Authentic USL images across 12 categories
+- **Reviewed Sign Set** — Runtime content is filtered through a local review ledger before it appears in the app
 - **Quiz with Combo System** — Same-category questions, 2×/3×/5× multipliers, time bonuses, confetti
 - **Progressive Badges** — 5-tier achievements (Bronze → Diamond) with 1,540 total points
 - **Certificates** — Downloadable with QR codes and Cruze Tech branding
 - **Offline PWA** — Works without internet after first load (IndexedDB caching)
-- **Bilingual** — English + Acholi (Lwo) with in-app language switching
+- **Bilingual** — English + Acholi (Lwo) with offline glossary-backed search
 - **Gamification** — XP, levels, streaks, combos, daily challenges
 - **Accessibility** — Voice narration, high contrast mode, 44px touch targets
 - **Responsive** — Mobile, tablet, and desktop with safe-area support
@@ -64,8 +64,8 @@ npm run map-assets
 ```
 Scans images with Tesseract.js and creates `tools/asset-review.csv`.
 
-### Step 2: Review CSV (Optional, 10 min)
-Open `tools/asset-review.csv` in a spreadsheet editor. Sort by `confidence`, fix `manualLabel` for rows below 70%, mark `verified = yes`.
+### Step 2: Review OCR CSV (Optional, 10 min)
+Open `tools/asset-review.csv` in a spreadsheet editor. Sort by `confidence`, fix `manualLabel` for rows below 70%, and keep the raw OCR audit data up to date.
 
 ### Step 3: Generate Manifest (2 min)
 ```bash
@@ -76,8 +76,16 @@ Creates `src/data/signs-manifest.json` with all categories and signs.
 ### Step 4: Audit & Clean (1 min)
 ```bash
 node tools/audit-manifest.cjs        # Report-only
-node tools/audit-manifest.cjs --clean # Remove unverified/bad entries
+node tools/audit-manifest.cjs --clean # Remove obvious legacy OCR/meta noise
 ```
+
+### Step 5: Seed or Sync the Runtime Review Ledger
+```bash
+npm run content-review:seed    # Build src/data/content-review.json + tools/content-review.csv
+npm run content-review:export  # Re-export CSV from the JSON ledger
+npm run content-review:import  # Import edited CSV back into the JSON ledger
+```
+Only rows marked `approved` in `src/data/content-review.json` are exposed at runtime.
 
 ### Image Optimization
 ```bash
@@ -171,7 +179,7 @@ SignMaster/
 |---|---|
 | Images won't load | Run `npm run build` then `npm run preview` |
 | Dev server won't start | `rm -rf node_modules && npm install && npm run dev` |
-| Wrong image labels | Run `node tools/audit-manifest.cjs --clean` to re-audit |
+| Wrong image labels | Edit `tools/content-review.csv`, then run `npm run content-review:import` |
 | Terminal frozen during OCR | Normal — wait 15–20 min for completion |
 | `sharp` not found | `npm install sharp --save-dev` |
 
