@@ -1290,7 +1290,12 @@ class SignMasterApp {
           <h3>ℹ️ ${t('about')}</h3>
           <p class="about-text">
             SignMaster is an educational game for learning Uganda Sign Language (USL) from a reviewed in-app sign set.
-            Developed by <strong>Cruze Intelligent Systems(U) Ltd</strong>.
+          </p>
+          <p class="about-text">
+            Sponsored by <strong>Cruze Intelligent Systems(U) Ltd</strong>.
+          </p>
+          <p class="about-text">
+            Developers and researchers: <strong>Gabriel, Vincent and Jennifer</strong>.
           </p>
           <p class="version-text">Version 2.0.0</p>
         </div>

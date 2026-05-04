@@ -9,7 +9,7 @@ An interactive PWA for learning Uganda Sign Language (USL) with a reviewed sign 
 - **Reviewed Sign Set** — Runtime content is filtered through a local review ledger before it appears in the app
 - **Quiz with Combo System** — Same-category questions, 2×/3×/5× multipliers, time bonuses, confetti
 - **Progressive Badges** — 5-tier achievements (Bronze → Diamond) with 1,540 total points
-- **Certificates** — Downloadable with QR codes and Cruze Intelligent Systems(U) Ltd branding
+- **Certificates** — Downloadable learning certificates with QR codes
 - **Offline PWA** — Works without internet after first load (IndexedDB caching)
 - **Bilingual** — English + Acholi (Lwo) with offline glossary-backed search
 - **Gamification** — XP, levels, streaks, combos, daily challenges
@@ -101,7 +101,7 @@ Converts PNGs → WebP (85% smaller). The app tries WebP first and falls back to
 
 Push to `main` → GitHub Actions builds and deploys to `gh-pages`.
 
-**Live URL:** `https://cruzeintelligentsystems.com`
+**Live URL:** Published through the repository's GitHub Pages configuration.
 
 ### Manual Deploy
 ```bash
@@ -111,7 +111,7 @@ npm run deploy     # Builds + pushes to gh-pages branch
 ### GitHub Pages Setup
 1. Repository Settings → Pages
 2. Source: **GitHub Actions**
-3. Custom domain (optional): `cruzeintelligentsystems.com`
+3. Custom domain (optional): add the project domain in repository settings
 
 ---
 
@@ -199,6 +199,6 @@ MIT License — See LICENSE file
 
 ---
 
-**Cruze Intelligent Systems(U) Ltd**
+**SignMaster**
 
-Made with ❤️ for Uganda's Deaf community
+Made for Uganda's Deaf community

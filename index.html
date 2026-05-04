@@ -8,7 +8,7 @@
     content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' blob: https://cdnjs.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com;">
   <meta name="description" content="Learn Uganda Sign Language with a reviewed sign set, offline search, badges, and practice tools">
   <meta name="keywords" content="Uganda Sign Language, USL, sign language learning, educational game, deaf community">
-  <meta name="author" content="Cruze Intelligent Systems(U) Ltd">
+  <meta name="author" content="SignMaster team">
 
   <!-- PWA Meta Tags -->
   <meta name="theme-color" content="#D90000">
@@ -21,7 +21,6 @@
   <meta property="og:title" content="SignMaster: Learn Uganda Sign Language">
   <meta property="og:description" content="Interactive Uganda Sign Language learning game built around a reviewed sign set">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://cruzeintelligentsystems.com">
 
   <!-- Icons (relative paths so Vite's base applies correctly) -->
   <link rel="icon" type="image/svg+xml" href="./icon-192.svg">
@@ -281,12 +280,8 @@
   <!-- Footer -->
   <footer class="app-footer">
     <div class="container">
-      <p>
-        <strong>Cruze Intelligent Systems(U) Ltd</strong>
-      </p>
-      <p>
-        <a href="https://cruzeintelligentsystems.com" target="_blank">cruzeintelligentsystems.com</a>
-      </p>
+      <p><strong>SignMaster</strong></p>
+      <p>Uganda Sign Language learning game</p>
     </div>
   </footer>
 
@@ -347,6 +342,7 @@
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      overflow-x: hidden;
     }
 
     .app-header {
@@ -360,19 +356,23 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 1rem;
+      min-width: 0;
     }
 
     .app-title {
       margin: 0;
-      font-size: 1.5rem;
+      font-size: clamp(1.25rem, 5vw, 1.5rem);
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      min-width: 0;
     }
 
     .header-stats {
       display: flex;
-      gap: 1rem;
+      gap: clamp(0.5rem, 3vw, 1rem);
+      flex-shrink: 0;
     }
 
     .stat-item {
@@ -411,12 +411,14 @@
 
     .nav-item {
       display: flex;
+      flex: 1 1 0;
       flex-direction: column;
       align-items: center;
       gap: 0.25rem;
+      min-width: 0;
       background: none;
       border: none;
-      padding: 0.5rem 1rem;
+      padding: 0.5rem clamp(0.25rem, 2vw, 1rem);
       cursor: pointer;
       transition: transform 0.2s;
     }
@@ -431,6 +433,10 @@
 
     .nav-label {
       font-size: 0.75rem;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .app-footer {
@@ -445,8 +451,9 @@
 
     .welcome-content {
       text-align: center;
-      max-width: 500px;
-      margin: 4rem auto;
+      width: 100%;
+      max-width: none;
+      margin: 0 auto;
     }
 
     .welcome-actions {

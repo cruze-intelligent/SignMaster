@@ -160,7 +160,6 @@ export function validateURL(url) {
     
     // Whitelist allowed domains
     const allowedDomains = [
-      'cruzeintelligentsystems.com',
       'localhost',
       'github.io'
     ];

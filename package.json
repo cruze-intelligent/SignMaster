@@ -25,13 +25,12 @@
     "accessibility",
     "pwa"
   ],
-  "author": "Cruze Intelligent Systems(U) Ltd (cruzeintelligentsystems.com)",
+  "author": "Gabriel, Vincent and Jennifer",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/cruze-tech/SignMaster"
   },
-  "homepage": "https://cruzeintelligentsystems.com",
   "dependencies": {
     "csv-parse": "^6.1.0",
     "gsap": "^3.12.5",
