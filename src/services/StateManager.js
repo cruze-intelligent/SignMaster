@@ -42,6 +42,10 @@ class StateManager {
         highContrast: false,
         difficulty: 'beginner',
         showHints: true
+      },
+      quests: {
+        date: null,
+        items: []
       }
     };
 
@@ -93,7 +97,8 @@ class StateManager {
         completedSigns: this.state.completedSigns,
         stats: this.state.stats,
         streak: this.state.streak,
-        longestStreak: this.state.longestStreak
+        longestStreak: this.state.longestStreak,
+        quests: this.state.quests
       });
 
       await cacheManager.setProgress('settings', this.state.settings);
@@ -112,7 +117,11 @@ class StateManager {
         ...this.state.stats,
         categoriesCompleted: [...this.state.stats.categoriesCompleted]
       },
-      settings: { ...this.state.settings }
+      settings: { ...this.state.settings },
+      quests: this.state.quests ? {
+        date: this.state.quests.date,
+        items: Array.isArray(this.state.quests.items) ? [...this.state.quests.items] : []
+      } : { date: null, items: [] }
     };
   }
 
@@ -181,6 +190,10 @@ class StateManager {
       newXP: this.state.xp,
       level: this.state.level
     });
+
+    if (reason !== 'quest_completion') {
+      this.updateQuestProgress('xp', amount);
+    }
   }
 
   isSignLearned(signId) {
@@ -261,6 +274,7 @@ class StateManager {
     };
 
     this.emit('signLearned', payload);
+    this.updateQuestProgress('learn', 1);
 
     if (categoryCompleted) {
       this.emit('categoryCompleted', {
@@ -304,6 +318,8 @@ class StateManager {
       streak: this.state.streak,
       accuracy: this.getAccuracy()
     });
+
+    this.updateQuestProgress('combo', this.state.streak);
   }
 
   async completeCategory(category, score, isPerfect) {
@@ -323,6 +339,9 @@ class StateManager {
     await badgeManager.checkAndUnlockBadge('greeting_master', this.getStats());
     await badgeManager.checkAndUnlockBadge('perfect_match', this.getStats());
     await badgeManager.checkAndUnlockBadge('perfectionist', this.getStats());
+
+    this.updateQuestProgress('play', 1);
+    if (isPerfect) this.updateQuestProgress('perfect', 1);
 
     this.emit('categoryCompleted', {
       category,
@@ -355,6 +374,70 @@ class StateManager {
       this.emit('dailyStreakUpdated', {
         streak: this.state.stats.dailyStreak
       });
+    }
+
+    if (this.state.quests.date !== today) {
+      this.generateDailyQuests(today);
+    }
+  }
+
+  generateDailyQuests(date) {
+    const questPool = [
+      { id: 'q_combo', type: 'combo', target: 5, description: 'Achieve a 5x Combo', xp: 50 },
+      { id: 'q_learn', type: 'learn', target: 5, description: 'Learn 5 new signs', xp: 30 },
+      { id: 'q_games', type: 'play', target: 3, description: 'Play 3 quiz games', xp: 20 },
+      { id: 'q_perfect', type: 'perfect', target: 1, description: 'Get a perfect score', xp: 50 },
+      { id: 'q_xp', type: 'xp', target: 100, description: 'Earn 100 XP', xp: 40 }
+    ];
+
+    // Shuffle and pick 3
+    const shuffled = questPool.sort(() => 0.5 - Math.random());
+    const selected = shuffled.slice(0, 3).map(q => ({
+      ...q,
+      progress: 0,
+      completed: false
+    }));
+
+    this.state.quests = {
+      date: date,
+      items: selected
+    };
+    this.saveState();
+  }
+
+  async updateQuestProgress(type, amount = 1) {
+    if (!this.state.quests || !this.state.quests.items) return;
+
+    let updated = false;
+    for (const quest of this.state.quests.items) {
+      if (quest.type === type && !quest.completed) {
+        // Special logic for combo and perfect (which are non-cumulative)
+        if (type === 'combo' || type === 'perfect') {
+          if (amount >= quest.target) {
+            quest.progress = quest.target;
+            quest.completed = true;
+            updated = true;
+            this.addXP(quest.xp, 'quest_completion');
+            this.emit('questCompleted', quest);
+          }
+        } else {
+          // Cumulative (learn, play, xp)
+          quest.progress += amount;
+          if (quest.progress >= quest.target) {
+            quest.progress = quest.target;
+            quest.completed = true;
+            updated = true;
+            this.addXP(quest.xp, 'quest_completion');
+            this.emit('questCompleted', quest);
+          }
+          updated = true;
+        }
+      }
+    }
+
+    if (updated) {
+      await this.saveState();
+      this.emit('questsUpdated', this.state.quests);
     }
   }
 

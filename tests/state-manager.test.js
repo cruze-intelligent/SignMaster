@@ -35,6 +35,10 @@ function createBaseState() {
       highContrast: false,
       difficulty: 'beginner',
       showHints: true
+    },
+    quests: {
+      date: null,
+      items: []
     }
   };
 }

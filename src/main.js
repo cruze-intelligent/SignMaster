@@ -17,6 +17,8 @@ import assetLoader from './services/AssetLoader.js';
 import certificateGenerator from './services/CertificateGenerator.js';
 import searchEngine from './services/SearchEngine.js';
 import translationService from './services/TranslationService.js';
+import audioService from './services/AudioService.js';
+import { gsap } from 'gsap';
 
 // PWA install handling --------------------------------------------------
 let deferredPrompt = null;
@@ -82,8 +84,16 @@ class SignMasterApp {
   }
 
   formatCategoryName(category, fallback = null) {
-    if (fallback) return fallback;
-    return category ? category.charAt(0).toUpperCase() + category.slice(1) : '';
+    const defaultName = fallback || (category ? category.charAt(0).toUpperCase() + category.slice(1) : '');
+    const categoryKey = category ? category.toLowerCase() : '';
+    
+    // Try to translate by key, e.g., 'alphabet', 'numbers'
+    const translatedName = translationService.t(categoryKey);
+    if (translatedName !== categoryKey) {
+      return translatedName;
+    }
+    
+    return defaultName;
   }
 
   /**
@@ -152,11 +162,24 @@ class SignMasterApp {
     // Level up
     stateManager.on('levelUp', (data) => {
       this.showLevelUp(data);
+      audioService.playLevelUp();
     });
 
     // XP gained
     stateManager.on('xpGained', (data) => {
       this.updateXPDisplay(data.newXP, data.level);
+    });
+
+    // Quests updated
+    stateManager.on('questsUpdated', () => {
+      if (this.getVisibleScreen() === 'welcome-screen') {
+        this.renderDailyQuests();
+      }
+    });
+
+    stateManager.on('questCompleted', (quest) => {
+      this.showInfoToast(`Quest Completed: ${quest.description}! +${quest.xp} XP`);
+      audioService.playLevelUp(); // reuse sound for quest completion
     });
 
     stateManager.on('signCompleted', data => {
@@ -615,8 +638,11 @@ class SignMasterApp {
   async startQuiz() {
     const categorySelect = document.getElementById('quiz-category');
     const countSelect = document.getElementById('quiz-count');
+    const modeSelect = document.getElementById('quiz-mode');
+    
     const selectedCategory = categorySelect?.value || 'all';
-    const questionCount = parseInt(countSelect?.value || '10');
+    const selectedMode = modeSelect?.value || 'standard';
+    const questionCount = selectedMode === 'survival' ? 999 : parseInt(countSelect?.value || '10');
 
     const manifest = await manifestLoader.loadManifest();
 
@@ -667,6 +693,10 @@ class SignMasterApp {
       totalXP: 0,
       comboMultiplier: 1,
       selectedCategory,
+      mode: selectedMode,
+      timeLeft: selectedMode === 'time_attack' ? 60 : null,
+      lives: selectedMode === 'survival' ? 3 : null,
+      timerInterval: null,
       questionStartTime: null
     };
 
@@ -675,7 +705,42 @@ class SignMasterApp {
     document.getElementById('quiz-active').style.display = 'block';
     document.getElementById('quiz-results').style.display = 'none';
 
+    if (this.quizState.mode === 'time_attack') {
+      this.quizState.timerInterval = setInterval(() => {
+        this.quizState.timeLeft--;
+        this.updateSpecialModeUI();
+        if (this.quizState.timeLeft <= 0) {
+          this.endQuiz();
+        }
+      }, 1000);
+    }
+
     this.showQuizQuestion();
+  }
+
+  updateSpecialModeUI() {
+    const ui = document.getElementById('quiz-special-mode-ui');
+    if (!ui) return;
+    
+    const qs = this.quizState;
+    if (qs.mode === 'standard') {
+      ui.style.display = 'none';
+      return;
+    }
+
+    ui.style.display = 'flex';
+    if (qs.mode === 'time_attack') {
+      ui.innerHTML = `<span class="quiz-timer">⏱️ ${qs.timeLeft}s</span>`;
+    } else if (qs.mode === 'survival') {
+      ui.innerHTML = `<span class="quiz-lives">${'❤️'.repeat(qs.lives)}</span>`;
+    }
+  }
+
+  endQuiz() {
+    if (this.quizState.timerInterval) {
+      clearInterval(this.quizState.timerInterval);
+    }
+    this.showQuizResults();
   }
 
   /**
@@ -706,11 +771,18 @@ class SignMasterApp {
 
     // Update progress
     const total = qs.questions.length;
-    document.getElementById('quiz-question-num').textContent = `${qs.currentIndex + 1}/${total}`;
+    document.getElementById('quiz-question-num').textContent = qs.mode === 'survival' ? `Wave ${qs.currentIndex + 1}` : `${qs.currentIndex + 1}/${total}`;
     document.getElementById('quiz-score-display').textContent = `Score: ${qs.score}`;
     const combo = this.getComboMultiplier(qs.streak);
     document.getElementById('quiz-streak-display').textContent = combo.label || `🔥 ${qs.streak}`;
-    document.getElementById('quiz-progress-fill').style.width = `${((qs.currentIndex) / total) * 100}%`;
+    
+    if (qs.mode !== 'survival') {
+      document.getElementById('quiz-progress-fill').style.width = `${((qs.currentIndex) / total) * 100}%`;
+    } else {
+      document.getElementById('quiz-progress-fill').style.width = `100%`;
+    }
+
+    this.updateSpecialModeUI();
 
     // Hide feedback, next button, and combo overlay
     document.getElementById('quiz-feedback').style.display = 'none';
@@ -824,6 +896,13 @@ class SignMasterApp {
       qs.streak++;
       if (qs.streak > qs.bestStreak) qs.bestStreak = qs.streak;
 
+      // Time attack logic
+      if (qs.mode === 'time_attack') qs.timeLeft += 2;
+
+      // Audio & Visual Polish
+      audioService.playCorrect(qs.streak);
+      this.animateFloatingText(btnEl, '+2s', '#4CAF50');
+
       // Combo multiplier
       const combo = this.getComboMultiplier(qs.streak);
       qs.comboMultiplier = combo.mult;
@@ -839,7 +918,11 @@ class SignMasterApp {
 
       // Build feedback message
       let feedbackParts = [`✅ Correct! +${points} pts`];
-      if (combo.mult > 1) feedbackParts.push(combo.label);
+      if (combo.mult > 1) {
+        feedbackParts.push(combo.label);
+        audioService.playCombo();
+        this.animateFloatingText(btnEl, `x${combo.mult} COMBO!`, '#FCDC04', 40);
+      }
       if (timeBonus.bonus > 0) feedbackParts.push(timeBonus.label);
       feedbackEl.innerHTML = feedbackParts.join(' &nbsp;·&nbsp; ');
       feedbackEl.className = 'quiz-feedback quiz-feedback-correct';
@@ -858,43 +941,75 @@ class SignMasterApp {
       // Check streak badges
       if (qs.streak >= 5) await badgeManager.checkAndUnlockBadge('five_streak', stateManager.getStats());
       if (qs.streak >= 10) await badgeManager.checkAndUnlockBadge('ten_streak', stateManager.getStats());
-      if (qs.streak >= 20) await badgeManager.checkAndUnlockBadge('twenty_streak', stateManager.getStats());
+
+      setTimeout(() => {
+        qs.currentIndex++;
+        if (qs.currentIndex < qs.questions.length) {
+          this.showQuizQuestion();
+        } else {
+          this.endQuiz();
+        }
+      }, 1500);
+
     } else {
       btnEl.classList.add('quiz-option-wrong');
-      const oldStreak = qs.streak;
-      qs.streak = 0;
-      qs.comboMultiplier = 1;
+      
+      // Reveal correct answer
+      document.querySelectorAll('.quiz-option-btn').forEach(btn => {
+        if (btn.dataset.signId === correctSign.id) {
+          btn.classList.add('quiz-option-correct');
+        }
+      });
 
-      // Educational feedback
-      feedbackEl.innerHTML = `❌ The correct answer is <strong>"${correctSign.label}"</strong>. Look at the hand shape carefully!`;
+      // Special mode logic
+      if (qs.mode === 'time_attack') qs.timeLeft -= 3;
+      if (qs.mode === 'survival') qs.lives--;
+      this.updateSpecialModeUI();
+
+      // Audio & Visual Polish
+      audioService.playWrong();
+      const quizActive = document.getElementById('quiz-active');
+      if (quizActive) {
+        gsap.fromTo(quizActive, { x: -10 }, { x: 10, duration: 0.1, yoyo: true, repeat: 3, onComplete: () => gsap.set(quizActive, { x: 0 }) });
+      }
+
+      qs.streak = 0;
+      feedbackEl.textContent = `❌ Incorrect. That was "${correctSign.label}".`;
       feedbackEl.className = 'quiz-feedback quiz-feedback-wrong';
 
-      // Shake animation on wrong answer
-      btnEl.style.animation = 'shake 0.4s ease';
-      if (oldStreak >= 3) {
-        this.showComboLost();
-      }
-    }
-
-    // Update displays
-    document.getElementById('quiz-score-display').textContent = `Score: ${qs.score}`;
-    const newCombo = this.getComboMultiplier(qs.streak);
-    document.getElementById('quiz-streak-display').textContent = newCombo.label || `🔥 ${qs.streak}`;
-
-    // Show next button
-    const nextBtn = document.getElementById('quiz-next-btn');
-    if (qs.currentIndex < qs.questions.length - 1) {
-      nextBtn.textContent = 'Next Question →';
-      nextBtn.style.display = 'block';
-      nextBtn.onclick = () => {
+      setTimeout(() => {
+        if (qs.mode === 'survival' && qs.lives <= 0) {
+          this.endQuiz();
+          return;
+        }
+        
         qs.currentIndex++;
-        this.showQuizQuestion();
-      };
-    } else {
-      nextBtn.textContent = 'See Results 🏆';
-      nextBtn.style.display = 'block';
-      nextBtn.onclick = () => this.showQuizResults();
+        if (qs.currentIndex < qs.questions.length) {
+          this.showQuizQuestion();
+        } else {
+          this.endQuiz();
+        }
+      }, 2000);
     }
+  }
+
+  animateFloatingText(element, text, color, yOffset = 0) {
+    const rect = element.getBoundingClientRect();
+    const floating = document.createElement('div');
+    floating.className = 'gsap-floating-text';
+    floating.textContent = text;
+    floating.style.color = color;
+    floating.style.left = `${rect.left + rect.width / 2}px`;
+    floating.style.top = `${rect.top - 20 - yOffset}px`;
+    document.body.appendChild(floating);
+
+    gsap.to(floating, {
+      y: -50,
+      opacity: 0,
+      duration: 1.5,
+      ease: 'power2.out',
+      onComplete: () => floating.remove()
+    });
   }
 
   /**
@@ -961,11 +1076,13 @@ class SignMasterApp {
    */
   async showQuizResults() {
     const qs = this.quizState;
+    if (qs.timerInterval) clearInterval(qs.timerInterval);
     const total = qs.questions.length;
     const pct = Math.round((qs.correct / total) * 100);
 
     document.getElementById('quiz-active').style.display = 'none';
-    document.getElementById('quiz-results').style.display = 'block';
+    const resultsEl = document.getElementById('quiz-results');
+    resultsEl.style.display = 'block';
 
     // Icon and title based on performance
     const icon = document.getElementById('quiz-results-icon');
@@ -1393,6 +1510,31 @@ class SignMasterApp {
   }
 
   applyStaticTranslations() {
+    // Translate standard data-i18n elements
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      const translation = translationService.t(key);
+      if (translation !== key) {
+        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+          el.placeholder = translation;
+        } else {
+          // Replace only the first non-empty text node to preserve icons/HTML inside
+          let updated = false;
+          el.childNodes.forEach(node => {
+            if (!updated && node.nodeType === Node.TEXT_NODE && node.textContent.trim().length > 0) {
+              node.textContent = translation;
+              updated = true;
+            }
+          });
+          // If no text node was found (e.g., empty element), just set textContent
+          if (!updated && el.childNodes.length === 0) {
+            el.textContent = translation;
+          }
+        }
+      }
+    });
+
+    // Translate dynamic elements not caught by data-i18n
     document.querySelector('[data-nav="welcome"] .nav-label')?.replaceChildren(document.createTextNode(translationService.t('home')));
     document.querySelector('[data-nav="categories"] .nav-label')?.replaceChildren(document.createTextNode(translationService.t('categories')));
     document.querySelector('[data-nav="search"] .nav-label')?.replaceChildren(document.createTextNode(translationService.t('search')));
@@ -1507,6 +1649,37 @@ class SignMasterApp {
    */
   showWelcome() {
     this.navigate('welcome');
+    this.renderDailyQuests();
+  }
+
+  /**
+   * Render Daily Quests
+   */
+  renderDailyQuests() {
+    const container = document.getElementById('daily-quests-container');
+    if (!container) return;
+
+    const quests = stateManager.getState().quests;
+    if (!quests || !quests.items || quests.items.length === 0) {
+      const emptyMsg = translationService.t('no_quests_available');
+      container.innerHTML = `<p>${emptyMsg !== 'no_quests_available' ? emptyMsg : 'No quests available today.'}</p>`;
+      return;
+    }
+
+    container.innerHTML = quests.items.map(quest => {
+      const progressPercent = Math.min(100, Math.round((quest.progress / quest.target) * 100));
+      return `
+        <div class="daily-quest-item ${quest.completed ? 'completed' : ''}">
+          <div class="daily-quest-header">
+            <span>${translationService.t(quest.id) !== quest.id ? translationService.t(quest.id) : quest.description}</span>
+            <span class="daily-quest-xp">+${quest.xp} XP</span>
+          </div>
+          <div class="daily-quest-progress-bg">
+            <div class="daily-quest-progress-fill" style="width: ${progressPercent}%"></div>
+          </div>
+        </div>
+      `;
+    }).join('');
   }
 
   /**

@@ -63,11 +63,11 @@
           </h1>
           <div class="header-stats">
             <div class="stat-item">
-              <span class="stat-label">Level</span>
+              <span class="stat-label" data-i18n="level">Level</span>
               <span class="stat-value" id="level-display">1</span>
             </div>
             <div class="stat-item">
-              <span class="stat-label">XP</span>
+              <span class="stat-label" data-i18n="total_xp">XP</span>
               <span class="stat-value" id="xp-display">0</span>
             </div>
           </div>
@@ -81,37 +81,46 @@
         <!-- Welcome Screen -->
         <div id="welcome-screen" class="screen">
           <div class="welcome-content">
-            <h2>Welcome to SignMaster!</h2>
-            <p class="welcome-subtitle">Learn Uganda Sign Language with a reviewed sign set in 3 practical ways</p>
+            <h2 data-i18n="welcome">Welcome to SignMaster!</h2>
+            <p class="welcome-subtitle" data-i18n="welcome_subtitle">Learn Uganda Sign Language with a reviewed sign set in 3 practical ways</p>
 
             <div class="learning-modes">
               <!-- Category Learning -->
               <div class="mode-card" data-nav="categories">
                 <div class="mode-icon">📚</div>
-                <h3>Learn by Category</h3>
-                <p>Browse reviewed signs organized by topics like Numbers, Food, Actions, and more</p>
-                <button class="btn-mode">Start Learning →</button>
+                <h3 data-i18n="learn_by_category">Learn by Category</h3>
+                <p data-i18n="learn_by_category_desc">Browse reviewed signs organized by topics like Numbers, Food, Actions, and more</p>
+                <button class="btn-mode" data-i18n="start_learning">Start Learning →</button>
               </div>
 
               <!-- Search Learning -->
               <div class="mode-card" data-nav="search">
                 <div class="mode-icon">🔍</div>
-                <h3>Search & Translate</h3>
-                <p>Search reviewed signs in English or Acholi with offline glossary support</p>
-                <button class="btn-mode">Search Signs →</button>
+                <h3 data-i18n="search_and_translate">Search & Translate</h3>
+                <p data-i18n="search_and_translate_desc">Search reviewed signs in English or Acholi with offline glossary support</p>
+                <button class="btn-mode" data-i18n="search_signs">Search Signs →</button>
+              </div>
+              
+              <!-- Daily Quests (New) -->
+              <div class="mode-card" id="daily-quests-card">
+                <div class="mode-icon">⭐</div>
+                <h3 data-i18n="daily_quests">Daily Quests</h3>
+                <div id="daily-quests-container" class="daily-quests-container">
+                  <!-- Quests injected here -->
+                </div>
               </div>
 
               <!-- Quiz/Story Mode -->
               <div class="mode-card mode-card--coming-soon" id="stories-coming-soon">
                 <div class="mode-icon">🎮</div>
-                <h3>Interactive Stories</h3>
-                <p>Coming soon. Story content stays hidden until the signs behind it are independently verified.</p>
-                <button class="btn-mode" type="button">Coming Soon</button>
+                <h3 data-i18n="interactive_stories">Interactive Stories</h3>
+                <p data-i18n="interactive_stories_desc">Coming soon. Story content stays hidden until the signs behind it are independently verified.</p>
+                <button class="btn-mode" type="button" data-i18n="coming_soon">Coming Soon</button>
               </div>
             </div>
 
             <div class="quick-stats">
-              <button class="stats-link" data-nav="progress">📊 View My Progress</button>
+              <button class="stats-link" data-nav="progress" data-i18n="view_my_progress">📊 View My Progress</button>
             </div>
           </div>
         </div>
@@ -119,8 +128,8 @@
         <!-- Categories Screen -->
         <div id="categories-screen" class="screen" style="display: none;">
           <div class="screen-header">
-            <button class="btn-back" data-nav="welcome">← Back</button>
-            <h2>Choose a Category</h2>
+            <button class="btn-back" data-nav="welcome" data-i18n="back">← Back</button>
+            <h2 data-i18n="choose_category">Choose a Category</h2>
           </div>
           <div id="categories-list" class="categories-grid"></div>
         </div>
@@ -128,8 +137,8 @@
         <!-- Category Signs Screen -->
         <div id="game-screen" class="screen" style="display: none;">
           <div class="screen-header">
-            <button class="btn-back" id="back-to-categories">← Categories</button>
-            <h2 id="category-title">Signs</h2>
+            <button class="btn-back" id="back-to-categories" data-i18n="categories">← Categories</button>
+            <h2 id="category-title" data-i18n="signs">Signs</h2>
           </div>
           <div id="sign-grid" class="grid grid-3"></div>
         </div>
@@ -137,14 +146,14 @@
         <!-- Search Screen -->
         <div id="search-screen" class="screen" style="display: none;">
           <div class="screen-header">
-            <button class="btn-back" data-nav="welcome">← Back</button>
-            <h2>Search Signs</h2>
+            <button class="btn-back" data-nav="welcome" data-i18n="back">← Back</button>
+            <h2 data-i18n="search_signs">Search Signs</h2>
           </div>
           <div class="search-container">
             <div class="search-box">
               <input type="text" id="search-input" placeholder="Type a word, letter, number, or phrase..."
-                autocomplete="off" />
-              <button id="search-btn" class="btn-search">🔍 Search</button>
+                autocomplete="off" data-i18n="search_placeholder" />
+              <button id="search-btn" class="btn-search" data-i18n="search">🔍 Search</button>
             </div>
             <div id="search-suggestions" class="search-suggestions"></div>
             <div id="search-results" class="search-results"></div>
@@ -154,30 +163,38 @@
         <!-- Quiz/Story Screen -->
         <div id="quiz-screen" class="screen" style="display: none;">
           <div class="screen-header">
-            <button class="btn-back" data-nav="welcome">← Back</button>
-            <h2>Sign Quiz</h2>
+            <button class="btn-back" data-nav="welcome" data-i18n="back">← Back</button>
+            <h2 data-i18n="sign_quiz">Sign Quiz</h2>
           </div>
           <div id="quiz-content" class="quiz-container">
             <!-- Quiz setup (shown before quiz starts) -->
             <div id="quiz-setup" class="quiz-setup">
               <div class="quiz-setup-icon">🎯</div>
-              <h3>Test Your Knowledge</h3>
-              <p>How well do you know Uganda Sign Language? Pick a category and find out!</p>
+              <h3 data-i18n="test_your_knowledge">Test Your Knowledge</h3>
+              <p data-i18n="test_knowledge_desc">How well do you know Uganda Sign Language? Pick a category and find out!</p>
               <div class="quiz-category-select">
-                <label for="quiz-category">Category:</label>
+                <label for="quiz-category" data-i18n="category_label">Category:</label>
                 <select id="quiz-category">
-                  <option value="all">All Categories (Mixed)</option>
+                  <option value="all" data-i18n="all_categories">All Categories (Mixed)</option>
                 </select>
               </div>
               <div class="quiz-difficulty-select">
-                <label for="quiz-count">Questions:</label>
-                <select id="quiz-count">
-                  <option value="5">5 Questions</option>
-                  <option value="10" selected>10 Questions</option>
-                  <option value="20">20 Questions</option>
+                <label for="quiz-mode" data-i18n="mode_label">Mode:</label>
+                <select id="quiz-mode">
+                  <option value="standard" selected data-i18n="standard">Standard</option>
+                  <option value="time_attack" data-i18n="time_attack">Time Attack</option>
+                  <option value="survival" data-i18n="survival">Survival</option>
                 </select>
               </div>
-              <button id="quiz-start-btn" class="btn-primary btn-quiz-start">Start Quiz 🚀</button>
+              <div class="quiz-difficulty-select">
+                <label for="quiz-count" data-i18n="questions_label">Questions:</label>
+                <select id="quiz-count">
+                  <option value="5" data-i18n="5_questions">5 Questions</option>
+                  <option value="10" selected data-i18n="10_questions">10 Questions</option>
+                  <option value="20" data-i18n="20_questions">20 Questions</option>
+                </select>
+              </div>
+              <button id="quiz-start-btn" class="btn-primary btn-quiz-start" data-i18n="start_quiz">Start Quiz 🚀</button>
             </div>
 
             <!-- Active quiz (shown during quiz) -->
@@ -190,8 +207,11 @@
                 <span id="quiz-score-display">Score: 0</span>
                 <span id="quiz-streak-display">🔥 0</span>
               </div>
+              <div id="quiz-special-mode-ui" class="quiz-special-mode-ui" style="display: none;">
+                <!-- Filled dynamically with timer or lives -->
+              </div>
               <div class="quiz-question-area">
-                <p class="quiz-prompt">What sign is shown below?</p>
+                <p class="quiz-prompt" data-i18n="what_sign">What sign is shown below?</p>
                 <div class="quiz-image-wrapper">
                   <img id="quiz-sign-image" class="quiz-sign-image" src="" alt="Sign to identify" />
                   <div id="quiz-image-loader" class="quiz-image-loader">
@@ -201,35 +221,35 @@
               </div>
               <div id="quiz-options" class="quiz-options"></div>
               <div id="quiz-feedback" class="quiz-feedback" style="display: none;"></div>
-              <button id="quiz-next-btn" class="btn-primary btn-quiz-next" style="display: none;">Next Question
+              <button id="quiz-next-btn" class="btn-primary btn-quiz-next" style="display: none;" data-i18n="next_question">Next Question
                 →</button>
             </div>
 
             <!-- Quiz results (shown after quiz ends) -->
             <div id="quiz-results" class="quiz-results" style="display: none;">
               <div id="quiz-results-icon" class="quiz-results-icon">🏆</div>
-              <h3 id="quiz-results-title">Quiz Complete!</h3>
+              <h3 id="quiz-results-title" data-i18n="quiz_complete">Quiz Complete!</h3>
               <div class="quiz-results-stats">
                 <div class="result-stat">
                   <span class="result-stat-value" id="quiz-final-score">0</span>
-                  <span class="result-stat-label">Score</span>
+                  <span class="result-stat-label" data-i18n="score">Score</span>
                 </div>
                 <div class="result-stat">
                   <span class="result-stat-value" id="quiz-correct-count">0/10</span>
-                  <span class="result-stat-label">Correct</span>
+                  <span class="result-stat-label" data-i18n="correct">Correct</span>
                 </div>
                 <div class="result-stat">
                   <span class="result-stat-value" id="quiz-best-streak">0</span>
-                  <span class="result-stat-label">Best Streak</span>
+                  <span class="result-stat-label" data-i18n="best_streak">Best Streak</span>
                 </div>
                 <div class="result-stat">
                   <span class="result-stat-value" id="quiz-xp-earned">+0 XP</span>
-                  <span class="result-stat-label">XP Earned</span>
+                  <span class="result-stat-label" data-i18n="xp_earned">XP Earned</span>
                 </div>
               </div>
               <div class="quiz-results-actions">
-                <button id="quiz-retry-btn" class="btn-primary">Play Again 🔄</button>
-                <button class="btn-secondary" data-nav="categories">Back to Learning 📚</button>
+                <button id="quiz-retry-btn" class="btn-primary" data-i18n="play_again">Play Again 🔄</button>
+                <button class="btn-secondary" data-nav="categories" data-i18n="back_to_learning">Back to Learning 📚</button>
               </div>
             </div>
           </div>
@@ -256,23 +276,23 @@
     <nav class="app-nav">
       <button class="nav-item" data-nav="welcome">
         <span class="nav-icon">🏠</span>
-        <span class="nav-label">Home</span>
+        <span class="nav-label" data-i18n="home">Home</span>
       </button>
       <button class="nav-item" data-nav="categories">
         <span class="nav-icon">📚</span>
-        <span class="nav-label">Categories</span>
+        <span class="nav-label" data-i18n="categories">Categories</span>
       </button>
       <button class="nav-item" data-nav="search">
         <span class="nav-icon">🔍</span>
-        <span class="nav-label">Search</span>
+        <span class="nav-label" data-i18n="search">Search</span>
       </button>
       <button class="nav-item" data-nav="progress">
         <span class="nav-icon">📊</span>
-        <span class="nav-label">Progress</span>
+        <span class="nav-label" data-i18n="progress">Progress</span>
       </button>
       <button class="nav-item" data-nav="settings">
         <span class="nav-icon">⚙️</span>
-        <span class="nav-label">Settings</span>
+        <span class="nav-label" data-i18n="settings">Settings</span>
       </button>
     </nav>
   </div>
