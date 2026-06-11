@@ -119,7 +119,85 @@ class TranslationService {
         q_learn: 'Learn 5 new signs',
         q_games: 'Play 3 quiz games',
         q_perfect: 'Get a perfect score',
-        q_xp: 'Earn 100 XP'
+        q_xp: 'Earn 100 XP',
+        install_app: 'Install App',
+        init_error: 'Failed to initialize app. Please refresh.',
+        alphabet: 'Alphabet',
+        numbers: 'Numbers',
+        greetings: 'Greetings',
+        family: 'Family',
+        emotions: 'Emotions',
+        school: 'School',
+        food: 'Food',
+        colors: 'Colors',
+        animals: 'Animals',
+        places: 'Places',
+        actions: 'Actions',
+        time: 'Time',
+        money: 'Money & Commerce',
+        math: 'Mathematics',
+        quantities: 'Quantities',
+        popular_searches: 'Popular Searches',
+        suggestions: 'Suggestions',
+        search_empty_title: 'Search for Signs',
+        search_empty_desc: 'Enter a word, letter, number, or phrase to find its sign language translation',
+        no_signs_match: 'No signs match "{query}".',
+        no_signs_match_translated: 'No signs match "{query}" (searched: "{resolvedQuery}").',
+        try_different_words: 'Try different words or browse categories.',
+        found_signs_for: 'Found {count} {signWord} for "{query}"',
+        found_signs_for_translated: 'Found {count} {signWord} for "{query}" -> "{resolvedQuery}"',
+        sign_singular: 'sign',
+        sign_plural: 'signs',
+        not_enough_signs_quiz: 'Not enough signs in this category for a quiz. Try "All Categories"!',
+        wave: 'Wave',
+        score_label: 'Score',
+        what_sign_is_this: 'What sign is this?',
+        time_up_correct: 'Time is up! The correct answer was "{answer}".',
+        correct_points: 'Correct! +{points} pts',
+        incorrect_answer: 'Incorrect. That was "{answer}".',
+        speed_bonus: 'Speed Bonus +5!',
+        quick_bonus: 'Quick +2!',
+        combo_2: '2x Combo!',
+        combo_3: '3x Combo!',
+        combo_5: '5x On Fire!',
+        combo_multiplier: 'x{mult} COMBO!',
+        combo_lost: 'Combo Lost!',
+        perfect_score: 'Perfect Score!',
+        excellent: 'Excellent!',
+        good_job: 'Good Job!',
+        keep_practicing: 'Keep Practicing!',
+        dont_give_up: "Don't Give Up!",
+        badge_points: 'Badge Points',
+        your_badges: 'Your Badges',
+        next_to_unlock: 'Next to Unlock',
+        save: 'Save',
+        saved: 'Saved',
+        preferences: 'Preferences',
+        about_body: 'SignMaster is an educational game for learning Uganda Sign Language (USL) from a reviewed in-app sign set.',
+        sponsored_by: 'Sponsored by',
+        developers_and_researchers: 'Developers and researchers',
+        version: 'Version',
+        level_up: 'Level Up!',
+        reached_level: 'You reached Level {level}',
+        learned_toast_title: 'Learned!',
+        sign_mastered: '{label} mastered',
+        sign_saved: '{label} saved to your progress',
+        error: 'Error',
+        coming_soon_title: 'Coming Soon',
+        failed_load_image: 'Failed to load image',
+        close: 'Close',
+        continue: 'Continue',
+        badge_unlocked: 'Badge Unlocked!',
+        certificate_learning_progress: 'Certificate of Learning Progress',
+        uganda_sign_language_learning: 'Uganda Sign Language Learning',
+        signmaster_usl: 'SignMaster: Uganda Sign Language',
+        total_xp_label: 'Total XP',
+        badges: 'Badges',
+        top_achievements: 'Top Achievements',
+        scan_to_play: 'Scan to play',
+        issued: 'Issued',
+        generated: 'Generated',
+        certificate_id: 'Certificate ID'
       },
       ach: acholiGlossary.ui || {}
     };
@@ -190,15 +268,21 @@ class TranslationService {
     console.log(`🌍 Language changed to: ${langCode}`);
   }
 
-  t(key) {
+  interpolate(text, params = {}) {
+    return String(text).replace(/\{(\w+)\}/g, (match, name) => (
+      params[name] !== undefined ? String(params[name]) : match
+    ));
+  }
+
+  t(key, params = {}) {
     const translations = this.builtInTranslations[this.currentLanguage] || {};
     if (translations[key]) {
-      return translations[key];
+      return this.interpolate(translations[key], params);
     }
 
     const englishTranslations = this.builtInTranslations.en || {};
     if (englishTranslations[key]) {
-      return englishTranslations[key];
+      return this.interpolate(englishTranslations[key], params);
     }
 
     return key;

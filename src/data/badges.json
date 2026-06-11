@@ -109,14 +109,84 @@
       "condition": { "type": "categoryComplete", "value": "emotions" }
     },
     {
-      "id": "story_hero",
-      "name": "Story Hero",
-      "description": "Complete all Story Missions",
-      "icon": "📖",
+      "id": "food_master",
+      "name": "Food Master",
+      "description": "Complete all Food signs",
+      "icon": "🍽️",
+      "tier": "gold",
+      "category": "mastery",
+      "condition": { "type": "categoryComplete", "value": "food" },
+      "unlockLevel": 2
+    },
+    {
+      "id": "school_master",
+      "name": "School Master",
+      "description": "Complete all School signs",
+      "icon": "🏫",
+      "tier": "gold",
+      "category": "mastery",
+      "condition": { "type": "categoryComplete", "value": "school" },
+      "unlockLevel": 2
+    },
+    {
+      "id": "color_master",
+      "name": "Color Master",
+      "description": "Complete all Color signs",
+      "icon": "🎨",
+      "tier": "gold",
+      "category": "mastery",
+      "condition": { "type": "categoryComplete", "value": "colors" },
+      "unlockLevel": 2
+    },
+    {
+      "id": "animal_master",
+      "name": "Animal Master",
+      "description": "Complete all Animal signs",
+      "icon": "🦁",
+      "tier": "gold",
+      "category": "mastery",
+      "condition": { "type": "categoryComplete", "value": "animals" },
+      "unlockLevel": 3
+    },
+    {
+      "id": "places_master",
+      "name": "Places Master",
+      "description": "Complete all Places signs",
+      "icon": "🗺️",
+      "tier": "gold",
+      "category": "mastery",
+      "condition": { "type": "categoryComplete", "value": "places" },
+      "unlockLevel": 3
+    },
+    {
+      "id": "actions_master",
+      "name": "Actions Master",
+      "description": "Complete all Action signs",
+      "icon": "🏃",
+      "tier": "gold",
+      "category": "mastery",
+      "condition": { "type": "categoryComplete", "value": "actions" },
+      "unlockLevel": 2
+    },
+    {
+      "id": "time_master",
+      "name": "Time Master",
+      "description": "Complete all Time signs",
+      "icon": "⏰",
+      "tier": "gold",
+      "category": "mastery",
+      "condition": { "type": "categoryComplete", "value": "time" },
+      "unlockLevel": 2
+    },
+    {
+      "id": "money_master",
+      "name": "Money Master",
+      "description": "Complete all Money & Commerce signs",
+      "icon": "💰",
       "tier": "platinum",
       "category": "mastery",
       "unlockLevel": 5,
-      "condition": { "type": "categoryComplete", "value": "story" }
+      "condition": { "type": "categoryComplete", "value": "money" }
     },
     {
       "id": "perfect_match",

@@ -5,12 +5,14 @@
  */
 
 import { gsap } from 'gsap';
+import translationService from '../services/TranslationService.js';
 
 export class BadgeUnlockModal {
   constructor() {
     this.element = null;
     this.queue = [];
     this.showing = false;
+    this.autoHideTimeout = null;
   }
 
   /**
@@ -37,7 +39,7 @@ export class BadgeUnlockModal {
     await this.animateIn();
 
     // Auto-hide after 3 seconds
-    setTimeout(() => {
+    this.autoHideTimeout = setTimeout(() => {
       this.hide();
     }, 3000);
   }
@@ -55,11 +57,11 @@ export class BadgeUnlockModal {
           <div class="badge-unlock-modal__icon"></div>
           <div class="badge-unlock-modal__shine"></div>
         </div>
-        <h2 class="badge-unlock-modal__title">Badge Unlocked!</h2>
+        <h2 class="badge-unlock-modal__title"></h2>
         <h3 class="badge-unlock-modal__badge-name"></h3>
         <p class="badge-unlock-modal__description"></p>
         <div class="badge-unlock-modal__points"></div>
-        <button class="badge-unlock-modal__close">Continue</button>
+        <button class="badge-unlock-modal__close"></button>
       </div>
     `;
 
@@ -67,6 +69,7 @@ export class BadgeUnlockModal {
 
     // Close button
     this.element.querySelector('.badge-unlock-modal__close').addEventListener('click', () => {
+      clearTimeout(this.autoHideTimeout);
       this.hide();
     });
 
@@ -84,11 +87,15 @@ export class BadgeUnlockModal {
     const name = this.element.querySelector('.badge-unlock-modal__badge-name');
     const description = this.element.querySelector('.badge-unlock-modal__description');
     const points = this.element.querySelector('.badge-unlock-modal__points');
+    const title = this.element.querySelector('.badge-unlock-modal__title');
+    const close = this.element.querySelector('.badge-unlock-modal__close');
 
     icon.textContent = badge.icon;
+    title.textContent = translationService.t('badge_unlocked');
     name.textContent = badge.name;
     description.textContent = badge.description;
-    points.innerHTML = `<strong>+${badge.points}</strong> Badge Points`;
+    points.innerHTML = `<strong>+${badge.points}</strong> ${translationService.t('badge_points')}`;
+    close.textContent = translationService.t('continue');
 
     // Tier color
     const tierColors = {
@@ -187,6 +194,7 @@ export class BadgeUnlockModal {
    * Hide modal
    */
   async hide() {
+    clearTimeout(this.autoHideTimeout);
     await this.animateOut();
     this.showing = false;
 

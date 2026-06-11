@@ -6,6 +6,7 @@
 
 import assetLoader from '../services/AssetLoader.js';
 import stateManager from '../services/StateManager.js';
+import translationService from '../services/TranslationService.js';
 import signModal from './SignModal.js';
 import { gsap } from 'gsap';
 
@@ -41,7 +42,7 @@ export class SignCard {
           </div>
         </div>
         <div class="sign-card__label">${this.sign.label}</div>
-        ${learned ? '<span class="sign-card__verified" aria-label="Learned">✓</span>' : ''}
+        ${learned ? `<span class="sign-card__verified" aria-label="${translationService.t('learned')}">✓</span>` : ''}
       </div>
     `;
     
@@ -131,7 +132,7 @@ export class SignCard {
       const badge = document.createElement('span');
       badge.className = 'sign-card__verified';
       badge.textContent = '✓';
-      badge.setAttribute('aria-label', 'Learned');
+      badge.setAttribute('aria-label', translationService.t('learned'));
       this.element.querySelector('.sign-card__inner')?.appendChild(badge);
     }
 

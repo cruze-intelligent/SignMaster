@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const installBtn = document.createElement('button');
   installBtn.id = 'install-app-btn';
   installBtn.className = 'btn-primary btn-install';
-  installBtn.textContent = 'Install App';
+  installBtn.textContent = translationService.t('install_app');
   installBtn.style.display = 'none';
   installBtn.addEventListener('click', async () => {
     if (!deferredPrompt) return;
@@ -128,6 +128,7 @@ class SignMasterApp {
 
       // Update daily streak
       await stateManager.updateDailyStreak();
+      audioService.setEnabled(stateManager.getState().settings.soundEnabled);
 
       // Setup event listeners
       this.setupEventListeners();
@@ -146,7 +147,7 @@ class SignMasterApp {
 
     } catch (error) {
       console.error('❌ Initialization error:', error);
-      this.showError('Failed to initialize app. Please refresh.');
+      this.showError(translationService.t('init_error'));
     }
   }
 
@@ -154,10 +155,8 @@ class SignMasterApp {
    * Setup global event listeners
    */
   setupEventListeners() {
-    // Badge unlocked
-    stateManager.on('badgeUnlocked', (badge) => {
-      badgeUnlockModal.show(badge);
-    });
+    // Badge unlocked — handled by badgeManager.on('badgeUnlocked') below.
+    // stateManager listener removed to prevent duplicate modal display.
 
     // Level up
     stateManager.on('levelUp', (data) => {
@@ -208,6 +207,8 @@ class SignMasterApp {
    * Initialize UI components
    */
   initUI() {
+    document.body.classList.toggle('high-contrast', stateManager.getState().settings.highContrast);
+
     // Initialize sign grid
     const gridContainer = document.getElementById('sign-grid');
     if (gridContainer) {
@@ -242,7 +243,7 @@ class SignMasterApp {
     if (!storyCard) return;
 
     storyCard.addEventListener('click', () => {
-      this.showInfoToast('Interactive Stories are coming soon while we verify the underlying content.');
+      this.showInfoToast(translationService.t('interactive_stories_desc'));
     });
   }
 
@@ -461,10 +462,8 @@ class SignMasterApp {
     };
 
     // Clear results when navigating to search
-    const emptyTitle = translationService.getLanguage() === 'ach' ? 'Yeny Lanyut' : 'Search for Signs';
-    const emptyDesc = translationService.getLanguage() === 'ach'
-      ? 'Ket lok, ceke, namba, onyo lok me nongo lanyut mere'
-      : 'Enter a word, letter, number, or phrase to find its sign language translation';
+    const emptyTitle = translationService.t('search_empty_title');
+    const emptyDesc = translationService.t('search_empty_desc');
 
     resultsEl.innerHTML = `
       <div class="search-empty">
@@ -486,7 +485,7 @@ class SignMasterApp {
       // Show popular terms
       const popular = searchEngine.getPopularTerms(12);
       suggestionsEl.innerHTML = `
-        <h4>Popular Searches</h4>
+        <h4>${translationService.t('popular_searches')}</h4>
         <div class="suggestion-chips">
           ${popular.map(term => `
             <button class="suggestion-chip" data-term="${term}">
@@ -498,7 +497,7 @@ class SignMasterApp {
       suggestionsEl.classList.add('visible');
     } else {
       suggestionsEl.innerHTML = `
-        <h4>Suggestions</h4>
+        <h4>${translationService.t('suggestions')}</h4>
         <div class="suggestion-chips">
           ${suggestions.map(term => `
             <button class="suggestion-chip" data-term="${term}">
@@ -543,14 +542,17 @@ class SignMasterApp {
 
     if (results.length === 0) {
       const noResultsMsg = searchMeta.translated
-        ? `No signs match "${query}" (searched: "${searchMeta.resolvedQuery}").`
-        : `No signs match "${query}".`;
+        ? translationService.t('no_signs_match_translated', {
+          query,
+          resolvedQuery: searchMeta.resolvedQuery
+        })
+        : translationService.t('no_signs_match', { query });
 
       resultsEl.innerHTML = `
         <div class="search-empty">
           <div class="search-empty-icon">😔</div>
           <h3>${translationService.t('no_results')}</h3>
-          <p>${noResultsMsg} ${translationService.getLanguage() === 'ach' ? 'Tem lok mukene onyo nen buce.' : 'Try different words or browse categories.'}</p>
+          <p>${noResultsMsg} ${translationService.t('try_different_words')}</p>
           <button class="btn-primary" data-nav="categories">${translationService.t('browse_categories')}</button>
         </div>
       `;
@@ -561,9 +563,19 @@ class SignMasterApp {
         browseBtn.onclick = () => this.navigate('categories');
       }
     } else {
+      const signWord = translationService.t(results.length === 1 ? 'sign_singular' : 'sign_plural');
       const headerText = searchMeta.translated
-        ? `Found ${results.length} sign${results.length > 1 ? 's' : ''} for "${query}" → "${searchMeta.resolvedQuery}"`
-        : `Found ${results.length} sign${results.length > 1 ? 's' : ''} for "${query}"`;
+        ? translationService.t('found_signs_for_translated', {
+          count: results.length,
+          signWord,
+          query,
+          resolvedQuery: searchMeta.resolvedQuery
+        })
+        : translationService.t('found_signs_for', {
+          count: results.length,
+          signWord,
+          query
+        });
 
       resultsEl.innerHTML = `
         <div class="search-results-header">
@@ -669,7 +681,7 @@ class SignMasterApp {
       const feedbackEl = document.getElementById('quiz-feedback');
       if (feedbackEl) {
         feedbackEl.style.display = 'block';
-        feedbackEl.textContent = 'Not enough signs in this category for a quiz. Try "All Categories"!';
+        feedbackEl.textContent = translationService.t('not_enough_signs_quiz');
         feedbackEl.className = 'quiz-feedback quiz-feedback-wrong';
       }
       return;
@@ -697,7 +709,8 @@ class SignMasterApp {
       timeLeft: selectedMode === 'time_attack' ? 60 : null,
       lives: selectedMode === 'survival' ? 3 : null,
       timerInterval: null,
-      questionStartTime: null
+      questionStartTime: null,
+      timerTimeout: null
     };
 
     // Switch to active view
@@ -747,9 +760,9 @@ class SignMasterApp {
    * Get combo multiplier based on streak
    */
   getComboMultiplier(streak) {
-    if (streak >= 10) return { mult: 5, label: '🔥🔥🔥 5× ON FIRE!', cssClass: 'combo-fire' };
-    if (streak >= 5) return { mult: 3, label: '🔥🔥 3× Combo!', cssClass: 'combo-hot' };
-    if (streak >= 3) return { mult: 2, label: '🔥 2× Combo!', cssClass: 'combo-warm' };
+    if (streak >= 10) return { mult: 5, label: `🔥🔥🔥 ${translationService.t('combo_5')}`, cssClass: 'combo-fire' };
+    if (streak >= 5) return { mult: 3, label: `🔥🔥 ${translationService.t('combo_3')}`, cssClass: 'combo-hot' };
+    if (streak >= 3) return { mult: 2, label: `🔥 ${translationService.t('combo_2')}`, cssClass: 'combo-warm' };
     return { mult: 1, label: '', cssClass: '' };
   }
 
@@ -757,8 +770,8 @@ class SignMasterApp {
    * Get time bonus based on answer speed
    */
   getTimeBonus(elapsedMs) {
-    if (elapsedMs < 3000) return { bonus: 5, label: '⚡ Speed Bonus +5!' };
-    if (elapsedMs < 6000) return { bonus: 2, label: '⏱️ Quick +2!' };
+    if (elapsedMs < 3000) return { bonus: 5, label: `⚡ ${translationService.t('speed_bonus')}` };
+    if (elapsedMs < 6000) return { bonus: 2, label: `⏱️ ${translationService.t('quick_bonus')}` };
     return { bonus: 0, label: '' };
   }
 
@@ -771,8 +784,10 @@ class SignMasterApp {
 
     // Update progress
     const total = qs.questions.length;
-    document.getElementById('quiz-question-num').textContent = qs.mode === 'survival' ? `Wave ${qs.currentIndex + 1}` : `${qs.currentIndex + 1}/${total}`;
-    document.getElementById('quiz-score-display').textContent = `Score: ${qs.score}`;
+    document.getElementById('quiz-question-num').textContent = qs.mode === 'survival'
+      ? `${translationService.t('wave')} ${qs.currentIndex + 1}`
+      : `${qs.currentIndex + 1}/${total}`;
+    document.getElementById('quiz-score-display').textContent = `${translationService.t('score_label')}: ${qs.score}`;
     const combo = this.getComboMultiplier(qs.streak);
     document.getElementById('quiz-streak-display').textContent = combo.label || `🔥 ${qs.streak}`;
     
@@ -800,7 +815,7 @@ class SignMasterApp {
       const imgContainer = document.getElementById('quiz-sign-image')?.parentElement;
       if (imgContainer) imgContainer.parentElement.insertBefore(promptEl, imgContainer);
     }
-    promptEl.textContent = '🤔 What sign is this?';
+    promptEl.textContent = `🤔 ${translationService.t('what_sign_is_this')}`;
 
     // Load image
     const imgEl = document.getElementById('quiz-sign-image');
@@ -859,10 +874,62 @@ class SignMasterApp {
     const timerFill = document.getElementById('quiz-timer-fill');
     timerFill.style.width = '100%';
     timerFill.style.transition = 'none';
+
+    // Clear any previous question timer
+    if (qs.timerTimeout) {
+      clearTimeout(qs.timerTimeout);
+      qs.timerTimeout = null;
+    }
+
     requestAnimationFrame(() => {
       timerFill.style.transition = 'width 10s linear';
       timerFill.style.width = '0%';
     });
+
+    // Auto-expire after 10 seconds if no answer is selected
+    qs.timerTimeout = setTimeout(() => {
+      // Disable all option buttons
+      document.querySelectorAll('.quiz-option-btn').forEach(btn => {
+        btn.disabled = true;
+        if (btn.dataset.signId === question.id) {
+          btn.classList.add('quiz-option-correct');
+        }
+      });
+
+      // Show timeout feedback
+      const feedbackEl = document.getElementById('quiz-feedback');
+      feedbackEl.style.display = 'block';
+      feedbackEl.textContent = `⏰ ${translationService.t('time_up_correct', { answer: question.label })}`;
+      feedbackEl.className = 'quiz-feedback quiz-feedback-wrong';
+
+      // Award 0 points and reset streak
+      qs.streak = 0;
+
+      // Special mode penalties
+      if (qs.mode === 'time_attack') qs.timeLeft -= 3;
+      if (qs.mode === 'survival') qs.lives--;
+      this.updateSpecialModeUI();
+
+      audioService.playWrong();
+
+      // Show next button
+      const nextBtn = document.getElementById('quiz-next-btn');
+      if (nextBtn) {
+        nextBtn.style.display = 'block';
+        nextBtn.onclick = () => {
+          if (qs.mode === 'survival' && qs.lives <= 0) {
+            this.endQuiz();
+            return;
+          }
+          qs.currentIndex++;
+          if (qs.currentIndex < qs.questions.length) {
+            this.showQuizQuestion();
+          } else {
+            this.endQuiz();
+          }
+        };
+      }
+    }, 10000);
   }
 
   /**
@@ -872,11 +939,19 @@ class SignMasterApp {
     const qs = this.quizState;
     const elapsed = Date.now() - (qs.questionStartTime || Date.now());
 
-    // Stop timer
+    // Cancel auto-expire timer
+    if (qs.timerTimeout) {
+      clearTimeout(qs.timerTimeout);
+      qs.timerTimeout = null;
+    }
+
+    // Stop timer bar — use percentage to avoid resize glitches
     const timerFill = document.getElementById('quiz-timer-fill');
     if (timerFill) {
       timerFill.style.transition = 'none';
-      timerFill.style.width = timerFill.getBoundingClientRect().width + 'px';
+      const parentWidth = timerFill.parentElement.getBoundingClientRect().width;
+      const currentWidth = timerFill.getBoundingClientRect().width;
+      timerFill.style.width = (currentWidth / parentWidth * 100) + '%';
     }
 
     // Disable all buttons
@@ -917,11 +992,11 @@ class SignMasterApp {
       qs.totalXP += points;
 
       // Build feedback message
-      let feedbackParts = [`✅ Correct! +${points} pts`];
+      let feedbackParts = [`✅ ${translationService.t('correct_points', { points })}`];
       if (combo.mult > 1) {
         feedbackParts.push(combo.label);
         audioService.playCombo();
-        this.animateFloatingText(btnEl, `x${combo.mult} COMBO!`, '#FCDC04', 40);
+        this.animateFloatingText(btnEl, translationService.t('combo_multiplier', { mult: combo.mult }), 'var(--color-highlight)', 40);
       }
       if (timeBonus.bonus > 0) feedbackParts.push(timeBonus.label);
       feedbackEl.innerHTML = feedbackParts.join(' &nbsp;·&nbsp; ');
@@ -974,7 +1049,7 @@ class SignMasterApp {
       }
 
       qs.streak = 0;
-      feedbackEl.textContent = `❌ Incorrect. That was "${correctSign.label}".`;
+      feedbackEl.textContent = `❌ ${translationService.t('incorrect_answer', { answer: correctSign.label })}`;
       feedbackEl.className = 'quiz-feedback quiz-feedback-wrong';
 
       setTimeout(() => {
@@ -1061,7 +1136,7 @@ class SignMasterApp {
       overlay.id = 'quiz-combo-overlay';
       document.getElementById('quiz-active')?.appendChild(overlay);
     }
-    overlay.textContent = '💔 Combo Lost!';
+    overlay.textContent = `💔 ${translationService.t('combo_lost')}`;
     overlay.className = 'quiz-combo-overlay combo-lost';
     overlay.style.display = 'block';
     overlay.style.animation = 'none';
@@ -1076,7 +1151,11 @@ class SignMasterApp {
    */
   async showQuizResults() {
     const qs = this.quizState;
+    if (!qs || qs.completed) return;
+    qs.completed = true;
+
     if (qs.timerInterval) clearInterval(qs.timerInterval);
+    if (qs.timerTimeout) clearTimeout(qs.timerTimeout);
     const total = qs.questions.length;
     const pct = Math.round((qs.correct / total) * 100);
 
@@ -1089,19 +1168,19 @@ class SignMasterApp {
     const title = document.getElementById('quiz-results-title');
     if (pct === 100) {
       icon.textContent = '💎';
-      title.textContent = 'Perfect Score!';
+      title.textContent = translationService.t('perfect_score');
     } else if (pct >= 80) {
       icon.textContent = '🏆';
-      title.textContent = 'Excellent!';
+      title.textContent = translationService.t('excellent');
     } else if (pct >= 60) {
       icon.textContent = '⭐';
-      title.textContent = 'Good Job!';
+      title.textContent = translationService.t('good_job');
     } else if (pct >= 40) {
       icon.textContent = '📚';
-      title.textContent = 'Keep Practicing!';
+      title.textContent = translationService.t('keep_practicing');
     } else {
       icon.textContent = '💪';
-      title.textContent = 'Don\'t Give Up!';
+      title.textContent = translationService.t('dont_give_up');
     }
 
     document.getElementById('quiz-final-score').textContent = qs.score;
@@ -1109,10 +1188,12 @@ class SignMasterApp {
     document.getElementById('quiz-best-streak').textContent = qs.bestStreak;
     document.getElementById('quiz-xp-earned').textContent = `+${qs.totalXP} XP`;
 
-    // Check perfect score badge
-    if (pct === 100) {
-      await badgeManager.checkAndUnlockBadge('perfect_match', stateManager.getStats());
-    }
+    await stateManager.recordQuizResult({
+      score: pct,
+      isPerfect: pct === 100,
+      bestStreak: qs.bestStreak,
+      category: qs.selectedCategory === 'all' ? null : qs.selectedCategory
+    });
 
     // Update header XP display
     this.updateXPDisplay(stateManager.getState().xp, stateManager.getState().level);
@@ -1236,7 +1317,7 @@ class SignMasterApp {
           <div class="badge-points-card">
             <span class="badge-points-icon">💎</span>
             <span class="badge-points-value">${badgeStats.points}</span>
-            <span class="badge-points-label">Badge Points</span>
+            <span class="badge-points-label">${t('badge_points')}</span>
           </div>
         </div>
         
@@ -1276,7 +1357,10 @@ class SignMasterApp {
    */
   async loadBadges() {
     const allBadges = await badgeManager.getEarnedBadges();
-    const progressive = await badgeManager.getProgressiveReveal();
+    const progressive = await badgeManager.getProgressiveReveal(
+      stateManager.getState().level,
+      stateManager.getStats()
+    );
 
     const container = document.getElementById('badges-content');
     if (!container) return;
@@ -1288,16 +1372,16 @@ class SignMasterApp {
       byTier[badge.tier].push(badge);
     });
 
-    let html = '<h2>Your Badges</h2>';
+    let html = `<h2>${translationService.t('your_badges')}</h2>`;
 
     // Progressive reveal
     if (progressive.length > 0) {
       html += `<div class="progressive-badges">
-        <h3>Next to Unlock</h3>
+        <h3>${translationService.t('next_to_unlock')}</h3>
         ${progressive.map(b => `
           <div class="badge-preview">
-            <div class="badge-icon">${b.badge.icon}</div>
-            <div class="badge-name">${b.badge.name}</div>
+            <div class="badge-icon">${b.icon}</div>
+            <div class="badge-name">${b.name}</div>
             <div class="progress-bar">
               <div class="progress-fill" style="width: ${b.progress}%"></div>
             </div>
@@ -1350,7 +1434,7 @@ class SignMasterApp {
                    value="${state.playerName}" 
                    placeholder="${t('player_name')}" 
                    maxlength="30">
-            <button id="save-name-btn" class="btn-secondary btn-sm">Save</button>
+            <button id="save-name-btn" class="btn-secondary btn-sm">${t('save')}</button>
           </div>
         </div>
         
@@ -1372,9 +1456,8 @@ class SignMasterApp {
           </div>
         </div>
         
-        <!-- Preferences Section -->
         <div class="settings-section">
-          <h3>🎨 Preferences</h3>
+          <h3>🎨 ${t('preferences')}</h3>
           <div class="settings-toggles">
             <label class="settings-toggle">
               <span class="toggle-icon">🔊</span>
@@ -1406,15 +1489,15 @@ class SignMasterApp {
         <div class="settings-section settings-about">
           <h3>ℹ️ ${t('about')}</h3>
           <p class="about-text">
-            SignMaster is an educational game for learning Uganda Sign Language (USL) from a reviewed in-app sign set.
+            ${t('about_body')}
           </p>
           <p class="about-text">
-            Sponsored by <strong>Cruze Intelligent Systems(U) Ltd</strong>.
+            ${t('sponsored_by')} <strong>Cruze Intelligent Systems(U) Ltd</strong>.
           </p>
           <p class="about-text">
-            Developers and researchers: <strong>Gabriel, Vincent and Jennifer</strong>.
+            ${t('developers_and_researchers')}: <strong>Gabriel, Vincent and Jennifer</strong>.
           </p>
-          <p class="version-text">Version 2.0.0</p>
+          <p class="version-text">${t('version')} 2.0.0</p>
         </div>
       </div>
     `;
@@ -1426,10 +1509,10 @@ class SignMasterApp {
         await stateManager.setState({ playerName: nameInput.value.trim() });
         // Show saved feedback
         const btn = document.getElementById('save-name-btn');
-        btn.textContent = '✓ Saved';
+        btn.textContent = `✓ ${translationService.t('saved')}`;
         btn.classList.add('saved');
         setTimeout(() => {
-          btn.textContent = 'Save';
+          btn.textContent = translationService.t('save');
           btn.classList.remove('saved');
         }, 2000);
       }
@@ -1466,6 +1549,9 @@ class SignMasterApp {
         }
 
         await stateManager.updateSettings(updates);
+        if (setting === 'sound') {
+          audioService.setEnabled(value);
+        }
       });
     });
   }
@@ -1575,13 +1661,14 @@ class SignMasterApp {
    * Show level up celebration
    */
   showLevelUp(data) {
+    const level = data?.level || data?.newLevel || '?';
     const toast = document.createElement('div');
     toast.className = 'toast toast-levelup';
     toast.innerHTML = `
       <div class="toast-icon">🎉</div>
       <div class="toast-body">
-        <strong>Level Up!</strong>
-        <span>You reached Level ${data?.level || '?'}</span>
+        <strong>${translationService.t('level_up')}</strong>
+        <span>${translationService.t('reached_level', { level })}</span>
       </div>
     `;
     document.body.appendChild(toast);
@@ -1600,8 +1687,8 @@ class SignMasterApp {
     toast.innerHTML = `
       <div class="toast-icon">✅</div>
       <div class="toast-body">
-        <strong>Learned!</strong>
-        <span>${data?.label || 'Sign'} mastered</span>
+        <strong>${translationService.t('learned_toast_title')}</strong>
+        <span>${translationService.t('sign_mastered', { label: data?.label || translationService.t('sign_singular') })}</span>
       </div>
     `;
     document.body.appendChild(toast);
@@ -1617,8 +1704,8 @@ class SignMasterApp {
     toast.innerHTML = `
       <div class="toast-icon">✅</div>
       <div class="toast-body">
-        <strong>Learned!</strong>
-        <span>${data?.label || 'Sign'} saved to your progress</span>
+        <strong>${translationService.t('learned_toast_title')}</strong>
+        <span>${translationService.t('sign_saved', { label: data?.label || translationService.t('sign_singular') })}</span>
       </div>
     `;
     document.body.appendChild(toast);
@@ -1691,7 +1778,7 @@ class SignMasterApp {
     toast.innerHTML = `
       <div class="toast-icon">⚠️</div>
       <div class="toast-body">
-        <strong>Error</strong>
+        <strong>${translationService.t('error')}</strong>
         <span>${message}</span>
       </div>
     `;
@@ -1708,7 +1795,7 @@ class SignMasterApp {
     toast.innerHTML = `
       <div class="toast-icon">🕒</div>
       <div class="toast-body">
-        <strong>Coming Soon</strong>
+        <strong>${translationService.t('coming_soon_title')}</strong>
         <span>${message}</span>
       </div>
     `;

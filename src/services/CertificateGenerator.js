@@ -12,6 +12,7 @@
 import QRCode from 'qrcode';
 import cacheManager from './CacheManager.js';
 import badgeManager from './BadgeManager.js';
+import translationService from './TranslationService.js';
 import { sanitizeCertificateData, generateSecureId } from '../utils/security.js';
 
 class CertificateGenerator {
@@ -52,9 +53,14 @@ class CertificateGenerator {
       stats = {
         xp: data.xp || 0,
         badges: data.badges || [],
+        signsLearned: data.signsLearned || 0,
+        accuracy: data.accuracy || 0,
+        dailyStreak: data.dailyStreak || 0,
+        categoriesCompleted: data.categoriesCompleted || 0,
+        categoriesTotal: data.categoriesTotal || 0,
         total: data.stats?.total || 0,
         points: data.stats?.points || 0,
-        rank: data.stats?.rank || { name: 'Beginner', icon: '🌱' }
+        rank: data.stats?.rank || { name: 'Beginner', rank: 'Beginner', icon: '🌱' }
       };
     }
     
@@ -66,7 +72,7 @@ class CertificateGenerator {
       stats: {
         total: stats.total || 0,
         points: stats.points || 0,
-        rank: stats.rank || { name: 'Beginner', icon: '🌱' }
+        rank: stats.rank || { name: 'Beginner', rank: 'Beginner', icon: '🌱' }
       }
     });
     
@@ -79,18 +85,18 @@ class CertificateGenerator {
 
     // Background gradient
     const gradient = ctx.createLinearGradient(0, 0, this.width, this.height);
-    gradient.addColorStop(0, '#f8f9fa');
-    gradient.addColorStop(1, '#e8eef3');
+    gradient.addColorStop(0, '#FBFAFF');
+    gradient.addColorStop(1, '#EEF2FF');
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, this.width, this.height);
 
     // Border
-    ctx.strokeStyle = '#D90000';
+    ctx.strokeStyle = '#4C1D95';
     ctx.lineWidth = 10;
     ctx.strokeRect(20, 20, this.width - 40, this.height - 40);
 
     // Inner border
-    ctx.strokeStyle = '#FCDC04';
+    ctx.strokeStyle = '#38BDF8';
     ctx.lineWidth = 4;
     ctx.strokeRect(35, 35, this.width - 70, this.height - 70);
 
@@ -106,11 +112,12 @@ class CertificateGenerator {
     // QR code
     await this.drawQRCode(ctx);
 
+    // Generate unique certificate ID (before footer so footer can display it)
+    const certId = this.generateCertificateId(playerName, stats);
+    this.currentCertId = certId;
+
     // Footer
     this.drawFooter(ctx);
-
-    // Generate unique certificate ID
-    const certId = this.generateCertificateId(playerName, stats);
 
     // Save to cache
     const certificateData = {
@@ -134,25 +141,25 @@ class CertificateGenerator {
    */
   async drawHeader(ctx) {
     ctx.save();
-    ctx.fillStyle = '#D90000';
+    ctx.fillStyle = '#4C1D95';
     ctx.font = 'bold 34px Arial, sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText('SIGNMASTER', this.width / 2, 86);
 
     // Program label
     ctx.font = '18px Arial, sans-serif';
-    ctx.fillStyle = '#4A90E2';
-    ctx.fillText('Uganda Sign Language Learning', this.width / 2, 120);
+    ctx.fillStyle = '#1E3A8A';
+    ctx.fillText(translationService.t('uganda_sign_language_learning'), this.width / 2, 120);
 
     // Certificate title
     ctx.font = 'bold 48px Georgia, serif';
     ctx.fillStyle = '#1a1a1a';
-    ctx.fillText('Certificate of Learning Progress', this.width / 2, 188);
+    ctx.fillText(translationService.t('certificate_learning_progress'), this.width / 2, 188);
 
     // SignMaster subtitle
     ctx.font = '28px Arial, sans-serif';
-    ctx.fillStyle = '#D90000';
-    ctx.fillText('SignMaster: Uganda Sign Language', this.width / 2, 228);
+    ctx.fillStyle = '#4C1D95';
+    ctx.fillText(translationService.t('signmaster_usl'), this.width / 2, 228);
 
     ctx.restore();
   }
@@ -167,7 +174,7 @@ class CertificateGenerator {
     // "This certifies that"
     ctx.font = '20px Georgia, serif';
     ctx.fillStyle = '#666';
-    ctx.fillText('This certifies that', this.width / 2, 300);
+    ctx.fillText(translationService.t('this_certifies'), this.width / 2, 300);
 
     // Player name
     ctx.font = 'bold 42px Georgia, serif';
@@ -177,12 +184,12 @@ class CertificateGenerator {
     // Achievement text
     ctx.font = '18px Georgia, serif';
     ctx.fillStyle = '#666';
-    ctx.fillText('has completed the current SignMaster reviewed learning set', this.width / 2, 390);
-    ctx.fillText('and built consistent practice in Uganda Sign Language', this.width / 2, 420);
+    ctx.fillText(translationService.t('completed_program'), this.width / 2, 390);
+    ctx.fillText(translationService.t('demonstrated_proficiency'), this.width / 2, 420);
 
     // Stats section - Enhanced with more tracked data
     ctx.font = 'bold 24px Arial, sans-serif';
-    ctx.fillStyle = '#D90000';
+    ctx.fillStyle = '#4C1D95';
     
     const statsY = 470;
     const spacing = 35;
@@ -192,25 +199,25 @@ class CertificateGenerator {
     
     // Row 1: XP and Signs Learned
     ctx.textAlign = 'left';
-    ctx.fillText(`⭐ Total XP: ${stats.xp}`, leftCol, statsY);
-    ctx.fillText(`📚 Signs Learned: ${stats.signsLearned || 0}`, rightCol, statsY);
+    ctx.fillText(`⭐ ${translationService.t('total_xp_label')}: ${stats.xp}`, leftCol, statsY);
+    ctx.fillText(`📚 ${translationService.t('signs_learned')}: ${stats.signsLearned || 0}`, rightCol, statsY);
     
     // Row 2: Badges and Accuracy
     const badgeCount = stats.badges ? stats.badges.length : 0;
-    ctx.fillText(`🏆 Badges: ${badgeCount}`, leftCol, statsY + spacing);
-    ctx.fillText(`🎯 Accuracy: ${stats.accuracy || 0}%`, rightCol, statsY + spacing);
+    ctx.fillText(`🏆 ${translationService.t('badges')}: ${badgeCount}`, leftCol, statsY + spacing);
+    ctx.fillText(`🎯 ${translationService.t('accuracy')}: ${stats.accuracy || 0}%`, rightCol, statsY + spacing);
     
     // Row 3: Categories and Streak
     const badgeStats = await badgeManager.getBadgeStats();
     ctx.font = '20px Arial, sans-serif';
-    ctx.fillStyle = '#4A90E2';
+    ctx.fillStyle = '#1E3A8A';
     const catsText = `${stats.categoriesCompleted || 0}/${stats.categoriesTotal || 12}`;
-    ctx.fillText(`📂 Categories: ${catsText}`, leftCol, statsY + spacing * 2);
-    ctx.fillText(`🔥 Daily Streak: ${stats.dailyStreak || 0} days`, rightCol, statsY + spacing * 2);
+    ctx.fillText(`📂 ${translationService.t('categories')}: ${catsText}`, leftCol, statsY + spacing * 2);
+    ctx.fillText(`🔥 ${translationService.t('learning_streak')}: ${stats.dailyStreak || 0} ${translationService.t('days')}`, rightCol, statsY + spacing * 2);
     
     // Row 4: Badge Points and Rank
-    ctx.fillText(`💎 Badge Points: ${badgeStats.points}`, leftCol, statsY + spacing * 3);
-    ctx.fillText(`🏅 Rank: ${badgeStats.rank.name}`, rightCol, statsY + spacing * 3);
+    ctx.fillText(`💎 ${translationService.t('badge_points')}: ${badgeStats.points}`, leftCol, statsY + spacing * 3);
+    ctx.fillText(`🏅 ${translationService.t('rank')}: ${badgeStats.rank.name || badgeStats.rank.rank}`, rightCol, statsY + spacing * 3);
 
     // Date
     const date = new Date().toLocaleDateString('en-US', {
@@ -222,7 +229,7 @@ class CertificateGenerator {
     ctx.textAlign = 'center';
     ctx.font = '16px Arial, sans-serif';
     ctx.fillStyle = '#666';
-    ctx.fillText(`Issued: ${date}`, this.width / 2, 620);
+    ctx.fillText(`${translationService.t('issued')}: ${date}`, this.width / 2, 620);
 
     ctx.restore();
   }
@@ -237,7 +244,7 @@ class CertificateGenerator {
     ctx.font = '18px Arial, sans-serif';
     ctx.fillStyle = '#666';
     ctx.textAlign = 'center';
-    ctx.fillText('Top Achievements', this.width / 2, 640);
+    ctx.fillText(translationService.t('top_achievements'), this.width / 2, 640);
 
     // Show top 5 badges
     const topBadges = badges.slice(0, 5);
@@ -250,7 +257,7 @@ class CertificateGenerator {
       const y = 680;
 
       // Badge circle background
-      ctx.fillStyle = '#FCDC04';
+      ctx.fillStyle = '#38BDF8';
       ctx.beginPath();
       ctx.arc(x, y, badgeSize / 2, 0, Math.PI * 2);
       ctx.fill();
@@ -296,7 +303,7 @@ class CertificateGenerator {
       // QR code background
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(qrX - 10, qrY - 10, 140, 140);
-      ctx.strokeStyle = '#D90000';
+      ctx.strokeStyle = '#4C1D95';
       ctx.lineWidth = 2;
       ctx.strokeRect(qrX - 10, qrY - 10, 140, 140);
 
@@ -307,7 +314,7 @@ class CertificateGenerator {
       ctx.font = '12px Arial, sans-serif';
       ctx.fillStyle = '#666';
       ctx.textAlign = 'center';
-      ctx.fillText('Scan to play', qrX + 60, qrY + 150);
+      ctx.fillText(translationService.t('scan_to_play'), qrX + 60, qrY + 150);
 
     } catch (error) {
       console.error('Error generating QR code:', error);
@@ -325,19 +332,19 @@ class CertificateGenerator {
     
     const footerY = this.height - 50;
     
-    // Left: Certificate ID
-    const certId = `SM-${Date.now().toString(36).toUpperCase()}`;
-    ctx.fillText(`Certificate ID: ${certId}`, 60, footerY);
+    // Left: Certificate ID (use the previously generated ID)
+    const certId = this.currentCertId || `SM-${Date.now().toString(36).toUpperCase()}`;
+    ctx.fillText(`${translationService.t('certificate_id')}: ${certId}`, 60, footerY);
     
     // Center: Program name
     ctx.textAlign = 'center';
-    ctx.fillStyle = '#4A90E2';
+    ctx.fillStyle = '#1E3A8A';
     ctx.fillText('SignMaster', this.width / 2, footerY);
     
     // Right: Date
     ctx.textAlign = 'right';
     ctx.fillStyle = '#999';
-    ctx.fillText(`Generated: ${new Date().toLocaleDateString()}`, this.width - 60, footerY);
+    ctx.fillText(`${translationService.t('generated')}: ${new Date().toLocaleDateString()}`, this.width - 60, footerY);
 
     ctx.restore();
   }
@@ -397,7 +404,7 @@ class CertificateGenerator {
     img.src = dataUrl;
     img.style.maxWidth = '100%';
     img.style.maxHeight = '100%';
-    img.style.boxShadow = '0 0 50px rgba(217,0,0,0.3)';
+    img.style.boxShadow = '0 0 50px rgba(76,29,149,0.3)';
 
     modal.appendChild(img);
     modal.onclick = () => modal.remove();

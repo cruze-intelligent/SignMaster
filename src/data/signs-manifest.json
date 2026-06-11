@@ -1,7 +1,7 @@
 {
   "version": "3.1.0",
   "generatedAt": "2025-12-22T11:23:32.201Z",
-  "cleanedAt": "2026-02-21T10:22:49.159Z",
+  "cleanedAt": "2026-06-09T06:30:00.000Z",
   "categories": {
     "alphabet": {
       "name": "Alphabet",
@@ -40,6 +40,17 @@
           "difficulty": "beginner"
         },
         {
+          "id": "alphabet_2_4",
+          "label": "Alphabet: D",
+          "filename": "p2_0004.png",
+          "page": 2,
+          "sequence": 4,
+          "path": "/SignMaster/assets/all_extracted_signs/p2_0004.png",
+          "verified": true,
+          "description": "Learn to sign \"Alphabet: D\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
           "id": "alphabet_2_5",
           "label": "Alphabet: E",
           "filename": "p2_0005.png",
@@ -48,6 +59,17 @@
           "path": "/SignMaster/assets/all_extracted_signs/p2_0005.png",
           "verified": true,
           "description": "Learn to sign \"Alphabet: E\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "alphabet_2_6",
+          "label": "Alphabet: F",
+          "filename": "p2_0006.png",
+          "page": 2,
+          "sequence": 6,
+          "path": "/SignMaster/assets/all_extracted_signs/p2_0006.png",
+          "verified": true,
+          "description": "Learn to sign \"Alphabet: F\" in Uganda Sign Language",
           "difficulty": "beginner"
         },
         {
@@ -386,149 +408,6 @@
           "difficulty": "beginner"
         },
         {
-          "id": "numbers_8_29",
-          "label": "Number Chart 1-10",
-          "filename": "p8_0029.png",
-          "page": 8,
-          "sequence": 29,
-          "path": "/SignMaster/assets/all_extracted_signs/p8_0029.png",
-          "verified": true,
-          "description": "Learn to sign \"Number Chart 1-10\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_8_30",
-          "label": "Correct/Right",
-          "filename": "p8_0030.png",
-          "page": 8,
-          "sequence": 30,
-          "path": "/SignMaster/assets/all_extracted_signs/p8_0030.png",
-          "verified": true,
-          "description": "Learn to sign \"Correct/Right\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_8_31",
-          "label": "Wrong/Error",
-          "filename": "p8_0031.png",
-          "page": 8,
-          "sequence": 31,
-          "path": "/SignMaster/assets/all_extracted_signs/p8_0031.png",
-          "verified": true,
-          "description": "Learn to sign \"Wrong/Error\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_8_32",
-          "label": "Try again",
-          "filename": "p8_0032.png",
-          "page": 8,
-          "sequence": 32,
-          "path": "/SignMaster/assets/all_extracted_signs/p8_0032.png",
-          "verified": true,
-          "description": "Learn to sign \"Try again\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_8_33",
-          "label": "Well done",
-          "filename": "p8_0033.png",
-          "page": 8,
-          "sequence": 33,
-          "path": "/SignMaster/assets/all_extracted_signs/p8_0033.png",
-          "verified": true,
-          "description": "Learn to sign \"Well done\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_8_146",
-          "label": "Addition",
-          "filename": "p8_0146.png",
-          "page": 8,
-          "sequence": 146,
-          "path": "/SignMaster/assets/all_extracted_signs/p8_0146.png",
-          "verified": true,
-          "description": "Learn to sign \"Addition\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_8_147",
-          "label": "Subtraction",
-          "filename": "p8_0147.png",
-          "page": 8,
-          "sequence": 147,
-          "path": "/SignMaster/assets/all_extracted_signs/p8_0147.png",
-          "verified": true,
-          "description": "Learn to sign \"Subtraction\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_8_148",
-          "label": "Multiplication",
-          "filename": "p8_0148.png",
-          "page": 8,
-          "sequence": 148,
-          "path": "/SignMaster/assets/all_extracted_signs/p8_0148.png",
-          "verified": true,
-          "description": "Learn to sign \"Multiplication\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_8_149",
-          "label": "Division",
-          "filename": "p8_0149.png",
-          "page": 8,
-          "sequence": 149,
-          "path": "/SignMaster/assets/all_extracted_signs/p8_0149.png",
-          "verified": true,
-          "description": "Learn to sign \"Division\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_8_150",
-          "label": "Equals",
-          "filename": "p8_0150.png",
-          "page": 8,
-          "sequence": 150,
-          "path": "/SignMaster/assets/all_extracted_signs/p8_0150.png",
-          "verified": true,
-          "description": "Learn to sign \"Equals\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_8_151",
-          "label": "Greater than",
-          "filename": "p8_0151.png",
-          "page": 8,
-          "sequence": 151,
-          "path": "/SignMaster/assets/all_extracted_signs/p8_0151.png",
-          "verified": true,
-          "description": "Learn to sign \"Greater than\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_8_152",
-          "label": "Less than",
-          "filename": "p8_0152.png",
-          "page": 8,
-          "sequence": 152,
-          "path": "/SignMaster/assets/all_extracted_signs/p8_0152.png",
-          "verified": true,
-          "description": "Learn to sign \"Less than\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_8_153",
-          "label": "Total",
-          "filename": "p8_0153.png",
-          "page": 8,
-          "sequence": 153,
-          "path": "/SignMaster/assets/all_extracted_signs/p8_0153.png",
-          "verified": true,
-          "description": "Learn to sign \"Total\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
           "id": "numbers_8_154",
           "label": "Zero",
           "filename": "p8_0154.png",
@@ -537,17 +416,6 @@
           "path": "/SignMaster/assets/all_extracted_signs/p8_0154.png",
           "verified": true,
           "description": "Learn to sign \"Zero\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_8_155",
-          "label": "Fraction",
-          "filename": "p8_0155.png",
-          "page": 8,
-          "sequence": 155,
-          "path": "/SignMaster/assets/all_extracted_signs/p8_0155.png",
-          "verified": true,
-          "description": "Learn to sign \"Fraction\" in Uganda Sign Language",
           "difficulty": "beginner"
         },
         {
@@ -661,17 +529,6 @@
           "difficulty": "beginner"
         },
         {
-          "id": "numbers_9_47",
-          "label": "Counting End",
-          "filename": "p9_0047.png",
-          "page": 9,
-          "sequence": 47,
-          "path": "/SignMaster/assets/all_extracted_signs/p9_0047.png",
-          "verified": true,
-          "description": "Learn to sign \"Counting End\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
           "id": "numbers_9_157",
           "label": "Hundred",
           "filename": "p9_0157.png",
@@ -713,39 +570,6 @@
           "path": "/SignMaster/assets/all_extracted_signs/p9_0160.png",
           "verified": true,
           "description": "Learn to sign \"Billion\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_9_162",
-          "label": "Single",
-          "filename": "p9_0162.png",
-          "page": 9,
-          "sequence": 162,
-          "path": "/SignMaster/assets/all_extracted_signs/p9_0162.png",
-          "verified": true,
-          "description": "Learn to sign \"Single\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_9_163",
-          "label": "Double",
-          "filename": "p9_0163.png",
-          "page": 9,
-          "sequence": 163,
-          "path": "/SignMaster/assets/all_extracted_signs/p9_0163.png",
-          "verified": true,
-          "description": "Learn to sign \"Double\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_9_164",
-          "label": "Triple",
-          "filename": "p9_0164.png",
-          "page": 9,
-          "sequence": 164,
-          "path": "/SignMaster/assets/all_extracted_signs/p9_0164.png",
-          "verified": true,
-          "description": "Learn to sign \"Triple\" in Uganda Sign Language",
           "difficulty": "beginner"
         },
         {
@@ -801,39 +625,6 @@
           "path": "/SignMaster/assets/all_extracted_signs/p9_0169.png",
           "verified": true,
           "description": "Learn to sign \"Fifth\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_9_170",
-          "label": "Many/A lot",
-          "filename": "p9_0170.png",
-          "page": 9,
-          "sequence": 170,
-          "path": "/SignMaster/assets/all_extracted_signs/p9_0170.png",
-          "verified": true,
-          "description": "Learn to sign \"Many/A lot\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_9_171",
-          "label": "Few/Some",
-          "filename": "p9_0171.png",
-          "page": 9,
-          "sequence": 171,
-          "path": "/SignMaster/assets/all_extracted_signs/p9_0171.png",
-          "verified": true,
-          "description": "Learn to sign \"Few/Some\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_9_172",
-          "label": "Enough",
-          "filename": "p9_0172.png",
-          "page": 9,
-          "sequence": 172,
-          "path": "/SignMaster/assets/all_extracted_signs/p9_0172.png",
-          "verified": true,
-          "description": "Learn to sign \"Enough\" in Uganda Sign Language",
           "difficulty": "beginner"
         },
         {
@@ -1805,39 +1596,6 @@
           "difficulty": "beginner"
         },
         {
-          "id": "numbers_12_239",
-          "label": "Half (1/2)",
-          "filename": "p12_0239.png",
-          "page": 12,
-          "sequence": 239,
-          "path": "/SignMaster/assets/all_extracted_signs/p12_0239.png",
-          "verified": true,
-          "description": "Learn to sign \"Half (1/2)\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_12_240",
-          "label": "Quarter (1/4)",
-          "filename": "p12_0240.png",
-          "page": 12,
-          "sequence": 240,
-          "path": "/SignMaster/assets/all_extracted_signs/p12_0240.png",
-          "verified": true,
-          "description": "Learn to sign \"Quarter (1/4)\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_12_241",
-          "label": "Percentage (%)",
-          "filename": "p12_0241.png",
-          "page": 12,
-          "sequence": 241,
-          "path": "/SignMaster/assets/all_extracted_signs/p12_0241.png",
-          "verified": true,
-          "description": "Learn to sign \"Percentage (%)\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
           "id": "numbers_13_242",
           "label": "Addition (+)",
           "filename": "p13_0242.png",
@@ -1882,17 +1640,6 @@
           "difficulty": "beginner"
         },
         {
-          "id": "numbers_13_247",
-          "label": "More than (>)",
-          "filename": "p13_0247.png",
-          "page": 13,
-          "sequence": 247,
-          "path": "/SignMaster/assets/all_extracted_signs/p13_0247.png",
-          "verified": true,
-          "description": "Learn to sign \"More than (>)\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
           "id": "numbers_13_248",
           "label": "Less than (<)",
           "filename": "p13_0248.png",
@@ -1901,17 +1648,6 @@
           "path": "/SignMaster/assets/all_extracted_signs/p13_0248.png",
           "verified": true,
           "description": "Learn to sign \"Less than (<)\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_13_249",
-          "label": "Total",
-          "filename": "p13_0249.png",
-          "page": 13,
-          "sequence": 249,
-          "path": "/SignMaster/assets/all_extracted_signs/p13_0249.png",
-          "verified": true,
-          "description": "Learn to sign \"Total\" in Uganda Sign Language",
           "difficulty": "beginner"
         },
         {
@@ -1934,28 +1670,6 @@
           "path": "/SignMaster/assets/all_extracted_signs/p13_0251.png",
           "verified": true,
           "description": "Learn to sign \"Negative Number\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_13_252",
-          "label": "Decimal Point",
-          "filename": "p13_0252.png",
-          "page": 13,
-          "sequence": 252,
-          "path": "/SignMaster/assets/all_extracted_signs/p13_0252.png",
-          "verified": true,
-          "description": "Learn to sign \"Decimal Point\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_13_253",
-          "label": "Infinity",
-          "filename": "p13_0253.png",
-          "page": 13,
-          "sequence": 253,
-          "path": "/SignMaster/assets/all_extracted_signs/p13_0253.png",
-          "verified": true,
-          "description": "Learn to sign \"Infinity\" in Uganda Sign Language",
           "difficulty": "beginner"
         },
         {
@@ -1989,39 +1703,6 @@
           "path": "/SignMaster/assets/all_extracted_signs/p13_0257.png",
           "verified": true,
           "description": "Learn to sign \"Counting 11-20\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_13_259",
-          "label": "Math Quiz",
-          "filename": "p13_0259.png",
-          "page": 13,
-          "sequence": 259,
-          "path": "/SignMaster/assets/all_extracted_signs/p13_0259.png",
-          "verified": true,
-          "description": "Learn to sign \"Math Quiz\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_13_260",
-          "label": "Answer",
-          "filename": "p13_0260.png",
-          "page": 13,
-          "sequence": 260,
-          "path": "/SignMaster/assets/all_extracted_signs/p13_0260.png",
-          "verified": true,
-          "description": "Learn to sign \"Answer\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_13_261",
-          "label": "Result",
-          "filename": "p13_0261.png",
-          "page": 13,
-          "sequence": 261,
-          "path": "/SignMaster/assets/all_extracted_signs/p13_0261.png",
-          "verified": true,
-          "description": "Learn to sign \"Result\" in Uganda Sign Language",
           "difficulty": "beginner"
         },
         {
@@ -2124,149 +1805,6 @@
           "difficulty": "beginner"
         },
         {
-          "id": "numbers_14_268",
-          "label": "Series",
-          "filename": "p14_0268.png",
-          "page": 14,
-          "sequence": 268,
-          "path": "/SignMaster/assets/all_extracted_signs/p14_0268.png",
-          "verified": true,
-          "description": "Learn to sign \"Series\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_14_269",
-          "label": "Sequence Start",
-          "filename": "p14_0269.png",
-          "page": 14,
-          "sequence": 269,
-          "path": "/SignMaster/assets/all_extracted_signs/p14_0269.png",
-          "verified": true,
-          "description": "Learn to sign \"Sequence Start\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_14_270",
-          "label": "Item 1",
-          "filename": "p14_0270.png",
-          "page": 14,
-          "sequence": 270,
-          "path": "/SignMaster/assets/all_extracted_signs/p14_0270.png",
-          "verified": true,
-          "description": "Learn to sign \"Item 1\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_14_271",
-          "label": "Item 2",
-          "filename": "p14_0271.png",
-          "page": 14,
-          "sequence": 271,
-          "path": "/SignMaster/assets/all_extracted_signs/p14_0271.png",
-          "verified": true,
-          "description": "Learn to sign \"Item 2\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_14_272",
-          "label": "Item 3",
-          "filename": "p14_0272.png",
-          "page": 14,
-          "sequence": 272,
-          "path": "/SignMaster/assets/all_extracted_signs/p14_0272.png",
-          "verified": true,
-          "description": "Learn to sign \"Item 3\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_14_273",
-          "label": "Item 4",
-          "filename": "p14_0273.png",
-          "page": 14,
-          "sequence": 273,
-          "path": "/SignMaster/assets/all_extracted_signs/p14_0273.png",
-          "verified": true,
-          "description": "Learn to sign \"Item 4\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_14_274",
-          "label": "Item 5",
-          "filename": "p14_0274.png",
-          "page": 14,
-          "sequence": 274,
-          "path": "/SignMaster/assets/all_extracted_signs/p14_0274.png",
-          "verified": true,
-          "description": "Learn to sign \"Item 5\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_14_276",
-          "label": "Grouping",
-          "filename": "p14_0276.png",
-          "page": 14,
-          "sequence": 276,
-          "path": "/SignMaster/assets/all_extracted_signs/p14_0276.png",
-          "verified": true,
-          "description": "Learn to sign \"Grouping\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_14_277",
-          "label": "Sum",
-          "filename": "p14_0277.png",
-          "page": 14,
-          "sequence": 277,
-          "path": "/SignMaster/assets/all_extracted_signs/p14_0277.png",
-          "verified": true,
-          "description": "Learn to sign \"Sum\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_14_278",
-          "label": "Difference",
-          "filename": "p14_0278.png",
-          "page": 14,
-          "sequence": 278,
-          "path": "/SignMaster/assets/all_extracted_signs/p14_0278.png",
-          "verified": true,
-          "description": "Learn to sign \"Difference\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_14_280",
-          "label": "Quotient",
-          "filename": "p14_0280.png",
-          "page": 14,
-          "sequence": 280,
-          "path": "/SignMaster/assets/all_extracted_signs/p14_0280.png",
-          "verified": true,
-          "description": "Learn to sign \"Quotient\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_14_281",
-          "label": "Remainder",
-          "filename": "p14_0281.png",
-          "page": 14,
-          "sequence": 281,
-          "path": "/SignMaster/assets/all_extracted_signs/p14_0281.png",
-          "verified": true,
-          "description": "Learn to sign \"Remainder\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_14_282",
-          "label": "End Math",
-          "filename": "p14_0282.png",
-          "page": 14,
-          "sequence": 282,
-          "path": "/SignMaster/assets/all_extracted_signs/p14_0282.png",
-          "verified": true,
-          "description": "Learn to sign \"End Math\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
           "id": "numbers_15_77",
           "label": "Currency/Money (Intro)",
           "filename": "p15_0077.png",
@@ -2278,160 +1816,6 @@
           "difficulty": "beginner"
         },
         {
-          "id": "numbers_15_78",
-          "label": "Shillings (UGX)",
-          "filename": "p15_0078.png",
-          "page": 15,
-          "sequence": 78,
-          "path": "/SignMaster/assets/all_extracted_signs/p15_0078.png",
-          "verified": true,
-          "description": "Learn to sign \"Shillings (UGX)\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_15_79",
-          "label": "Cost/Price",
-          "filename": "p15_0079.png",
-          "page": 15,
-          "sequence": 79,
-          "path": "/SignMaster/assets/all_extracted_signs/p15_0079.png",
-          "verified": true,
-          "description": "Learn to sign \"Cost/Price\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_15_80",
-          "label": "Expensive",
-          "filename": "p15_0080.png",
-          "page": 15,
-          "sequence": 80,
-          "path": "/SignMaster/assets/all_extracted_signs/p15_0080.png",
-          "verified": true,
-          "description": "Learn to sign \"Expensive\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_15_81",
-          "label": "Cheap",
-          "filename": "p15_0081.png",
-          "page": 15,
-          "sequence": 81,
-          "path": "/SignMaster/assets/all_extracted_signs/p15_0081.png",
-          "verified": true,
-          "description": "Learn to sign \"Cheap\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_15_82",
-          "label": "Balance/Change",
-          "filename": "p15_0082.png",
-          "page": 15,
-          "sequence": 82,
-          "path": "/SignMaster/assets/all_extracted_signs/p15_0082.png",
-          "verified": true,
-          "description": "Learn to sign \"Balance/Change\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_15_83",
-          "label": "Pay",
-          "filename": "p15_0083.png",
-          "page": 15,
-          "sequence": 83,
-          "path": "/SignMaster/assets/all_extracted_signs/p15_0083.png",
-          "verified": true,
-          "description": "Learn to sign \"Pay\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_15_84",
-          "label": "Buy",
-          "filename": "p15_0084.png",
-          "page": 15,
-          "sequence": 84,
-          "path": "/SignMaster/assets/all_extracted_signs/p15_0084.png",
-          "verified": true,
-          "description": "Learn to sign \"Buy\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_15_85",
-          "label": "Sell",
-          "filename": "p15_0085.png",
-          "page": 15,
-          "sequence": 85,
-          "path": "/SignMaster/assets/all_extracted_signs/p15_0085.png",
-          "verified": true,
-          "description": "Learn to sign \"Sell\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_15_86",
-          "label": "Receipt",
-          "filename": "p15_0086.png",
-          "page": 15,
-          "sequence": 86,
-          "path": "/SignMaster/assets/all_extracted_signs/p15_0086.png",
-          "verified": true,
-          "description": "Learn to sign \"Receipt\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_15_284",
-          "label": "Shop",
-          "filename": "p15_0284.png",
-          "page": 15,
-          "sequence": 284,
-          "path": "/SignMaster/assets/all_extracted_signs/p15_0284.png",
-          "verified": true,
-          "description": "Learn to sign \"Shop\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_15_285",
-          "label": "Supermarket",
-          "filename": "p15_0285.png",
-          "page": 15,
-          "sequence": 285,
-          "path": "/SignMaster/assets/all_extracted_signs/p15_0285.png",
-          "verified": true,
-          "description": "Learn to sign \"Supermarket\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_15_286",
-          "label": "Bank",
-          "filename": "p15_0286.png",
-          "page": 15,
-          "sequence": 286,
-          "path": "/SignMaster/assets/all_extracted_signs/p15_0286.png",
-          "verified": true,
-          "description": "Learn to sign \"Bank\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_15_287",
-          "label": "Wallet",
-          "filename": "p15_0287.png",
-          "page": 15,
-          "sequence": 287,
-          "path": "/SignMaster/assets/all_extracted_signs/p15_0287.png",
-          "verified": true,
-          "description": "Learn to sign \"Wallet\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_15_288",
-          "label": "Pocket",
-          "filename": "p15_0288.png",
-          "page": 15,
-          "sequence": 288,
-          "path": "/SignMaster/assets/all_extracted_signs/p15_0288.png",
-          "verified": true,
-          "description": "Learn to sign \"Pocket\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
           "id": "numbers_15_289",
           "label": "Save Money",
           "filename": "p15_0289.png",
@@ -2440,127 +1824,6 @@
           "path": "/SignMaster/assets/all_extracted_signs/p15_0289.png",
           "verified": true,
           "description": "Learn to sign \"Save Money\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_15_290",
-          "label": "Lend",
-          "filename": "p15_0290.png",
-          "page": 15,
-          "sequence": 290,
-          "path": "/SignMaster/assets/all_extracted_signs/p15_0290.png",
-          "verified": true,
-          "description": "Learn to sign \"Lend\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_15_291",
-          "label": "Borrow",
-          "filename": "p15_0291.png",
-          "page": 15,
-          "sequence": 291,
-          "path": "/SignMaster/assets/all_extracted_signs/p15_0291.png",
-          "verified": true,
-          "description": "Learn to sign \"Borrow\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_15_292",
-          "label": "Debt",
-          "filename": "p15_0292.png",
-          "page": 15,
-          "sequence": 292,
-          "path": "/SignMaster/assets/all_extracted_signs/p15_0292.png",
-          "verified": true,
-          "description": "Learn to sign \"Debt\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_15_293",
-          "label": "Profit",
-          "filename": "p15_0293.png",
-          "page": 15,
-          "sequence": 293,
-          "path": "/SignMaster/assets/all_extracted_signs/p15_0293.png",
-          "verified": true,
-          "description": "Learn to sign \"Profit\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_15_294",
-          "label": "Loss",
-          "filename": "p15_0294.png",
-          "page": 15,
-          "sequence": 294,
-          "path": "/SignMaster/assets/all_extracted_signs/p15_0294.png",
-          "verified": true,
-          "description": "Learn to sign \"Loss\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_15_295",
-          "label": "Poverty",
-          "filename": "p15_0295.png",
-          "page": 15,
-          "sequence": 295,
-          "path": "/SignMaster/assets/all_extracted_signs/p15_0295.png",
-          "verified": true,
-          "description": "Learn to sign \"Poverty\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_15_296",
-          "label": "Wealth",
-          "filename": "p15_0296.png",
-          "page": 15,
-          "sequence": 296,
-          "path": "/SignMaster/assets/all_extracted_signs/p15_0296.png",
-          "verified": true,
-          "description": "Learn to sign \"Wealth\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_15_297",
-          "label": "Rich",
-          "filename": "p15_0297.png",
-          "page": 15,
-          "sequence": 297,
-          "path": "/SignMaster/assets/all_extracted_signs/p15_0297.png",
-          "verified": true,
-          "description": "Learn to sign \"Rich\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_15_298",
-          "label": "Poor",
-          "filename": "p15_0298.png",
-          "page": 15,
-          "sequence": 298,
-          "path": "/SignMaster/assets/all_extracted_signs/p15_0298.png",
-          "verified": true,
-          "description": "Learn to sign \"Poor\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_15_299",
-          "label": "Coin",
-          "filename": "p15_0299.png",
-          "page": 15,
-          "sequence": 299,
-          "path": "/SignMaster/assets/all_extracted_signs/p15_0299.png",
-          "verified": true,
-          "description": "Learn to sign \"Coin\" in Uganda Sign Language",
-          "difficulty": "beginner"
-        },
-        {
-          "id": "numbers_15_300",
-          "label": "Note (Cash)",
-          "filename": "p15_0300.png",
-          "page": 15,
-          "sequence": 300,
-          "path": "/SignMaster/assets/all_extracted_signs/p15_0300.png",
-          "verified": true,
-          "description": "Learn to sign \"Note (Cash)\" in Uganda Sign Language",
           "difficulty": "beginner"
         },
         {
@@ -7260,6 +6523,50 @@
           "verified": true,
           "description": "Learn to sign \"Jump\" in Uganda Sign Language",
           "difficulty": "intermediate"
+        },
+        {
+          "id": "numbers_8_30",
+          "label": "Correct/Right",
+          "filename": "p8_0030.png",
+          "page": 8,
+          "sequence": 30,
+          "path": "/SignMaster/assets/all_extracted_signs/p8_0030.png",
+          "verified": true,
+          "description": "Learn to sign \"Correct/Right\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_8_31",
+          "label": "Wrong/Error",
+          "filename": "p8_0031.png",
+          "page": 8,
+          "sequence": 31,
+          "path": "/SignMaster/assets/all_extracted_signs/p8_0031.png",
+          "verified": true,
+          "description": "Learn to sign \"Wrong/Error\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_8_32",
+          "label": "Try again",
+          "filename": "p8_0032.png",
+          "page": 8,
+          "sequence": 32,
+          "path": "/SignMaster/assets/all_extracted_signs/p8_0032.png",
+          "verified": true,
+          "description": "Learn to sign \"Try again\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_8_33",
+          "label": "Well done",
+          "filename": "p8_0033.png",
+          "page": 8,
+          "sequence": 33,
+          "path": "/SignMaster/assets/all_extracted_signs/p8_0033.png",
+          "verified": true,
+          "description": "Learn to sign \"Well done\" in Uganda Sign Language",
+          "difficulty": "beginner"
         }
       ]
     },
@@ -7496,6 +6803,703 @@
           "verified": true,
           "description": "Learn to sign \"Appointment\" in Uganda Sign Language",
           "difficulty": "intermediate"
+        }
+      ]
+    },
+    "money": {
+      "name": "Money & Commerce",
+      "signs": [
+        {
+          "id": "numbers_15_78",
+          "label": "Shillings (UGX)",
+          "filename": "p15_0078.png",
+          "page": 15,
+          "sequence": 78,
+          "path": "/SignMaster/assets/all_extracted_signs/p15_0078.png",
+          "verified": true,
+          "description": "Learn to sign \"Shillings (UGX)\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_15_79",
+          "label": "Cost/Price",
+          "filename": "p15_0079.png",
+          "page": 15,
+          "sequence": 79,
+          "path": "/SignMaster/assets/all_extracted_signs/p15_0079.png",
+          "verified": true,
+          "description": "Learn to sign \"Cost/Price\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_15_80",
+          "label": "Expensive",
+          "filename": "p15_0080.png",
+          "page": 15,
+          "sequence": 80,
+          "path": "/SignMaster/assets/all_extracted_signs/p15_0080.png",
+          "verified": true,
+          "description": "Learn to sign \"Expensive\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_15_81",
+          "label": "Cheap",
+          "filename": "p15_0081.png",
+          "page": 15,
+          "sequence": 81,
+          "path": "/SignMaster/assets/all_extracted_signs/p15_0081.png",
+          "verified": true,
+          "description": "Learn to sign \"Cheap\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_15_82",
+          "label": "Balance/Change",
+          "filename": "p15_0082.png",
+          "page": 15,
+          "sequence": 82,
+          "path": "/SignMaster/assets/all_extracted_signs/p15_0082.png",
+          "verified": true,
+          "description": "Learn to sign \"Balance/Change\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_15_83",
+          "label": "Pay",
+          "filename": "p15_0083.png",
+          "page": 15,
+          "sequence": 83,
+          "path": "/SignMaster/assets/all_extracted_signs/p15_0083.png",
+          "verified": true,
+          "description": "Learn to sign \"Pay\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_15_84",
+          "label": "Buy",
+          "filename": "p15_0084.png",
+          "page": 15,
+          "sequence": 84,
+          "path": "/SignMaster/assets/all_extracted_signs/p15_0084.png",
+          "verified": true,
+          "description": "Learn to sign \"Buy\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_15_85",
+          "label": "Sell",
+          "filename": "p15_0085.png",
+          "page": 15,
+          "sequence": 85,
+          "path": "/SignMaster/assets/all_extracted_signs/p15_0085.png",
+          "verified": true,
+          "description": "Learn to sign \"Sell\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_15_86",
+          "label": "Receipt",
+          "filename": "p15_0086.png",
+          "page": 15,
+          "sequence": 86,
+          "path": "/SignMaster/assets/all_extracted_signs/p15_0086.png",
+          "verified": true,
+          "description": "Learn to sign \"Receipt\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_15_284",
+          "label": "Shop",
+          "filename": "p15_0284.png",
+          "page": 15,
+          "sequence": 284,
+          "path": "/SignMaster/assets/all_extracted_signs/p15_0284.png",
+          "verified": true,
+          "description": "Learn to sign \"Shop\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_15_285",
+          "label": "Supermarket",
+          "filename": "p15_0285.png",
+          "page": 15,
+          "sequence": 285,
+          "path": "/SignMaster/assets/all_extracted_signs/p15_0285.png",
+          "verified": true,
+          "description": "Learn to sign \"Supermarket\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_15_286",
+          "label": "Bank",
+          "filename": "p15_0286.png",
+          "page": 15,
+          "sequence": 286,
+          "path": "/SignMaster/assets/all_extracted_signs/p15_0286.png",
+          "verified": true,
+          "description": "Learn to sign \"Bank\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_15_287",
+          "label": "Wallet",
+          "filename": "p15_0287.png",
+          "page": 15,
+          "sequence": 287,
+          "path": "/SignMaster/assets/all_extracted_signs/p15_0287.png",
+          "verified": true,
+          "description": "Learn to sign \"Wallet\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_15_288",
+          "label": "Pocket",
+          "filename": "p15_0288.png",
+          "page": 15,
+          "sequence": 288,
+          "path": "/SignMaster/assets/all_extracted_signs/p15_0288.png",
+          "verified": true,
+          "description": "Learn to sign \"Pocket\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_15_290",
+          "label": "Lend",
+          "filename": "p15_0290.png",
+          "page": 15,
+          "sequence": 290,
+          "path": "/SignMaster/assets/all_extracted_signs/p15_0290.png",
+          "verified": true,
+          "description": "Learn to sign \"Lend\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_15_291",
+          "label": "Borrow",
+          "filename": "p15_0291.png",
+          "page": 15,
+          "sequence": 291,
+          "path": "/SignMaster/assets/all_extracted_signs/p15_0291.png",
+          "verified": true,
+          "description": "Learn to sign \"Borrow\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_15_292",
+          "label": "Debt",
+          "filename": "p15_0292.png",
+          "page": 15,
+          "sequence": 292,
+          "path": "/SignMaster/assets/all_extracted_signs/p15_0292.png",
+          "verified": true,
+          "description": "Learn to sign \"Debt\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_15_293",
+          "label": "Profit",
+          "filename": "p15_0293.png",
+          "page": 15,
+          "sequence": 293,
+          "path": "/SignMaster/assets/all_extracted_signs/p15_0293.png",
+          "verified": true,
+          "description": "Learn to sign \"Profit\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_15_294",
+          "label": "Loss",
+          "filename": "p15_0294.png",
+          "page": 15,
+          "sequence": 294,
+          "path": "/SignMaster/assets/all_extracted_signs/p15_0294.png",
+          "verified": true,
+          "description": "Learn to sign \"Loss\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_15_295",
+          "label": "Poverty",
+          "filename": "p15_0295.png",
+          "page": 15,
+          "sequence": 295,
+          "path": "/SignMaster/assets/all_extracted_signs/p15_0295.png",
+          "verified": true,
+          "description": "Learn to sign \"Poverty\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_15_296",
+          "label": "Wealth",
+          "filename": "p15_0296.png",
+          "page": 15,
+          "sequence": 296,
+          "path": "/SignMaster/assets/all_extracted_signs/p15_0296.png",
+          "verified": true,
+          "description": "Learn to sign \"Wealth\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_15_297",
+          "label": "Rich",
+          "filename": "p15_0297.png",
+          "page": 15,
+          "sequence": 297,
+          "path": "/SignMaster/assets/all_extracted_signs/p15_0297.png",
+          "verified": true,
+          "description": "Learn to sign \"Rich\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_15_298",
+          "label": "Poor",
+          "filename": "p15_0298.png",
+          "page": 15,
+          "sequence": 298,
+          "path": "/SignMaster/assets/all_extracted_signs/p15_0298.png",
+          "verified": true,
+          "description": "Learn to sign \"Poor\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_15_299",
+          "label": "Coin",
+          "filename": "p15_0299.png",
+          "page": 15,
+          "sequence": 299,
+          "path": "/SignMaster/assets/all_extracted_signs/p15_0299.png",
+          "verified": true,
+          "description": "Learn to sign \"Coin\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_15_300",
+          "label": "Note (Cash)",
+          "filename": "p15_0300.png",
+          "page": 15,
+          "sequence": 300,
+          "path": "/SignMaster/assets/all_extracted_signs/p15_0300.png",
+          "verified": true,
+          "description": "Learn to sign \"Note (Cash)\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        }
+      ]
+    },
+    "math": {
+      "name": "Mathematics",
+      "signs": [
+        {
+          "id": "numbers_8_146",
+          "label": "Addition",
+          "filename": "p8_0146.png",
+          "page": 8,
+          "sequence": 146,
+          "path": "/SignMaster/assets/all_extracted_signs/p8_0146.png",
+          "verified": true,
+          "description": "Learn to sign \"Addition\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_8_147",
+          "label": "Subtraction",
+          "filename": "p8_0147.png",
+          "page": 8,
+          "sequence": 147,
+          "path": "/SignMaster/assets/all_extracted_signs/p8_0147.png",
+          "verified": true,
+          "description": "Learn to sign \"Subtraction\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_8_148",
+          "label": "Multiplication",
+          "filename": "p8_0148.png",
+          "page": 8,
+          "sequence": 148,
+          "path": "/SignMaster/assets/all_extracted_signs/p8_0148.png",
+          "verified": true,
+          "description": "Learn to sign \"Multiplication\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_8_149",
+          "label": "Division",
+          "filename": "p8_0149.png",
+          "page": 8,
+          "sequence": 149,
+          "path": "/SignMaster/assets/all_extracted_signs/p8_0149.png",
+          "verified": true,
+          "description": "Learn to sign \"Division\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_8_150",
+          "label": "Equals",
+          "filename": "p8_0150.png",
+          "page": 8,
+          "sequence": 150,
+          "path": "/SignMaster/assets/all_extracted_signs/p8_0150.png",
+          "verified": true,
+          "description": "Learn to sign \"Equals\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_8_151",
+          "label": "Greater than",
+          "filename": "p8_0151.png",
+          "page": 8,
+          "sequence": 151,
+          "path": "/SignMaster/assets/all_extracted_signs/p8_0151.png",
+          "verified": true,
+          "description": "Learn to sign \"Greater than\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_8_152",
+          "label": "Less than",
+          "filename": "p8_0152.png",
+          "page": 8,
+          "sequence": 152,
+          "path": "/SignMaster/assets/all_extracted_signs/p8_0152.png",
+          "verified": true,
+          "description": "Learn to sign \"Less than\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_8_153",
+          "label": "Total",
+          "filename": "p8_0153.png",
+          "page": 8,
+          "sequence": 153,
+          "path": "/SignMaster/assets/all_extracted_signs/p8_0153.png",
+          "verified": true,
+          "description": "Learn to sign \"Total\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_8_155",
+          "label": "Fraction",
+          "filename": "p8_0155.png",
+          "page": 8,
+          "sequence": 155,
+          "path": "/SignMaster/assets/all_extracted_signs/p8_0155.png",
+          "verified": true,
+          "description": "Learn to sign \"Fraction\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_12_239",
+          "label": "Half (1/2)",
+          "filename": "p12_0239.png",
+          "page": 12,
+          "sequence": 239,
+          "path": "/SignMaster/assets/all_extracted_signs/p12_0239.png",
+          "verified": true,
+          "description": "Learn to sign \"Half (1/2)\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_12_240",
+          "label": "Quarter (1/4)",
+          "filename": "p12_0240.png",
+          "page": 12,
+          "sequence": 240,
+          "path": "/SignMaster/assets/all_extracted_signs/p12_0240.png",
+          "verified": true,
+          "description": "Learn to sign \"Quarter (1/4)\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_12_241",
+          "label": "Percentage (%)",
+          "filename": "p12_0241.png",
+          "page": 12,
+          "sequence": 241,
+          "path": "/SignMaster/assets/all_extracted_signs/p12_0241.png",
+          "verified": true,
+          "description": "Learn to sign \"Percentage (%)\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_13_247",
+          "label": "More than (>)",
+          "filename": "p13_0247.png",
+          "page": 13,
+          "sequence": 247,
+          "path": "/SignMaster/assets/all_extracted_signs/p13_0247.png",
+          "verified": true,
+          "description": "Learn to sign \"More than (>)\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_13_249",
+          "label": "Total",
+          "filename": "p13_0249.png",
+          "page": 13,
+          "sequence": 249,
+          "path": "/SignMaster/assets/all_extracted_signs/p13_0249.png",
+          "verified": true,
+          "description": "Learn to sign \"Total\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_13_252",
+          "label": "Decimal Point",
+          "filename": "p13_0252.png",
+          "page": 13,
+          "sequence": 252,
+          "path": "/SignMaster/assets/all_extracted_signs/p13_0252.png",
+          "verified": true,
+          "description": "Learn to sign \"Decimal Point\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_13_253",
+          "label": "Infinity",
+          "filename": "p13_0253.png",
+          "page": 13,
+          "sequence": 253,
+          "path": "/SignMaster/assets/all_extracted_signs/p13_0253.png",
+          "verified": true,
+          "description": "Learn to sign \"Infinity\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_13_259",
+          "label": "Math Quiz",
+          "filename": "p13_0259.png",
+          "page": 13,
+          "sequence": 259,
+          "path": "/SignMaster/assets/all_extracted_signs/p13_0259.png",
+          "verified": true,
+          "description": "Learn to sign \"Math Quiz\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_13_260",
+          "label": "Answer",
+          "filename": "p13_0260.png",
+          "page": 13,
+          "sequence": 260,
+          "path": "/SignMaster/assets/all_extracted_signs/p13_0260.png",
+          "verified": true,
+          "description": "Learn to sign \"Answer\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_13_261",
+          "label": "Result",
+          "filename": "p13_0261.png",
+          "page": 13,
+          "sequence": 261,
+          "path": "/SignMaster/assets/all_extracted_signs/p13_0261.png",
+          "verified": true,
+          "description": "Learn to sign \"Result\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_14_277",
+          "label": "Sum",
+          "filename": "p14_0277.png",
+          "page": 14,
+          "sequence": 277,
+          "path": "/SignMaster/assets/all_extracted_signs/p14_0277.png",
+          "verified": true,
+          "description": "Learn to sign \"Sum\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_14_278",
+          "label": "Difference",
+          "filename": "p14_0278.png",
+          "page": 14,
+          "sequence": 278,
+          "path": "/SignMaster/assets/all_extracted_signs/p14_0278.png",
+          "verified": true,
+          "description": "Learn to sign \"Difference\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_14_280",
+          "label": "Quotient",
+          "filename": "p14_0280.png",
+          "page": 14,
+          "sequence": 280,
+          "path": "/SignMaster/assets/all_extracted_signs/p14_0280.png",
+          "verified": true,
+          "description": "Learn to sign \"Quotient\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_14_281",
+          "label": "Remainder",
+          "filename": "p14_0281.png",
+          "page": 14,
+          "sequence": 281,
+          "path": "/SignMaster/assets/all_extracted_signs/p14_0281.png",
+          "verified": true,
+          "description": "Learn to sign \"Remainder\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_14_282",
+          "label": "End Math",
+          "filename": "p14_0282.png",
+          "page": 14,
+          "sequence": 282,
+          "path": "/SignMaster/assets/all_extracted_signs/p14_0282.png",
+          "verified": true,
+          "description": "Learn to sign \"End Math\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        }
+      ]
+    },
+    "quantities": {
+      "name": "Quantities",
+      "signs": [
+        {
+          "id": "numbers_9_162",
+          "label": "Single",
+          "filename": "p9_0162.png",
+          "page": 9,
+          "sequence": 162,
+          "path": "/SignMaster/assets/all_extracted_signs/p9_0162.png",
+          "verified": true,
+          "description": "Learn to sign \"Single\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_9_163",
+          "label": "Double",
+          "filename": "p9_0163.png",
+          "page": 9,
+          "sequence": 163,
+          "path": "/SignMaster/assets/all_extracted_signs/p9_0163.png",
+          "verified": true,
+          "description": "Learn to sign \"Double\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_9_164",
+          "label": "Triple",
+          "filename": "p9_0164.png",
+          "page": 9,
+          "sequence": 164,
+          "path": "/SignMaster/assets/all_extracted_signs/p9_0164.png",
+          "verified": true,
+          "description": "Learn to sign \"Triple\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_9_170",
+          "label": "Many/A lot",
+          "filename": "p9_0170.png",
+          "page": 9,
+          "sequence": 170,
+          "path": "/SignMaster/assets/all_extracted_signs/p9_0170.png",
+          "verified": true,
+          "description": "Learn to sign \"Many/A lot\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_9_171",
+          "label": "Few/Some",
+          "filename": "p9_0171.png",
+          "page": 9,
+          "sequence": 171,
+          "path": "/SignMaster/assets/all_extracted_signs/p9_0171.png",
+          "verified": true,
+          "description": "Learn to sign \"Few/Some\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_9_172",
+          "label": "Enough",
+          "filename": "p9_0172.png",
+          "page": 9,
+          "sequence": 172,
+          "path": "/SignMaster/assets/all_extracted_signs/p9_0172.png",
+          "verified": true,
+          "description": "Learn to sign \"Enough\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_14_268",
+          "label": "Series",
+          "filename": "p14_0268.png",
+          "page": 14,
+          "sequence": 268,
+          "path": "/SignMaster/assets/all_extracted_signs/p14_0268.png",
+          "verified": true,
+          "description": "Learn to sign \"Series\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_14_270",
+          "label": "Item 1",
+          "filename": "p14_0270.png",
+          "page": 14,
+          "sequence": 270,
+          "path": "/SignMaster/assets/all_extracted_signs/p14_0270.png",
+          "verified": true,
+          "description": "Learn to sign \"Item 1\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_14_271",
+          "label": "Item 2",
+          "filename": "p14_0271.png",
+          "page": 14,
+          "sequence": 271,
+          "path": "/SignMaster/assets/all_extracted_signs/p14_0271.png",
+          "verified": true,
+          "description": "Learn to sign \"Item 2\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_14_272",
+          "label": "Item 3",
+          "filename": "p14_0272.png",
+          "page": 14,
+          "sequence": 272,
+          "path": "/SignMaster/assets/all_extracted_signs/p14_0272.png",
+          "verified": true,
+          "description": "Learn to sign \"Item 3\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_14_273",
+          "label": "Item 4",
+          "filename": "p14_0273.png",
+          "page": 14,
+          "sequence": 273,
+          "path": "/SignMaster/assets/all_extracted_signs/p14_0273.png",
+          "verified": true,
+          "description": "Learn to sign \"Item 4\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_14_274",
+          "label": "Item 5",
+          "filename": "p14_0274.png",
+          "page": 14,
+          "sequence": 274,
+          "path": "/SignMaster/assets/all_extracted_signs/p14_0274.png",
+          "verified": true,
+          "description": "Learn to sign \"Item 5\" in Uganda Sign Language",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "numbers_14_276",
+          "label": "Grouping",
+          "filename": "p14_0276.png",
+          "page": 14,
+          "sequence": 276,
+          "path": "/SignMaster/assets/all_extracted_signs/p14_0276.png",
+          "verified": true,
+          "description": "Learn to sign \"Grouping\" in Uganda Sign Language",
+          "difficulty": "beginner"
         }
       ]
     }

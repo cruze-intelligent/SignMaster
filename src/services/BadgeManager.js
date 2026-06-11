@@ -27,7 +27,8 @@ class BadgeManager {
     if (existing) return false;
 
     // Check unlock level requirement
-    if (stats.currentLevel < badge.unlockLevel) return false;
+    const playerLevel = stats.currentLevel || stats.level || 1;
+    if (playerLevel < badge.unlockLevel) return false;
 
     // Check condition
     const isMet = this.checkCondition(badge.condition, stats);
@@ -46,46 +47,58 @@ class BadgeManager {
   checkCondition(condition, stats) {
     switch (condition.type) {
       case 'signsLearned':
-        return (stats.signsLearned || 0) >= condition.value;
+        return (stats.totalSignsLearned || stats.signsLearned || 0) >= condition.value;
       
       case 'categoryComplete':
-        return (stats.completedCategories || []).includes(condition.value);
+        return (stats.categoriesCompleted || []).includes(condition.value);
       
       case 'perfectScore':
         return (stats.lastMatchScore || 0) >= condition.value;
       
       case 'matchTime':
-        return (stats.lastMatchTime || Infinity) <= condition.value;
+        return (stats.lastMatchTime || stats.fastestMatch || Infinity) <= condition.value;
       
       case 'streak':
-        return (stats.currentStreak || 0) >= condition.value;
+        return (stats.streak || 0) >= condition.value;
       
       case 'totalXP':
-        return (stats.xp || 0) >= condition.value;
+        return (stats.totalXP || stats.xp || 0) >= condition.value;
       
       case 'dailyStreak':
         return (stats.dailyStreak || 0) >= condition.value;
       
-      case 'timeOfDay':
-        const hour = new Date().getHours();
+      case 'perfectGames':
+        return (stats.perfectGames || 0) >= condition.value;
+      
+      case 'timeOfDay': {
+        const hour = stats.timeOfDay !== undefined ? stats.timeOfDay : new Date().getHours();
         if (condition.value === 'morning') return hour < 9;
         if (condition.value === 'night') return hour >= 22;
         return false;
+      }
       
       case 'shareCount':
         return (stats.shareCount || 0) >= condition.value;
       
       case 'perfectLevels':
-        return (stats.perfectLevels || 0) >= condition.value;
+        return (stats.perfectGames || stats.perfectLevels || 0) >= condition.value;
       
-      case 'allComplete':
-        return stats.allCategoriesComplete || false;
+      case 'allComplete': {
+        // Check if all known categories are completed
+        const completed = stats.categoriesCompleted || [];
+        if (stats.allCategoriesComplete) return true;
+        // Fallback: require at least 11 categories (all mastery badge categories)
+        return completed.length >= 11;
+      }
       
       case 'secret':
         return stats.secretsFound && stats.secretsFound.includes(condition.value);
       
       case 'voiceUsage':
         return (stats.voiceUsageCount || 0) >= condition.value;
+      
+      case 'special':
+        return false;
       
       default:
         return false;
@@ -177,28 +190,33 @@ class BadgeManager {
     
     switch (condition.type) {
       case 'signsLearned':
-        return Math.min(100, ((stats.signsLearned || 0) / condition.value) * 100);
+        return Math.min(100, ((stats.totalSignsLearned || stats.signsLearned || 0) / condition.value) * 100);
       
       case 'categoryComplete':
-        return (stats.completedCategories || []).includes(condition.value) ? 100 : 0;
+        return (stats.categoriesCompleted || []).includes(condition.value) ? 100 : 0;
       
       case 'perfectScore':
         return Math.min(100, ((stats.lastMatchScore || 0) / condition.value) * 100);
       
-      case 'matchTime':
-        return stats.lastMatchTime ? Math.min(100, (condition.value / stats.lastMatchTime) * 100) : 0;
+      case 'matchTime': {
+        const matchTime = stats.lastMatchTime || stats.fastestMatch;
+        return matchTime ? Math.min(100, (condition.value / matchTime) * 100) : 0;
+      }
       
       case 'streak':
-        return Math.min(100, ((stats.currentStreak || 0) / condition.value) * 100);
+        return Math.min(100, ((stats.streak || 0) / condition.value) * 100);
       
       case 'totalXP':
-        return Math.min(100, ((stats.xp || 0) / condition.value) * 100);
+        return Math.min(100, ((stats.totalXP || stats.xp || 0) / condition.value) * 100);
       
       case 'dailyStreak':
         return Math.min(100, ((stats.dailyStreak || 0) / condition.value) * 100);
       
       case 'perfectLevels':
-        return Math.min(100, ((stats.perfectLevels || 0) / condition.value) * 100);
+        return Math.min(100, ((stats.perfectGames || stats.perfectLevels || 0) / condition.value) * 100);
+      
+      case 'perfectGames':
+        return Math.min(100, ((stats.perfectGames || 0) / condition.value) * 100);
       
       default:
         return 0;
@@ -224,14 +242,15 @@ class BadgeManager {
    */
   async getBadgeRank() {
     const points = await this.getTotalBadgePoints();
+    const rank = (name, tier, icon) => ({ rank: name, name, tier, icon });
     
     // Define rank thresholds
-    if (points >= 1000) return { rank: 'Legendary Master', tier: 'diamond', icon: '👑' };
-    if (points >= 500) return { rank: 'Elite Champion', tier: 'platinum', icon: '🏆' };
-    if (points >= 250) return { rank: 'Expert Signer', tier: 'gold', icon: '⭐' };
-    if (points >= 100) return { rank: 'Advanced Learner', tier: 'silver', icon: '🌟' };
-    if (points >= 25) return { rank: 'Rising Star', tier: 'bronze', icon: '✨' };
-    return { rank: 'Beginner', tier: 'bronze', icon: '🌱' };
+    if (points >= 1000) return rank('Legendary Master', 'diamond', '👑');
+    if (points >= 500) return rank('Elite Champion', 'platinum', '🏆');
+    if (points >= 250) return rank('Expert Signer', 'gold', '⭐');
+    if (points >= 100) return rank('Advanced Learner', 'silver', '🌟');
+    if (points >= 25) return rank('Rising Star', 'bronze', '✨');
+    return rank('Beginner', 'bronze', '🌱');
   }
 
   /**

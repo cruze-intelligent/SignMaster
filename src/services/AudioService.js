@@ -7,6 +7,11 @@ class AudioService {
   constructor() {
     this.ctx = null;
     this.initialized = false;
+    this.enabled = true;
+  }
+
+  setEnabled(enabled) {
+    this.enabled = Boolean(enabled);
   }
 
   init() {
@@ -29,6 +34,7 @@ class AudioService {
   }
 
   playTone(freq, type = 'sine', duration = 0.1, vol = 0.1) {
+    if (!this.enabled) return;
     if (!this.initialized || !this.ctx) return;
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();

@@ -25,7 +25,7 @@ class SignModal {
     this.element.innerHTML = `
       <div class="sign-modal__overlay"></div>
       <div class="sign-modal__content">
-        <button class="sign-modal__close" aria-label="Close">&times;</button>
+        <button class="sign-modal__close" aria-label="${translationService.t('close')}">&times;</button>
         <div class="sign-modal__image-container">
           <img class="sign-modal__image" alt="" />
           <div class="sign-modal__loader">
@@ -209,8 +209,11 @@ class SignModal {
     title.textContent = sign.label;
     description.textContent =
       sign.description || `${translationService.t('learn_to_sign')} "${sign.label}" ${translationService.t('in_usl')}`;
-    categoryEl.textContent = `📁 ${category}`;
-    difficultyEl.textContent = `📊 ${sign.difficulty || translationService.t('beginner')}`;
+    const categoryLabel = translationService.t(category) !== category ? translationService.t(category) : category;
+    const difficulty = sign.difficulty || 'beginner';
+    const difficultyLabel = translationService.t(difficulty) !== difficulty ? translationService.t(difficulty) : difficulty;
+    categoryEl.textContent = `📁 ${categoryLabel}`;
+    difficultyEl.textContent = `📊 ${difficultyLabel}`;
     notice.textContent = translationService.t('review_notice');
 
     if (sign.acholiLabel) {
@@ -251,7 +254,7 @@ class SignModal {
       };
     } catch (error) {
       console.error('Failed to load sign image:', error);
-      loader.innerHTML = '<p>Failed to load image</p>';
+      loader.innerHTML = `<p>${translationService.t('failed_load_image')}</p>`;
     }
 
     document.body.style.overflow = 'hidden';

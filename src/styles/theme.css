@@ -4,17 +4,19 @@
  */
 
 :root {
-  /* Colors - Uganda Flag inspired */
-  --color-primary: #D90000;
-  --color-secondary: #FCDC04;
-  --color-accent: #D90000;
+  /* Colors - sophisticated purple and navy identity */
+  --color-primary: #4C1D95;
+  --color-primary-dark: #172554;
+  --color-secondary: #1E3A8A;
+  --color-accent: #8B5CF6;
+  --color-highlight: #38BDF8;
   
   /* UI Colors */
-  --color-background: #FFFFFF;
-  --color-surface: #F8F9FA;
-  --color-text: #1A1A1A;
-  --color-text-secondary: #666666;
-  --color-border: #E0E0E0;
+  --color-background: #FBFAFF;
+  --color-surface: #F4F3FF;
+  --color-text: #111827;
+  --color-text-secondary: #4B5563;
+  --color-border: #D8D7E8;
   
   /* Feedback Colors */
   --color-success: #10B981;
@@ -53,13 +55,14 @@
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
   --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
   --radius-full: 9999px;
   
   /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(217, 0, 0, 0.08);
-  --shadow-md: 0 4px 6px rgba(217, 0, 0, 0.12);
-  --shadow-lg: 0 10px 15px rgba(217, 0, 0, 0.15);
-  --shadow-xl: 0 20px 25px rgba(217, 0, 0, 0.2);
+  --shadow-sm: 0 1px 2px rgba(23, 37, 84, 0.08);
+  --shadow-md: 0 4px 10px rgba(23, 37, 84, 0.12);
+  --shadow-lg: 0 10px 18px rgba(23, 37, 84, 0.16);
+  --shadow-xl: 0 20px 32px rgba(23, 37, 84, 0.22);
   
   /* Transitions */
   --transition-fast: 150ms ease;

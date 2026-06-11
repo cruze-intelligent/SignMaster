@@ -30,6 +30,7 @@ class StateManager {
         totalGamesPlayed: 0,
         totalXPEarned: 0,
         averageAccuracy: 0,
+        lastMatchScore: 0,
         categoriesCompleted: [],
         perfectGames: 0,
         fastestMatch: null,
@@ -80,9 +81,21 @@ class StateManager {
 
       this.initialized = true;
       console.log('✅ State initialized:', this.state);
+
+      // Check time-of-day badges on init
+      const hour = new Date().getHours();
+      if (hour < 9) this.checkBadge('early_bird');
+      if (hour >= 22) this.checkBadge('night_owl');
     } catch (error) {
       console.error('State init error:', error);
     }
+  }
+
+  /**
+   * Convenience helper – check a single badge by ID against current stats
+   */
+  async checkBadge(badgeId) {
+    return badgeManager.checkAndUnlockBadge(badgeId, this.getStats());
   }
 
   async saveState() {
@@ -175,10 +188,7 @@ class StateManager {
         xp: this.state.xp
       });
 
-      await badgeManager.checkAndUnlockBadge('hundred_xp', this.getStats());
-      await badgeManager.checkAndUnlockBadge('five_hundred_xp', this.getStats());
-      await badgeManager.checkAndUnlockBadge('thousand_xp', this.getStats());
-      await badgeManager.checkAndUnlockBadge('five_thousand_xp', this.getStats());
+      await badgeManager.checkAllBadges(this.getStats());
     } else {
       await this.saveState();
     }
@@ -251,17 +261,8 @@ class StateManager {
     const progress = category ? await this.getCategoryLearningProgress(category) : null;
     const categoryCompleted = category ? progress?.completed && !previousCategories.has(category) : false;
 
-    if (!alreadyLearned) {
-      const stats = this.getStats();
-      await badgeManager.checkAndUnlockBadge('first_sign', stats);
-      await badgeManager.checkAndUnlockBadge('five_signs', stats);
-      await badgeManager.checkAndUnlockBadge('ten_signs', stats);
-    }
-
-    if (categoryCompleted) {
-      await badgeManager.checkAndUnlockBadge('alphabet_master', this.getStats());
-      await badgeManager.checkAndUnlockBadge('number_master', this.getStats());
-      await badgeManager.checkAndUnlockBadge('greeting_master', this.getStats());
+    if (!alreadyLearned || categoryCompleted) {
+      await badgeManager.checkAllBadges(this.getStats());
     }
 
     const payload = {
@@ -274,7 +275,9 @@ class StateManager {
     };
 
     this.emit('signLearned', payload);
-    this.updateQuestProgress('learn', 1);
+    if (!alreadyLearned) {
+      await this.updateQuestProgress('learn', 1);
+    }
 
     if (categoryCompleted) {
       this.emit('categoryCompleted', {
@@ -306,10 +309,7 @@ class StateManager {
 
     await this.saveState();
 
-    await badgeManager.checkAndUnlockBadge('speed_demon', this.getStats());
-    await badgeManager.checkAndUnlockBadge('lightning_fast', this.getStats());
-    await badgeManager.checkAndUnlockBadge('five_streak', this.getStats());
-    await badgeManager.checkAndUnlockBadge('ten_streak', this.getStats());
+    await badgeManager.checkAllBadges(this.getStats());
 
     this.emit('signCompleted', {
       signId,
@@ -319,7 +319,7 @@ class StateManager {
       accuracy: this.getAccuracy()
     });
 
-    this.updateQuestProgress('combo', this.state.streak);
+    await this.updateQuestProgress('combo', this.state.streak);
   }
 
   async completeCategory(category, score, isPerfect) {
@@ -334,19 +334,52 @@ class StateManager {
     this.state.stats.totalGamesPlayed += 1;
     await this.saveState();
 
-    await badgeManager.checkAndUnlockBadge('alphabet_master', this.getStats());
-    await badgeManager.checkAndUnlockBadge('number_master', this.getStats());
-    await badgeManager.checkAndUnlockBadge('greeting_master', this.getStats());
-    await badgeManager.checkAndUnlockBadge('perfect_match', this.getStats());
-    await badgeManager.checkAndUnlockBadge('perfectionist', this.getStats());
+    await badgeManager.checkAllBadges(this.getStats());
 
-    this.updateQuestProgress('play', 1);
-    if (isPerfect) this.updateQuestProgress('perfect', 1);
+    await this.updateQuestProgress('play', 1);
+    if (isPerfect) await this.updateQuestProgress('perfect', 1);
 
     this.emit('categoryCompleted', {
       category,
       score,
       isPerfect
+    });
+  }
+
+  async recordQuizResult({ score = 0, isPerfect = false, bestStreak = 0, category = null } = {}) {
+    const boundedScore = Math.max(0, Math.min(100, Math.round(Number(score) || 0)));
+    const gamesPlayed = this.state.stats.totalGamesPlayed || 0;
+    const previousAverage = this.state.stats.averageAccuracy || 0;
+
+    this.state.stats.totalGamesPlayed = gamesPlayed + 1;
+    this.state.stats.averageAccuracy = Math.round(
+      ((previousAverage * gamesPlayed) + boundedScore) / this.state.stats.totalGamesPlayed
+    );
+    this.state.stats.lastMatchScore = boundedScore;
+
+    if (isPerfect) {
+      this.state.stats.perfectGames += 1;
+    }
+
+    if (bestStreak > this.state.longestStreak) {
+      this.state.longestStreak = bestStreak;
+    }
+
+    await this.saveState();
+    await badgeManager.checkAllBadges(this.getStats());
+
+    await this.updateQuestProgress('play', 1);
+    await this.updateQuestProgress('combo', bestStreak);
+    if (isPerfect) {
+      await this.updateQuestProgress('perfect', 1);
+    }
+
+    this.emit('quizCompleted', {
+      score: boundedScore,
+      isPerfect,
+      bestStreak,
+      category,
+      totalGamesPlayed: this.state.stats.totalGamesPlayed
     });
   }
 
@@ -377,13 +410,13 @@ class StateManager {
     }
 
     if (this.state.quests.date !== today) {
-      this.generateDailyQuests(today);
+      await this.generateDailyQuests(today);
     }
   }
 
-  generateDailyQuests(date) {
+  async generateDailyQuests(date) {
     const questPool = [
-      { id: 'q_combo', type: 'combo', target: 5, description: 'Achieve a 5x Combo', xp: 50 },
+      { id: 'q_combo', type: 'combo', target: 10, description: 'Achieve a 5x Combo', xp: 50 },
       { id: 'q_learn', type: 'learn', target: 5, description: 'Learn 5 new signs', xp: 30 },
       { id: 'q_games', type: 'play', target: 3, description: 'Play 3 quiz games', xp: 20 },
       { id: 'q_perfect', type: 'perfect', target: 1, description: 'Get a perfect score', xp: 50 },
@@ -402,7 +435,8 @@ class StateManager {
       date: date,
       items: selected
     };
-    this.saveState();
+    await this.saveState();
+    this.emit('questsUpdated', this.state.quests);
   }
 
   async updateQuestProgress(type, amount = 1) {
@@ -413,11 +447,17 @@ class StateManager {
       if (quest.type === type && !quest.completed) {
         // Special logic for combo and perfect (which are non-cumulative)
         if (type === 'combo' || type === 'perfect') {
-          if (amount >= quest.target) {
+          const nextProgress = Math.min(quest.target, Math.max(quest.progress || 0, amount));
+          if (nextProgress !== quest.progress) {
+            quest.progress = nextProgress;
+            updated = true;
+          }
+
+          if (quest.progress >= quest.target) {
             quest.progress = quest.target;
             quest.completed = true;
             updated = true;
-            this.addXP(quest.xp, 'quest_completion');
+            await this.addXP(quest.xp, 'quest_completion');
             this.emit('questCompleted', quest);
           }
         } else {
@@ -427,7 +467,7 @@ class StateManager {
             quest.progress = quest.target;
             quest.completed = true;
             updated = true;
-            this.addXP(quest.xp, 'quest_completion');
+            await this.addXP(quest.xp, 'quest_completion');
             this.emit('questCompleted', quest);
           }
           updated = true;
@@ -448,16 +488,23 @@ class StateManager {
 
   getStats() {
     return {
+      totalSignsLearned: this.state.stats.totalSignsLearned,
       signsLearned: this.state.stats.totalSignsLearned,
       categoriesCompleted: [...this.state.stats.categoriesCompleted],
       streak: this.state.streak,
       longestStreak: this.state.longestStreak,
       perfectGames: this.state.stats.perfectGames,
+      lastMatchScore: this.state.stats.lastMatchScore || 0,
       totalXP: this.state.xp,
+      xp: this.state.xp,
       level: this.state.level,
+      currentLevel: this.state.level,
       dailyStreak: this.state.stats.dailyStreak,
       fastestMatch: this.state.stats.fastestMatch,
-      totalGamesPlayed: this.state.stats.totalGamesPlayed
+      lastMatchTime: this.state.stats.fastestMatch,
+      totalGamesPlayed: this.state.stats.totalGamesPlayed,
+      averageAccuracy: this.state.stats.averageAccuracy || 0,
+      timeOfDay: new Date().getHours()
     };
   }
 

@@ -1,12 +1,13 @@
 <svg width="192" height="192" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg">
-  <!-- Red background (Uganda flag color) -->
-  <rect width="192" height="192" fill="#D90000" rx="32"/>
+  <!-- Purple and navy SignMaster background -->
+  <rect width="192" height="192" fill="#172554" rx="32"/>
+  <path d="M0 145 C45 100 84 116 128 62 C149 36 171 22 192 12 L192 192 L0 192 Z" fill="#4C1D95"/>
   
-  <!-- Yellow circle background -->
-  <circle cx="96" cy="96" r="60" fill="#FCDC04"/>
+  <!-- Cyan learning focus -->
+  <circle cx="96" cy="96" r="60" fill="#38BDF8"/>
   
   <!-- Hand sign emoji representation -->
-  <text x="96" y="130" font-size="80" text-anchor="middle" fill="#000000">🤟</text>
+  <text x="96" y="130" font-size="80" text-anchor="middle" fill="#111827">🤟</text>
   
   <!-- SignMaster text -->
   <text x="96" y="170" font-size="16" font-weight="bold" text-anchor="middle" fill="#FFFFFF">SignMaster</text>
