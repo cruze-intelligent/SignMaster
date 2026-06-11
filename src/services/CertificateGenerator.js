@@ -217,7 +217,9 @@ class CertificateGenerator {
     
     // Row 4: Badge Points and Rank
     ctx.fillText(`💎 ${translationService.t('badge_points')}: ${badgeStats.points}`, leftCol, statsY + spacing * 3);
-    ctx.fillText(`🏅 ${translationService.t('rank')}: ${badgeStats.rank.name || badgeStats.rank.rank}`, rightCol, statsY + spacing * 3);
+    const rankNameKey = 'rank_' + (badgeStats.rank.name || badgeStats.rank.rank || '').toLowerCase().replace(' ', '_');
+    const rankName = translationService.t(rankNameKey) !== rankNameKey ? translationService.t(rankNameKey) : (badgeStats.rank.name || badgeStats.rank.rank);
+    ctx.fillText(`🏅 ${translationService.t('rank')}: ${rankName}`, rightCol, statsY + spacing * 3);
 
     // Date
     const date = new Date().toLocaleDateString('en-US', {

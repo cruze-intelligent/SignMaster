@@ -92,8 +92,10 @@ export class BadgeUnlockModal {
 
     icon.textContent = badge.icon;
     title.textContent = translationService.t('badge_unlocked');
-    name.textContent = badge.name;
-    description.textContent = badge.description;
+    const badgeNameKey = `badge_name_${badge.id}`;
+    const badgeDescKey = `badge_desc_${badge.id}`;
+    name.textContent = translationService.t(badgeNameKey) !== badgeNameKey ? translationService.t(badgeNameKey) : badge.name;
+    description.textContent = translationService.t(badgeDescKey) !== badgeDescKey ? translationService.t(badgeDescKey) : badge.description;
     points.innerHTML = `<strong>+${badge.points}</strong> ${translationService.t('badge_points')}`;
     close.textContent = translationService.t('continue');
 

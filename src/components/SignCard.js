@@ -24,6 +24,8 @@ export class SignCard {
   render() {
     const learned = stateManager.isSignLearned(this.sign.id);
     const resolvedCategory = this.sign.category || this.category;
+    const isAcholi = translationService.getLanguage() === 'ach';
+    const displayLabel = (isAcholi && this.sign.acholiLabel) ? this.sign.acholiLabel : this.sign.label;
 
     this.element = document.createElement('div');
     this.element.className = `sign-card ${learned ? 'sign-card--learned' : ''}`;
@@ -34,14 +36,14 @@ export class SignCard {
         <div class="sign-card__image-wrapper">
           <img 
             class="sign-card__image" 
-            alt="${this.sign.label}"
+            alt="${displayLabel}"
             data-filename="${this.sign.filename}"
           />
           <div class="sign-card__loader">
             <div class="spinner"></div>
           </div>
         </div>
-        <div class="sign-card__label">${this.sign.label}</div>
+        <div class="sign-card__label">${displayLabel}</div>
         ${learned ? `<span class="sign-card__verified" aria-label="${translationService.t('learned')}">✓</span>` : ''}
       </div>
     `;
@@ -121,7 +123,8 @@ export class SignCard {
     this.sign = sign;
     const label = this.element.querySelector('.sign-card__label');
     if (label) {
-      label.textContent = sign.label;
+      const isAcholi = translationService.getLanguage() === 'ach';
+      label.textContent = (isAcholi && sign.acholiLabel) ? sign.acholiLabel : sign.label;
     }
 
     const learnedBadge = this.element.querySelector('.sign-card__verified');

@@ -156,11 +156,15 @@ class SignModal {
     }
 
     title.textContent = translationService.t('practice_next');
-    list.innerHTML = related.map(entry => `
-      <button class="sign-modal__related-chip" data-related-id="${entry.id}">
-        ${entry.label}
-      </button>
-    `).join('');
+    list.innerHTML = related.map(entry => {
+      const isAcholi = translationService.getLanguage() === 'ach';
+      const displayLabel = (isAcholi && entry.acholiLabel) ? entry.acholiLabel : entry.label;
+      return `
+        <button class="sign-modal__related-chip" data-related-id="${entry.id}">
+          ${displayLabel}
+        </button>
+      `;
+    }).join('');
 
     list.querySelectorAll('[data-related-id]').forEach(button => {
       button.addEventListener('click', async () => {
@@ -206,9 +210,10 @@ class SignModal {
     const img = this.element.querySelector('.sign-modal__image');
     const loader = this.element.querySelector('.sign-modal__loader');
 
-    title.textContent = sign.label;
-    description.textContent =
-      sign.description || `${translationService.t('learn_to_sign')} "${sign.label}" ${translationService.t('in_usl')}`;
+    const isAcholi = translationService.getLanguage() === 'ach';
+    const displayLabel = (isAcholi && sign.acholiLabel) ? sign.acholiLabel : sign.label;
+    title.textContent = displayLabel;
+    description.textContent = `${translationService.t('learn_to_sign')} "${displayLabel}" ${translationService.t('in_usl')}`;
     const categoryLabel = translationService.t(category) !== category ? translationService.t(category) : category;
     const difficulty = sign.difficulty || 'beginner';
     const difficultyLabel = translationService.t(difficulty) !== difficulty ? translationService.t(difficulty) : difficulty;

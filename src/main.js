@@ -177,7 +177,7 @@ class SignMasterApp {
     });
 
     stateManager.on('questCompleted', (quest) => {
-      this.showInfoToast(`Quest Completed: ${quest.description}! +${quest.xp} XP`);
+      this.showQuestCompletedToast(quest);
       audioService.playLevelUp(); // reuse sound for quest completion
     });
 
@@ -228,13 +228,13 @@ class SignMasterApp {
    * Setup navigation handlers
    */
   setupNavigation() {
-    const navButtons = document.querySelectorAll('[data-nav]');
-    navButtons.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const button = e.target.closest('[data-nav]');
-        const screen = button?.dataset.nav;
-        if (screen) this.navigate(screen);
-      });
+    document.addEventListener('click', (e) => {
+      const button = e.target.closest('[data-nav]');
+      const screen = button?.dataset.nav;
+      if (screen) {
+        e.preventDefault();
+        this.navigate(screen);
+      }
     });
   }
 
@@ -268,7 +268,16 @@ class SignMasterApp {
     document.querySelectorAll('.nav-item').forEach(btn => {
       btn.classList.remove('active');
     });
-    const activeNav = document.querySelector(`[data-nav="${screen}"]`);
+    
+    // Map active screens to navigation item keys
+    let highlightNav = screen;
+    if (screen === 'game' || screen === 'quiz') {
+      highlightNav = 'categories';
+    } else if (screen === 'badges') {
+      highlightNav = 'progress';
+    }
+
+    const activeNav = document.querySelector(`[data-nav="${highlightNav}"]`);
     if (activeNav) {
       activeNav.classList.add('active');
     }
@@ -276,7 +285,7 @@ class SignMasterApp {
     // Load screen content
     switch (screen) {
       case 'welcome':
-        // No special loading needed
+        this.renderDailyQuests();
         break;
       case 'categories':
         this.loadCategories();
@@ -295,6 +304,11 @@ class SignMasterApp {
         break;
       case 'settings':
         this.loadSettings();
+        break;
+      case 'game':
+        if (!this.currentCategory) {
+          this.navigate('categories');
+        }
         break;
     }
   }
@@ -400,8 +414,7 @@ class SignMasterApp {
     console.log(`📝 Loaded ${signs.length} signs for category: ${category}`);
 
     // Navigate to game screen
-    document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
-    document.getElementById('game-screen').style.display = 'block';
+    this.navigate('game');
 
     // Update category title
     const titleEl = document.getElementById('category-title');
@@ -853,7 +866,8 @@ class SignMasterApp {
     for (const opt of options) {
       const btn = document.createElement('button');
       btn.className = 'quiz-option-btn';
-      btn.textContent = opt.label;
+      const isAcholi = translationService.getLanguage() === 'ach';
+      btn.textContent = (isAcholi && opt.acholiLabel) ? opt.acholiLabel : opt.label;
       btn.dataset.signId = opt.id;
       btn.onclick = () => this.handleQuizAnswer(opt.id === question.id, btn, question);
       optionsEl.appendChild(btn);
@@ -899,7 +913,9 @@ class SignMasterApp {
       // Show timeout feedback
       const feedbackEl = document.getElementById('quiz-feedback');
       feedbackEl.style.display = 'block';
-      feedbackEl.textContent = `⏰ ${translationService.t('time_up_correct', { answer: question.label })}`;
+      const isAcholi = translationService.getLanguage() === 'ach';
+      const displayAnswer = (isAcholi && question.acholiLabel) ? question.acholiLabel : question.label;
+      feedbackEl.textContent = `⏰ ${translationService.t('time_up_correct', { answer: displayAnswer })}`;
       feedbackEl.className = 'quiz-feedback quiz-feedback-wrong';
 
       // Award 0 points and reset streak
@@ -1049,7 +1065,9 @@ class SignMasterApp {
       }
 
       qs.streak = 0;
-      feedbackEl.textContent = `❌ ${translationService.t('incorrect_answer', { answer: correctSign.label })}`;
+      const isAcholi = translationService.getLanguage() === 'ach';
+      const displayAnswer = (isAcholi && correctSign.acholiLabel) ? correctSign.acholiLabel : correctSign.label;
+      feedbackEl.textContent = `❌ ${translationService.t('incorrect_answer', { answer: displayAnswer })}`;
       feedbackEl.className = 'quiz-feedback quiz-feedback-wrong';
 
       setTimeout(() => {
@@ -1248,7 +1266,7 @@ class SignMasterApp {
             <h2 class="player-name">${state.playerName}</h2>
             <div class="player-rank">
               <span class="rank-badge">${badgeStats.rank.icon}</span>
-              <span class="rank-name">${badgeStats.rank.name}</span>
+              <span class="rank-name">${translationService.t('rank_' + (badgeStats.rank.name || badgeStats.rank.rank || '').toLowerCase().replace(' ', '_'))}</span>
             </div>
           </div>
         </div>
@@ -1278,7 +1296,7 @@ class SignMasterApp {
             </div>
           </div>
           
-          <div class="stat-card stat-card--secondary">
+          <div class="stat-card stat-card--secondary clickable" data-nav="badges" style="cursor: pointer;">
             <div class="stat-card__icon">🏆</div>
             <div class="stat-card__content">
               <div class="stat-card__value">${badgeStats.total}</div>
@@ -1372,21 +1390,25 @@ class SignMasterApp {
       byTier[badge.tier].push(badge);
     });
 
-    let html = `<h2>${translationService.t('your_badges')}</h2>`;
+    let html = `<h3>${translationService.t('your_badges')}</h3>`;
 
     // Progressive reveal
     if (progressive.length > 0) {
       html += `<div class="progressive-badges">
         <h3>${translationService.t('next_to_unlock')}</h3>
-        ${progressive.map(b => `
-          <div class="badge-preview">
-            <div class="badge-icon">${b.icon}</div>
-            <div class="badge-name">${b.name}</div>
-            <div class="progress-bar">
-              <div class="progress-fill" style="width: ${b.progress}%"></div>
+        ${progressive.map(b => {
+          const badgeNameKey = `badge_name_${b.id}`;
+          const displayName = translationService.t(badgeNameKey) !== badgeNameKey ? translationService.t(badgeNameKey) : b.name;
+          return `
+            <div class="badge-preview">
+              <div class="badge-icon">${b.icon}</div>
+              <div class="badge-name">${displayName}</div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: ${b.progress}%"></div>
+              </div>
             </div>
-          </div>
-        `).join('')}
+          `;
+        }).join('')}
       </div>`;
     }
 
@@ -1395,13 +1417,19 @@ class SignMasterApp {
       html += `<div class="badge-tier">
         <h3>${tier.toUpperCase()}</h3>
         <div class="badge-grid">
-          ${badges.map(b => `
-            <div class="badge-card ${b.earnedAt ? 'earned' : 'locked'}">
-              <div class="badge-icon">${b.icon}</div>
-              <div class="badge-name">${b.name}</div>
-              ${b.earnedAt ? `<div class="badge-points">+${b.points}</div>` : ''}
-            </div>
-          `).join('')}
+          ${badges.map(b => {
+            const badgeNameKey = `badge_name_${b.id}`;
+            const badgeDescKey = `badge_desc_${b.id}`;
+            const displayName = translationService.t(badgeNameKey) !== badgeNameKey ? translationService.t(badgeNameKey) : b.name;
+            const displayDesc = translationService.t(badgeDescKey) !== badgeDescKey ? translationService.t(badgeDescKey) : b.description;
+            return `
+              <div class="badge-card ${b.earnedAt ? 'earned' : 'locked'}" title="${displayDesc}">
+                <div class="badge-icon">${b.icon}</div>
+                <div class="badge-name">${displayName}</div>
+                ${b.earnedAt ? `<div class="badge-points">+${b.points}</div>` : ''}
+              </div>
+            `;
+          }).join('')}
         </div>
       </div>`;
     });
@@ -1568,6 +1596,14 @@ class SignMasterApp {
       return;
     }
 
+    if (visibleScreen === 'welcome-screen') {
+      this.renderDailyQuests();
+    }
+
+    if (visibleScreen === 'badges-screen') {
+      this.loadBadges();
+    }
+
     // Re-render current screen if needed
     const activeNav = document.querySelector('.nav-item.active');
     if (activeNav) {
@@ -1575,6 +1611,9 @@ class SignMasterApp {
       if (screen) {
         // Reload screen content with new translations
         switch (screen) {
+          case 'welcome':
+            this.renderDailyQuests();
+            break;
           case 'progress':
             this.loadProgress();
             break;
@@ -1589,6 +1628,9 @@ class SignMasterApp {
             break;
           case 'quiz':
             this.loadQuiz();
+            break;
+          case 'badges':
+            this.loadBadges();
             break;
         }
       }
@@ -1797,6 +1839,24 @@ class SignMasterApp {
       <div class="toast-body">
         <strong>${translationService.t('coming_soon_title')}</strong>
         <span>${message}</span>
+      </div>
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+      toast.classList.add('toast-exit');
+      setTimeout(() => toast.remove(), 400);
+    }, 3000);
+  }
+
+  showQuestCompletedToast(quest) {
+    const toast = document.createElement('div');
+    toast.className = 'toast toast-success';
+    const questDesc = translationService.t(quest.id) !== quest.id ? translationService.t(quest.id) : quest.description;
+    toast.innerHTML = `
+      <div class="toast-icon">🎉</div>
+      <div class="toast-body">
+        <strong>${translationService.t('quest_completed_title')}</strong>
+        <span>${questDesc} (+${quest.xp} XP)</span>
       </div>
     `;
     document.body.appendChild(toast);
