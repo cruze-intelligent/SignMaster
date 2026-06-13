@@ -269,80 +269,2037 @@
     "badge_desc_voice_master": "Tiyo ki dwon lok pi lanyut 50"
   },
   "searchTerms": [
-    { "term": "apwoyo", "english": "thank you", "aliases": ["pwoyo"] },
-    { "term": "tika", "english": "please", "aliases": [] },
-    { "term": "iyie nining", "english": "how are you", "aliases": ["itye nining"] },
-    { "term": "atye maber", "english": "i am fine", "aliases": ["maber"] },
-    { "term": "ber", "english": "good", "aliases": [] },
-    { "term": "pe", "english": "no", "aliases": [] },
-    { "term": "eyo", "english": "yes", "aliases": [] },
-    { "term": "mama", "english": "mother", "aliases": [] },
-    { "term": "baba", "english": "father", "aliases": [] },
-    { "term": "omin", "english": "brother", "aliases": [] },
-    { "term": "lamin", "english": "sister", "aliases": [] },
-    { "term": "wod", "english": "son", "aliases": [] },
-    { "term": "nyara", "english": "daughter", "aliases": ["nya"] },
-    { "term": "kwaro", "english": "grandfather", "aliases": [] },
-    { "term": "dayo", "english": "grandmother", "aliases": [] },
-    { "term": "dako", "english": "woman", "aliases": [] },
-    { "term": "coo", "english": "man", "aliases": [] },
-    { "term": "latin", "english": "child", "aliases": [] },
-    { "term": "lutino", "english": "children", "aliases": [] },
-    { "term": "cwinya ameda", "english": "happy", "aliases": ["happy"] },
-    { "term": "cwinya otyeko", "english": "sad", "aliases": ["sad"] },
-    { "term": "obela", "english": "angry", "aliases": [] },
-    { "term": "lworo", "english": "scared", "aliases": ["fear"] },
-    { "term": "malit", "english": "big", "aliases": [] },
-    { "term": "matidi", "english": "small", "aliases": [] },
-    { "term": "cak", "english": "milk", "aliases": [] },
-    { "term": "cam", "english": "food", "aliases": ["meal"] },
-    { "term": "mucere", "english": "rice", "aliases": ["mucele"] },
-    { "term": "kwon", "english": "millet bread (posho)", "aliases": [] },
-    { "term": "gweno", "english": "chicken", "aliases": [] },
-    { "term": "rec", "english": "fish", "aliases": [] },
-    { "term": "tong", "english": "egg", "aliases": [] },
-    { "term": "pii", "english": "water", "aliases": [] },
-    { "term": "cai", "english": "tea", "aliases": [] },
-    { "term": "kawa", "english": "coffee", "aliases": [] },
-    { "term": "lapena", "english": "banana", "aliases": ["matooke"] },
-    { "term": "nyig", "english": "beans", "aliases": [] },
-    { "term": "yen acam", "english": "vegetables", "aliases": ["vegetables"] },
-    { "term": "makwar", "english": "red", "aliases": [] },
-    { "term": "matut", "english": "green", "aliases": [] },
-    { "term": "bulu", "english": "blue", "aliases": [] },
-    { "term": "ma rung", "english": "yellow", "aliases": [] },
-    { "term": "col", "english": "black", "aliases": [] },
-    { "term": "tar", "english": "white", "aliases": [] },
-    { "term": "dyel", "english": "goat", "aliases": [] },
-    { "term": "romo", "english": "sheep", "aliases": [] },
-    { "term": "dyang", "english": "cow", "aliases": ["dyagi", "cattle"] },
-    { "term": "gwok", "english": "dog", "aliases": [] },
-    { "term": "paka", "english": "cat", "aliases": [] },
-    { "term": "labwor", "english": "lion", "aliases": [] },
-    { "term": "lyec", "english": "elephant", "aliases": [] },
-    { "term": "abuya", "english": "monkey", "aliases": [] },
-    { "term": "gang", "english": "home", "aliases": [] },
-    { "term": "ot", "english": "house", "aliases": [] },
-    { "term": "cuk", "english": "school", "aliases": [] },
-    { "term": "paco", "english": "village", "aliases": [] },
-    { "term": "nam", "english": "lake", "aliases": [] },
-    { "term": "kulu", "english": "river", "aliases": [] },
-    { "term": "got", "english": "mountain", "aliases": [] },
-    { "term": "tin", "english": "today", "aliases": [] },
-    { "term": "diki", "english": "tomorrow", "aliases": [] },
-    { "term": "lawa", "english": "yesterday", "aliases": ["lawo"] },
-    { "term": "odikinin", "english": "morning", "aliases": [] },
-    { "term": "odiko", "english": "morning", "aliases": [] },
-    { "term": "dyewor", "english": "night", "aliases": [] },
-    { "term": "acel", "english": "one", "aliases": [] },
-    { "term": "aryo", "english": "two", "aliases": [] },
-    { "term": "adek", "english": "three", "aliases": [] },
-    { "term": "angwen", "english": "four", "aliases": [] },
-    { "term": "abic", "english": "five", "aliases": [] },
-    { "term": "abicel", "english": "six", "aliases": [] },
-    { "term": "abiro", "english": "seven", "aliases": [] },
-    { "term": "aboro", "english": "eight", "aliases": [] },
-    { "term": "abongwen", "english": "nine", "aliases": [] },
-    { "term": "apar", "english": "ten", "aliases": [] }
+    {
+      "term": "apwoyo",
+      "english": "thank you",
+      "aliases": [
+        "pwoyo"
+      ]
+    },
+    {
+      "term": "tika",
+      "english": "please",
+      "aliases": []
+    },
+    {
+      "term": "iyie nining",
+      "english": "how are you",
+      "aliases": [
+        "itye nining"
+      ]
+    },
+    {
+      "term": "atye maber",
+      "english": "i am fine",
+      "aliases": [
+        "maber"
+      ]
+    },
+    {
+      "term": "ber",
+      "english": "good",
+      "aliases": []
+    },
+    {
+      "term": "pe",
+      "english": "no",
+      "aliases": []
+    },
+    {
+      "term": "eyo",
+      "english": "yes",
+      "aliases": []
+    },
+    {
+      "term": "mama",
+      "english": "mother",
+      "aliases": []
+    },
+    {
+      "term": "baba",
+      "english": "father",
+      "aliases": []
+    },
+    {
+      "term": "omin",
+      "english": "brother",
+      "aliases": []
+    },
+    {
+      "term": "lamin",
+      "english": "sister",
+      "aliases": []
+    },
+    {
+      "term": "wod",
+      "english": "son",
+      "aliases": []
+    },
+    {
+      "term": "nyara",
+      "english": "daughter",
+      "aliases": [
+        "nya"
+      ]
+    },
+    {
+      "term": "kwaro",
+      "english": "grandfather",
+      "aliases": []
+    },
+    {
+      "term": "dayo",
+      "english": "grandmother",
+      "aliases": []
+    },
+    {
+      "term": "dako",
+      "english": "woman",
+      "aliases": []
+    },
+    {
+      "term": "coo",
+      "english": "man",
+      "aliases": []
+    },
+    {
+      "term": "latin",
+      "english": "child",
+      "aliases": []
+    },
+    {
+      "term": "lutino",
+      "english": "children",
+      "aliases": []
+    },
+    {
+      "term": "cwinya ameda",
+      "english": "happy",
+      "aliases": [
+        "happy"
+      ]
+    },
+    {
+      "term": "cwinya otyeko",
+      "english": "sad",
+      "aliases": [
+        "sad"
+      ]
+    },
+    {
+      "term": "obela",
+      "english": "angry",
+      "aliases": []
+    },
+    {
+      "term": "lworo",
+      "english": "scared",
+      "aliases": [
+        "fear"
+      ]
+    },
+    {
+      "term": "malit",
+      "english": "big",
+      "aliases": []
+    },
+    {
+      "term": "matidi",
+      "english": "small",
+      "aliases": []
+    },
+    {
+      "term": "cak",
+      "english": "milk",
+      "aliases": []
+    },
+    {
+      "term": "cam",
+      "english": "food",
+      "aliases": [
+        "meal"
+      ]
+    },
+    {
+      "term": "mucere",
+      "english": "rice",
+      "aliases": [
+        "mucele"
+      ]
+    },
+    {
+      "term": "kwon",
+      "english": "millet bread (posho)",
+      "aliases": []
+    },
+    {
+      "term": "gweno",
+      "english": "chicken",
+      "aliases": []
+    },
+    {
+      "term": "rec",
+      "english": "fish",
+      "aliases": []
+    },
+    {
+      "term": "tong",
+      "english": "egg",
+      "aliases": []
+    },
+    {
+      "term": "pii",
+      "english": "water",
+      "aliases": []
+    },
+    {
+      "term": "cai",
+      "english": "tea",
+      "aliases": []
+    },
+    {
+      "term": "kawa",
+      "english": "coffee",
+      "aliases": []
+    },
+    {
+      "term": "lapena",
+      "english": "banana",
+      "aliases": [
+        "matooke"
+      ]
+    },
+    {
+      "term": "nyig",
+      "english": "beans",
+      "aliases": []
+    },
+    {
+      "term": "yen acam",
+      "english": "vegetables",
+      "aliases": [
+        "vegetables"
+      ]
+    },
+    {
+      "term": "makwar",
+      "english": "red",
+      "aliases": []
+    },
+    {
+      "term": "matut",
+      "english": "green",
+      "aliases": []
+    },
+    {
+      "term": "bulu",
+      "english": "blue",
+      "aliases": []
+    },
+    {
+      "term": "ma rung",
+      "english": "yellow",
+      "aliases": []
+    },
+    {
+      "term": "col",
+      "english": "black",
+      "aliases": []
+    },
+    {
+      "term": "tar",
+      "english": "white",
+      "aliases": []
+    },
+    {
+      "term": "dyel",
+      "english": "goat",
+      "aliases": []
+    },
+    {
+      "term": "romo",
+      "english": "sheep",
+      "aliases": []
+    },
+    {
+      "term": "dyang",
+      "english": "cow",
+      "aliases": [
+        "dyagi",
+        "cattle"
+      ]
+    },
+    {
+      "term": "gwok",
+      "english": "dog",
+      "aliases": []
+    },
+    {
+      "term": "paka",
+      "english": "cat",
+      "aliases": []
+    },
+    {
+      "term": "labwor",
+      "english": "lion",
+      "aliases": []
+    },
+    {
+      "term": "lyec",
+      "english": "elephant",
+      "aliases": []
+    },
+    {
+      "term": "abuya",
+      "english": "monkey",
+      "aliases": []
+    },
+    {
+      "term": "gang",
+      "english": "home",
+      "aliases": []
+    },
+    {
+      "term": "ot",
+      "english": "house",
+      "aliases": []
+    },
+    {
+      "term": "cuk",
+      "english": "school",
+      "aliases": []
+    },
+    {
+      "term": "paco",
+      "english": "village",
+      "aliases": []
+    },
+    {
+      "term": "nam",
+      "english": "lake",
+      "aliases": []
+    },
+    {
+      "term": "kulu",
+      "english": "river",
+      "aliases": []
+    },
+    {
+      "term": "got",
+      "english": "mountain",
+      "aliases": []
+    },
+    {
+      "term": "tin",
+      "english": "today",
+      "aliases": []
+    },
+    {
+      "term": "diki",
+      "english": "tomorrow",
+      "aliases": []
+    },
+    {
+      "term": "lawa",
+      "english": "yesterday",
+      "aliases": [
+        "lawo"
+      ]
+    },
+    {
+      "term": "odikinin",
+      "english": "morning",
+      "aliases": []
+    },
+    {
+      "term": "odiko",
+      "english": "morning",
+      "aliases": []
+    },
+    {
+      "term": "dyewor",
+      "english": "night",
+      "aliases": []
+    },
+    {
+      "term": "acel",
+      "english": "one",
+      "aliases": []
+    },
+    {
+      "term": "aryo",
+      "english": "two",
+      "aliases": []
+    },
+    {
+      "term": "adek",
+      "english": "three",
+      "aliases": []
+    },
+    {
+      "term": "angwen",
+      "english": "four",
+      "aliases": []
+    },
+    {
+      "term": "abic",
+      "english": "five",
+      "aliases": []
+    },
+    {
+      "term": "abicel",
+      "english": "six",
+      "aliases": []
+    },
+    {
+      "term": "abiro",
+      "english": "seven",
+      "aliases": []
+    },
+    {
+      "term": "aboro",
+      "english": "eight",
+      "aliases": []
+    },
+    {
+      "term": "abongwen",
+      "english": "nine",
+      "aliases": []
+    },
+    {
+      "term": "apar",
+      "english": "ten",
+      "aliases": []
+    },
+    {
+      "term": "medo",
+      "english": "addition / to add",
+      "aliases": [
+        "add"
+      ]
+    },
+    {
+      "term": "kwanyo",
+      "english": "subtraction / to take away",
+      "aliases": [
+        "minus"
+      ]
+    },
+    {
+      "term": "lwero",
+      "english": "multiplication / to multiply",
+      "aliases": [
+        "times"
+      ]
+    },
+    {
+      "term": "poko",
+      "english": "division / to divide / to share out",
+      "aliases": [
+        "share"
+      ]
+    },
+    {
+      "term": "marom",
+      "english": "equal / the same",
+      "aliases": [
+        "equals",
+        "same"
+      ]
+    },
+    {
+      "term": "madwong",
+      "english": "greater / bigger",
+      "aliases": [
+        "more than"
+      ]
+    },
+    {
+      "term": "weng",
+      "english": "total / all / altogether",
+      "aliases": [
+        "all"
+      ]
+    },
+    {
+      "term": "nucu",
+      "english": "half",
+      "aliases": [
+        "1/2"
+      ]
+    },
+    {
+      "term": "camo",
+      "english": "to eat",
+      "aliases": [
+        "eat"
+      ]
+    },
+    {
+      "term": "nyig boo",
+      "english": "peas (green peas)",
+      "aliases": [
+        "peas"
+      ]
+    },
+    {
+      "term": "iyo",
+      "english": "avocado",
+      "aliases": []
+    },
+    {
+      "term": "karacel",
+      "english": "together",
+      "aliases": []
+    },
+    {
+      "term": "muciungwa",
+      "english": "orange (fruit)",
+      "aliases": [
+        "orange"
+      ]
+    },
+    {
+      "term": "acel keken",
+      "english": "single / only one",
+      "aliases": [
+        "one only"
+      ]
+    },
+    {
+      "term": "lawote",
+      "english": "friend",
+      "aliases": [
+        "lawota"
+      ]
+    },
+    {
+      "term": "mama won",
+      "english": "aunt",
+      "aliases": [
+        "aunt"
+      ]
+    },
+    {
+      "term": "mugaati",
+      "english": "bread",
+      "aliases": []
+    },
+    {
+      "term": "agulu matidi",
+      "english": "cup",
+      "aliases": [
+        "cup",
+        "mug"
+      ]
+    },
+    {
+      "term": "miya",
+      "english": "hundred",
+      "aliases": [
+        "one hundred"
+      ]
+    },
+    {
+      "term": "alufu",
+      "english": "thousand",
+      "aliases": [
+        "tara"
+      ]
+    },
+    {
+      "term": "miliyoni",
+      "english": "million",
+      "aliases": []
+    },
+    {
+      "term": "biliyoni",
+      "english": "billion",
+      "aliases": []
+    },
+    {
+      "term": "mukwongo",
+      "english": "first",
+      "aliases": []
+    },
+    {
+      "term": "lunyodo",
+      "english": "parents",
+      "aliases": []
+    },
+    {
+      "term": "nera",
+      "english": "uncle (mother's brother)",
+      "aliases": [
+        "maternal uncle"
+      ]
+    },
+    {
+      "term": "lamego",
+      "english": "aunt (father's sister)",
+      "aliases": [
+        "paternal aunt"
+      ]
+    },
+    {
+      "term": "alip",
+      "english": "thousand",
+      "aliases": []
+    },
+    {
+      "term": "agulu",
+      "english": "cooking pot",
+      "aliases": [
+        "pot"
+      ]
+    },
+    {
+      "term": "pala",
+      "english": "knife",
+      "aliases": []
+    },
+    {
+      "term": "agira",
+      "english": "spoon",
+      "aliases": []
+    },
+    {
+      "term": "kikopo",
+      "english": "cup",
+      "aliases": []
+    },
+    {
+      "term": "atabo",
+      "english": "plate",
+      "aliases": [
+        "dish"
+      ]
+    },
+    {
+      "term": "mar-aryo",
+      "english": "second (ordinal)",
+      "aliases": []
+    },
+    {
+      "term": "mar-adek",
+      "english": "third (ordinal)",
+      "aliases": []
+    },
+    {
+      "term": "mar-angwen",
+      "english": "fourth (ordinal)",
+      "aliases": []
+    },
+    {
+      "term": "mar-abic",
+      "english": "fifth (ordinal)",
+      "aliases": []
+    },
+    {
+      "term": "mar-abicel",
+      "english": "sixth (ordinal)",
+      "aliases": []
+    },
+    {
+      "term": "mar-abiro",
+      "english": "seventh (ordinal)",
+      "aliases": []
+    },
+    {
+      "term": "mar-aboro",
+      "english": "eighth (ordinal)",
+      "aliases": []
+    },
+    {
+      "term": "katekwic",
+      "english": "potato",
+      "aliases": [
+        "irish potato"
+      ]
+    },
+    {
+      "term": "mar-apar",
+      "english": "tenth (ordinal)",
+      "aliases": []
+    },
+    {
+      "term": "mar-apar-wiye-aryo",
+      "english": "twelfth (ordinal)",
+      "aliases": []
+    },
+    {
+      "term": "mar-apar-wiye-adek",
+      "english": "thirteenth (ordinal)",
+      "aliases": []
+    },
+    {
+      "term": "oboke",
+      "english": "leaf / leaves",
+      "aliases": []
+    },
+    {
+      "term": "lamuun",
+      "english": "lemon",
+      "aliases": []
+    },
+    {
+      "term": "mar-apar-wiye-abicel",
+      "english": "sixteenth (ordinal)",
+      "aliases": []
+    },
+    {
+      "term": "mar-apar-wiye-abiro",
+      "english": "seventeenth (ordinal)",
+      "aliases": []
+    },
+    {
+      "term": "mar-apar-wiye-aboro",
+      "english": "eighteenth (ordinal)",
+      "aliases": []
+    },
+    {
+      "term": "mar-apar-wiye-abongwen",
+      "english": "nineteenth (ordinal)",
+      "aliases": []
+    },
+    {
+      "term": "mar-pyeraryo",
+      "english": "twentieth (ordinal)",
+      "aliases": []
+    },
+    {
+      "term": "kal",
+      "english": "maize",
+      "aliases": [
+        "corn"
+      ]
+    },
+    {
+      "term": "nanasi",
+      "english": "pineapple",
+      "aliases": []
+    },
+    {
+      "term": "nono",
+      "english": "zero / nothing",
+      "aliases": []
+    },
+    {
+      "term": "cente manok",
+      "english": "small change / coins",
+      "aliases": [
+        "change"
+      ]
+    },
+    {
+      "term": "sente",
+      "english": "money / shillings",
+      "aliases": [
+        "cente"
+      ]
+    },
+    {
+      "term": "wel",
+      "english": "price / cost",
+      "aliases": []
+    },
+    {
+      "term": "pek",
+      "english": "expensive / heavy",
+      "aliases": []
+    },
+    {
+      "term": "yot",
+      "english": "cheap / easy / light",
+      "aliases": []
+    },
+    {
+      "term": "cul",
+      "english": "pay",
+      "aliases": []
+    },
+    {
+      "term": "wil",
+      "english": "buy",
+      "aliases": []
+    },
+    {
+      "term": "cat",
+      "english": "sell",
+      "aliases": []
+    },
+    {
+      "term": "resit",
+      "english": "receipt",
+      "aliases": []
+    },
+    {
+      "term": "caduka",
+      "english": "shop / store",
+      "aliases": [
+        "duka"
+      ]
+    },
+    {
+      "term": "banka",
+      "english": "bank",
+      "aliases": []
+    },
+    {
+      "term": "waleti",
+      "english": "wallet",
+      "aliases": []
+    },
+    {
+      "term": "mwolo",
+      "english": "debt",
+      "aliases": []
+    },
+    {
+      "term": "lonyo",
+      "english": "wealth / riches",
+      "aliases": []
+    },
+    {
+      "term": "tawuni",
+      "english": "town",
+      "aliases": []
+    },
+    {
+      "term": "tedo",
+      "english": "cook / cooking",
+      "aliases": [
+        "tedo cam"
+      ]
+    },
+    {
+      "term": "yo",
+      "english": "road / street / way",
+      "aliases": []
+    },
+    {
+      "term": "atturo",
+      "english": "bridge",
+      "aliases": []
+    },
+    {
+      "term": "cok",
+      "english": "near / close",
+      "aliases": []
+    },
+    {
+      "term": "bor",
+      "english": "far / long",
+      "aliases": []
+    },
+    {
+      "term": "wokceng",
+      "english": "east (where the sun rises)",
+      "aliases": []
+    },
+    {
+      "term": "poceng",
+      "english": "west (where the sun sets)",
+      "aliases": [
+        "podo ceng"
+      ]
+    },
+    {
+      "term": "acuc",
+      "english": "left (side/direction)",
+      "aliases": []
+    },
+    {
+      "term": "lacuc",
+      "english": "right (side/direction)",
+      "aliases": []
+    },
+    {
+      "term": "tir",
+      "english": "straight / correct",
+      "aliases": []
+    },
+    {
+      "term": "bushi",
+      "english": "forest / bush",
+      "aliases": [
+        "thim"
+      ]
+    },
+    {
+      "term": "rangi",
+      "english": "color",
+      "aliases": []
+    },
+    {
+      "term": "oranji",
+      "english": "orange (color/fruit)",
+      "aliases": []
+    },
+    {
+      "term": "pingi",
+      "english": "pink",
+      "aliases": []
+    },
+    {
+      "term": "jabu",
+      "english": "gold",
+      "aliases": []
+    },
+    {
+      "term": "feza",
+      "english": "silver",
+      "aliases": []
+    },
+    {
+      "term": "macol",
+      "english": "dark",
+      "aliases": []
+    },
+    {
+      "term": "berber",
+      "english": "beautiful",
+      "aliases": []
+    },
+    {
+      "term": "marac",
+      "english": "ugly / bad",
+      "aliases": []
+    },
+    {
+      "term": "yer",
+      "english": "choice / to choose",
+      "aliases": []
+    },
+    {
+      "term": "otyeno",
+      "english": "afternoon/evening",
+      "aliases": [
+        "otieno"
+      ]
+    },
+    {
+      "term": "wot maber",
+      "english": "welcome",
+      "aliases": []
+    },
+    {
+      "term": "wabineno doki",
+      "english": "goodbye (see you again)",
+      "aliases": [
+        "wabineno"
+      ]
+    },
+    {
+      "term": "atimo bal",
+      "english": "sorry (i did wrong)",
+      "aliases": []
+    },
+    {
+      "term": "gin mo pe",
+      "english": "you're welcome (it's nothing)",
+      "aliases": []
+    },
+    {
+      "term": "loyo",
+      "english": "success/to win",
+      "aliases": []
+    },
+    {
+      "term": "mwaka manyen",
+      "english": "new year",
+      "aliases": []
+    },
+    {
+      "term": "nino me yweyo",
+      "english": "holiday/rest day",
+      "aliases": []
+    },
+    {
+      "term": "lagiya me kwano namba",
+      "english": "calculator (machine for counting numbers)",
+      "aliases": [
+        "calculator"
+      ]
+    },
+    {
+      "term": "kare malac",
+      "english": "long time / it's been a while",
+      "aliases": []
+    },
+    {
+      "term": "icito kwene",
+      "english": "where are you going?",
+      "aliases": []
+    },
+    {
+      "term": "nyingi ngo",
+      "english": "what is your name?",
+      "aliases": []
+    },
+    {
+      "term": "larem tic",
+      "english": "colleague/workmate",
+      "aliases": []
+    },
+    {
+      "term": "lakiny",
+      "english": "neighbor",
+      "aliases": []
+    },
+    {
+      "term": "welo",
+      "english": "guest/visitor",
+      "aliases": []
+    },
+    {
+      "term": "lamwony",
+      "english": "stranger/foreigner",
+      "aliases": []
+    },
+    {
+      "term": "limo",
+      "english": "to visit",
+      "aliases": []
+    },
+    {
+      "term": "lwak",
+      "english": "group/crowd",
+      "aliases": []
+    },
+    {
+      "term": "kenken",
+      "english": "alone/by oneself",
+      "aliases": []
+    },
+    {
+      "term": "lokika",
+      "english": "conversation/talk",
+      "aliases": []
+    },
+    {
+      "term": "leb",
+      "english": "language",
+      "aliases": []
+    },
+    {
+      "term": "kony",
+      "english": "help",
+      "aliases": []
+    },
+    {
+      "term": "lawac",
+      "english": "mosquito",
+      "aliases": []
+    },
+    {
+      "term": "twol",
+      "english": "snake",
+      "aliases": []
+    },
+    {
+      "term": "apaa",
+      "english": "pig",
+      "aliases": []
+    },
+    {
+      "term": "tic",
+      "english": "work / action",
+      "aliases": [
+        "action"
+      ]
+    },
+    {
+      "term": "wot",
+      "english": "movement / journey",
+      "aliases": [
+        "walk"
+      ]
+    },
+    {
+      "term": "twero",
+      "english": "skill / ability",
+      "aliases": [
+        "ability"
+      ]
+    },
+    {
+      "term": "teko",
+      "english": "effort / strength",
+      "aliases": [
+        "strength"
+      ]
+    },
+    {
+      "term": "tam",
+      "english": "plan / goal / intention",
+      "aliases": [
+        "plan",
+        "idea"
+      ]
+    },
+    {
+      "term": "peko",
+      "english": "problem / challenge",
+      "aliases": [
+        "difficulty"
+      ]
+    },
+    {
+      "term": "adwogi",
+      "english": "result / outcome",
+      "aliases": [
+        "results"
+      ]
+    },
+    {
+      "term": "ngec",
+      "english": "knowledge",
+      "aliases": []
+    },
+    {
+      "term": "ryeko",
+      "english": "wisdom / cleverness",
+      "aliases": []
+    },
+    {
+      "term": "niang",
+      "english": "understanding",
+      "aliases": []
+    },
+    {
+      "term": "pwony",
+      "english": "learn / study / learning",
+      "aliases": [
+        "study"
+      ]
+    },
+    {
+      "term": "bedo piny",
+      "english": "sit down / have a seat",
+      "aliases": [
+        "sit"
+      ]
+    },
+    {
+      "term": "bin kany",
+      "english": "come here",
+      "aliases": [
+        "bino kany"
+      ]
+    },
+    {
+      "term": "cung malo",
+      "english": "stand up",
+      "aliases": []
+    },
+    {
+      "term": "winyo",
+      "english": "hear / listen",
+      "aliases": []
+    },
+    {
+      "term": "neno",
+      "english": "see / look",
+      "aliases": [
+        "watch"
+      ]
+    },
+    {
+      "term": "lingo",
+      "english": "quiet / silence",
+      "aliases": []
+    },
+    {
+      "term": "cung",
+      "english": "stop / stand",
+      "aliases": []
+    },
+    {
+      "term": "cake",
+      "english": "start / begin",
+      "aliases": []
+    },
+    {
+      "term": "doki",
+      "english": "again",
+      "aliases": []
+    },
+    {
+      "term": "mot mot",
+      "english": "slowly / slow down",
+      "aliases": [
+        "mot"
+      ]
+    },
+    {
+      "term": "oyot",
+      "english": "fast / quick",
+      "aliases": []
+    },
+    {
+      "term": "tyeko",
+      "english": "finish / complete",
+      "aliases": [
+        "otyeko"
+      ]
+    },
+    {
+      "term": "ikare",
+      "english": "are you ready?",
+      "aliases": [
+        "i kare"
+      ]
+    },
+    {
+      "term": "ladit",
+      "english": "boss / manager / leader",
+      "aliases": [
+        "chief",
+        "elder"
+      ]
+    },
+    {
+      "term": "latic",
+      "english": "worker",
+      "aliases": []
+    },
+    {
+      "term": "poc",
+      "english": "pay / wage / salary",
+      "aliases": []
+    },
+    {
+      "term": "cokke",
+      "english": "meeting / gathering",
+      "aliases": []
+    },
+    {
+      "term": "poroceti",
+      "english": "project",
+      "aliases": [
+        "proceti"
+      ]
+    },
+    {
+      "term": "balo",
+      "english": "failure / to fail / spoil",
+      "aliases": [
+        "balu"
+      ]
+    },
+    {
+      "term": "nero",
+      "english": "uncle",
+      "aliases": [
+        "won baba"
+      ]
+    },
+    {
+      "term": "mego",
+      "english": "aunt",
+      "aliases": [
+        "auntie"
+      ]
+    },
+    {
+      "term": "omera",
+      "english": "cousin",
+      "aliases": [
+        "kinsman"
+      ]
+    },
+    {
+      "term": "cwara",
+      "english": "husband",
+      "aliases": [
+        "cwor"
+      ]
+    },
+    {
+      "term": "dakona",
+      "english": "wife",
+      "aliases": [
+        "my wife"
+      ]
+    },
+    {
+      "term": "latin laco",
+      "english": "boy",
+      "aliases": [
+        "laco"
+      ]
+    },
+    {
+      "term": "latin nyako",
+      "english": "girl",
+      "aliases": [
+        "nyako"
+      ]
+    },
+    {
+      "term": "nyathi",
+      "english": "baby",
+      "aliases": [
+        "infant"
+      ]
+    },
+    {
+      "term": "nyom",
+      "english": "marriage",
+      "aliases": [
+        "wedding"
+      ]
+    },
+    {
+      "term": "wat",
+      "english": "relationship",
+      "aliases": [
+        "kinship",
+        "relative"
+      ]
+    },
+    {
+      "term": "mar",
+      "english": "love",
+      "aliases": []
+    },
+    {
+      "term": "gwoko",
+      "english": "care",
+      "aliases": [
+        "protect",
+        "keep"
+      ]
+    },
+    {
+      "term": "ot pa kaka",
+      "english": "family house",
+      "aliases": [
+        "home of the family"
+      ]
+    },
+    {
+      "term": "kaka",
+      "english": "ancestry",
+      "aliases": [
+        "clan",
+        "lineage"
+      ]
+    },
+    {
+      "term": "bwoyo",
+      "english": "surprised",
+      "aliases": [
+        "amazed",
+        "astonished"
+      ]
+    },
+    {
+      "term": "yom cwiny",
+      "english": "excited",
+      "aliases": [
+        "joy",
+        "thrilled"
+      ]
+    },
+    {
+      "term": "ol",
+      "english": "tired",
+      "aliases": [
+        "exhausted"
+      ]
+    },
+    {
+      "term": "kec",
+      "english": "hungry",
+      "aliases": [
+        "hunger"
+      ]
+    },
+    {
+      "term": "riyo",
+      "english": "thirsty",
+      "aliases": [
+        "thirst"
+      ]
+    },
+    {
+      "term": "tuo",
+      "english": "sick",
+      "aliases": [
+        "illness",
+        "disease"
+      ]
+    },
+    {
+      "term": "cango",
+      "english": "better (getting well)",
+      "aliases": [
+        "healing",
+        "recovery"
+      ]
+    },
+    {
+      "term": "kwero",
+      "english": "hate",
+      "aliases": [
+        "dislike",
+        "refuse"
+      ]
+    },
+    {
+      "term": "nyeko",
+      "english": "jealous",
+      "aliases": [
+        "jealousy",
+        "envy"
+      ]
+    },
+    {
+      "term": "pwoc",
+      "english": "proud",
+      "aliases": [
+        "pride",
+        "honor"
+      ]
+    },
+    {
+      "term": "lewic",
+      "english": "shamed",
+      "aliases": [
+        "shame",
+        "embarrassed"
+      ]
+    },
+    {
+      "term": "bal",
+      "english": "guilty",
+      "aliases": [
+        "sin",
+        "wrongdoing"
+      ]
+    },
+    {
+      "term": "geno",
+      "english": "hopeful",
+      "aliases": [
+        "hope",
+        "trust"
+      ]
+    },
+    {
+      "term": "parro",
+      "english": "worried",
+      "aliases": [
+        "worry",
+        "anxious"
+      ]
+    },
+    {
+      "term": "diu diu",
+      "english": "nervous",
+      "aliases": [
+        "trembling",
+        "shaky"
+      ]
+    },
+    {
+      "term": "kuc",
+      "english": "calm / peace",
+      "aliases": [
+        "peaceful"
+      ]
+    },
+    {
+      "term": "lit",
+      "english": "pain",
+      "aliases": [
+        "hurt"
+      ]
+    },
+    {
+      "term": "lit wic",
+      "english": "headache",
+      "aliases": []
+    },
+    {
+      "term": "lit ic",
+      "english": "stomachache",
+      "aliases": []
+    },
+    {
+      "term": "lit lak",
+      "english": "toothache",
+      "aliases": []
+    },
+    {
+      "term": "liet",
+      "english": "fever / heat",
+      "aliases": []
+    },
+    {
+      "term": "owelo",
+      "english": "cough",
+      "aliases": []
+    },
+    {
+      "term": "yot kom",
+      "english": "health",
+      "aliases": [
+        "wellness"
+      ]
+    },
+    {
+      "term": "yat",
+      "english": "medicine",
+      "aliases": [
+        "drug",
+        "treatment"
+      ]
+    },
+    {
+      "term": "adagitari",
+      "english": "doctor",
+      "aliases": [
+        "daktari"
+      ]
+    },
+    {
+      "term": "nasi",
+      "english": "nurse",
+      "aliases": []
+    },
+    {
+      "term": "ospitale",
+      "english": "hospital",
+      "aliases": []
+    },
+    {
+      "term": "kabedo me yat",
+      "english": "clinic",
+      "aliases": [
+        "place of medicine"
+      ]
+    },
+    {
+      "term": "ambulansi",
+      "english": "ambulance",
+      "aliases": []
+    },
+    {
+      "term": "kony makwongo",
+      "english": "first aid",
+      "aliases": [
+        "first help"
+      ]
+    },
+    {
+      "term": "gengo",
+      "english": "prevention",
+      "aliases": [
+        "to prevent",
+        "to block"
+      ]
+    },
+    {
+      "term": "yer kom",
+      "english": "hygiene",
+      "aliases": [
+        "body cleanliness"
+      ]
+    },
+    {
+      "term": "leng",
+      "english": "clean",
+      "aliases": [
+        "pure"
+      ]
+    },
+    {
+      "term": "dwol",
+      "english": "dirty",
+      "aliases": [
+        "unclean"
+      ]
+    },
+    {
+      "term": "sabuni",
+      "english": "soap",
+      "aliases": []
+    },
+    {
+      "term": "opitala",
+      "english": "hospital",
+      "aliases": [
+        "hospital"
+      ]
+    },
+    {
+      "term": "bao me coc",
+      "english": "blackboard",
+      "aliases": [
+        "bao"
+      ]
+    },
+    {
+      "term": "waraga",
+      "english": "paper / letter / document",
+      "aliases": [
+        "paper"
+      ]
+    },
+    {
+      "term": "pensulu",
+      "english": "pencil",
+      "aliases": [
+        "pencil"
+      ]
+    },
+    {
+      "term": "kalam",
+      "english": "pen",
+      "aliases": [
+        "pen"
+      ]
+    },
+    {
+      "term": "rabara",
+      "english": "eraser / rubber",
+      "aliases": [
+        "eraser",
+        "rubber"
+      ]
+    },
+    {
+      "term": "lula",
+      "english": "ruler",
+      "aliases": [
+        "ruler"
+      ]
+    },
+    {
+      "term": "buk",
+      "english": "book",
+      "aliases": [
+        "book"
+      ]
+    },
+    {
+      "term": "ogut",
+      "english": "bag",
+      "aliases": [
+        "bag",
+        "sack"
+      ]
+    },
+    {
+      "term": "ot me pwony",
+      "english": "classroom",
+      "aliases": [
+        "classroom"
+      ]
+    },
+    {
+      "term": "lapwony",
+      "english": "student / learner",
+      "aliases": [
+        "student",
+        "learner",
+        "pupil"
+      ]
+    },
+    {
+      "term": "lapwony madit",
+      "english": "principal / head teacher",
+      "aliases": [
+        "principal",
+        "headteacher"
+      ]
+    },
+    {
+      "term": "tem",
+      "english": "test / examination",
+      "aliases": [
+        "exam",
+        "test"
+      ]
+    },
+    {
+      "term": "cam me dyeceng",
+      "english": "lunch (midday meal)",
+      "aliases": [
+        "lunch"
+      ]
+    },
+    {
+      "term": "cam me otyeno",
+      "english": "dinner (evening meal)",
+      "aliases": [
+        "dinner",
+        "supper"
+      ]
+    },
+    {
+      "term": "pii me yat",
+      "english": "juice",
+      "aliases": [
+        "juice"
+      ]
+    },
+    {
+      "term": "olum",
+      "english": "fruit",
+      "aliases": [
+        "fruit"
+      ]
+    },
+    {
+      "term": "macungwa",
+      "english": "orange (fruit)",
+      "aliases": []
+    },
+    {
+      "term": "ananasi",
+      "english": "pineapple",
+      "aliases": [
+        "pineapple"
+      ]
+    },
+    {
+      "term": "nyanya",
+      "english": "tomato",
+      "aliases": [
+        "tomato"
+      ]
+    },
+    {
+      "term": "katunguru",
+      "english": "onion",
+      "aliases": [
+        "onion"
+      ]
+    },
+    {
+      "term": "kabaca",
+      "english": "cabbage",
+      "aliases": [
+        "cabbage"
+      ]
+    },
+    {
+      "term": "lumonde",
+      "english": "potato",
+      "aliases": [
+        "potato"
+      ]
+    },
+    {
+      "term": "muogo",
+      "english": "cassava",
+      "aliases": [
+        "cassava"
+      ]
+    },
+    {
+      "term": "thwon gweno",
+      "english": "rooster (male chicken)",
+      "aliases": [
+        "rooster",
+        "cock"
+      ]
+    },
+    {
+      "term": "nyuka",
+      "english": "porridge",
+      "aliases": [
+        "porridge"
+      ]
+    },
+    {
+      "term": "kic",
+      "english": "honey",
+      "aliases": [
+        "honey"
+      ]
+    },
+    {
+      "term": "mo",
+      "english": "oil / fat / butter",
+      "aliases": [
+        "butter",
+        "oil",
+        "fat"
+      ]
+    },
+    {
+      "term": "cak makem",
+      "english": "yogurt (sour milk)",
+      "aliases": [
+        "yogurt"
+      ]
+    },
+    {
+      "term": "mogo",
+      "english": "flour",
+      "aliases": [
+        "flour"
+      ]
+    },
+    {
+      "term": "bel",
+      "english": "millet",
+      "aliases": [
+        "millet"
+      ]
+    },
+    {
+      "term": "katunguru cwiny",
+      "english": "garlic",
+      "aliases": [
+        "garlic"
+      ]
+    },
+    {
+      "term": "tangawuzi",
+      "english": "ginger",
+      "aliases": [
+        "ginger"
+      ]
+    },
+    {
+      "term": "labwori",
+      "english": "pepper / chili",
+      "aliases": [
+        "pepper",
+        "chili"
+      ]
+    },
+    {
+      "term": "yat cam",
+      "english": "spice (flavoring for food)",
+      "aliases": [
+        "spice",
+        "seasoning"
+      ]
+    },
+    {
+      "term": "cokleti",
+      "english": "chocolate",
+      "aliases": [
+        "chocolate"
+      ]
+    },
+    {
+      "term": "bisikuti",
+      "english": "biscuits",
+      "aliases": [
+        "biscuits",
+        "cookies"
+      ]
+    },
+    {
+      "term": "keke",
+      "english": "cake",
+      "aliases": []
+    },
+    {
+      "term": "soda",
+      "english": "soda / soft drink",
+      "aliases": [
+        "soft drink"
+      ]
+    },
+    {
+      "term": "kongo",
+      "english": "alcohol / local beer",
+      "aliases": [
+        "beer",
+        "alcohol"
+      ]
+    },
+    {
+      "term": "wayni",
+      "english": "wine",
+      "aliases": [
+        "wine"
+      ]
+    },
+    {
+      "term": "kongo macol",
+      "english": "spirits (hard liquor)",
+      "aliases": [
+        "spirits",
+        "liquor"
+      ]
+    },
+    {
+      "term": "cam marac",
+      "english": "junk food (bad food)",
+      "aliases": [
+        "junk food"
+      ]
+    },
+    {
+      "term": "cam mabeco",
+      "english": "balanced diet (good/proper food)",
+      "aliases": [
+        "balanced diet",
+        "healthy diet"
+      ]
+    },
+    {
+      "term": "cam mupiny",
+      "english": "nutrition",
+      "aliases": [
+        "nutrition"
+      ]
+    },
+    {
+      "term": "vitamin",
+      "english": "vitamin",
+      "aliases": []
+    },
+    {
+      "term": "mineral",
+      "english": "mineral",
+      "aliases": []
+    },
+    {
+      "term": "dongo",
+      "english": "growth / to grow",
+      "aliases": [
+        "growth",
+        "grow"
+      ]
+    },
+    {
+      "term": "sa",
+      "english": "clock / hour",
+      "aliases": [
+        "saa"
+      ]
+    },
+    {
+      "term": "anyel",
+      "english": "pig",
+      "aliases": []
+    },
+    {
+      "term": "nino",
+      "english": "sleep",
+      "aliases": []
+    },
+    {
+      "term": "lwango",
+      "english": "fly (insect)",
+      "aliases": []
+    },
+    {
+      "term": "twiga",
+      "english": "giraffe",
+      "aliases": []
+    },
+    {
+      "term": "faru",
+      "english": "rhino",
+      "aliases": [
+        "kifaru"
+      ]
+    },
+    {
+      "term": "tamo",
+      "english": "think",
+      "aliases": []
+    },
+    {
+      "term": "alira",
+      "english": "spider",
+      "aliases": []
+    },
+    {
+      "term": "biye",
+      "english": "ant",
+      "aliases": []
+    },
+    {
+      "term": "ayer",
+      "english": "locust",
+      "aliases": []
+    },
+    {
+      "term": "ngwen",
+      "english": "termite",
+      "aliases": [
+        "white ant"
+      ]
+    },
+    {
+      "term": "tweno",
+      "english": "horn",
+      "aliases": []
+    },
+    {
+      "term": "lwedo",
+      "english": "claw / nail",
+      "aliases": []
+    },
+    {
+      "term": "tim",
+      "english": "forest / bush / wild",
+      "aliases": [
+        "wild"
+      ]
+    },
+    {
+      "term": "cabit",
+      "english": "week",
+      "aliases": []
+    },
+    {
+      "term": "dwe",
+      "english": "month / moon",
+      "aliases": []
+    },
+    {
+      "term": "mwaka",
+      "english": "year",
+      "aliases": []
+    },
+    {
+      "term": "kombeddi",
+      "english": "now / present",
+      "aliases": []
+    },
+    {
+      "term": "con",
+      "english": "early / before",
+      "aliases": []
+    },
+    {
+      "term": "aiyu",
+      "english": "late",
+      "aliases": []
+    },
+    {
+      "term": "matwal",
+      "english": "forever / always",
+      "aliases": []
+    },
+    {
+      "term": "tutwal pe",
+      "english": "never",
+      "aliases": []
+    },
+    {
+      "term": "pile pile",
+      "english": "always / every day",
+      "aliases": []
+    },
+    {
+      "term": "kalenda",
+      "english": "calendar",
+      "aliases": []
+    }
   ]
 }
